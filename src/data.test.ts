@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { EDGES, filterEdges, metricMatchesPeriod, NETWORKS, NODES } from './data'
+import { EDGES, filterEdges, isSnapshotReviewOverdue, metricMatchesPeriod, NETWORKS, NODES } from './data'
 import type { Metric } from './types'
 
 describe('financial flow contract', () => {
@@ -37,5 +37,10 @@ describe('financial flow contract', () => {
     expect(metricMatchesPeriod(metric, '2026')).toBe(true)
     expect(metricMatchesPeriod(metric, '2025')).toBe(false)
     expect(metricMatchesPeriod(metric, 'all')).toBe(true)
+  })
+
+  it('marks source snapshots overdue only after their review deadline', () => {
+    expect(isSnapshotReviewOverdue('2026-08-16', new Date('2026-08-16T23:59:59.999Z'))).toBe(false)
+    expect(isSnapshotReviewOverdue('2026-08-16', new Date('2026-08-17T00:00:00Z'))).toBe(true)
   })
 })

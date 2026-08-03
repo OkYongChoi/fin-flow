@@ -38,9 +38,9 @@ export function DetailInspector({ selected, metrics, sources, locale }: { select
       {tab === 'institutions' ? <section id="panel-institutions" role="tabpanel" aria-labelledby="tab-institutions" className="inspector-panel institution-panel"><h3>{locale === 'ko' ? '참여 기관' : 'Participating institutions'}</h3>{INSTITUTIONS[selected].map(([ko, en], index) => <div key={ko}><span>{index + 1}</span><b>{locale === 'ko' ? ko : en}</b></div>)}</section> : null}
       {tab === 'statistics' ? <section id="panel-statistics" role="tabpanel" aria-labelledby="tab-statistics" className="metric-section"><h3>{t('inspector.compare')}</h3><div className="metric-table">
         {metrics.map((metric) => <div key={metric.id}><span>{locale === 'ko' ? metric.labelKo : metric.labelEn}</span><strong>{metric.id === 'bis-cadence' && locale === 'en' ? 'Semiannual' : metric.display}</strong><small>{metric.coveragePeriod}</small></div>)}
-        {metrics.length === 0 ? <p>—</p> : null}
+        {metrics.length === 0 ? <p className="empty-metrics">{locale === 'ko' ? '현재 기간에 공개 통계가 없습니다.' : 'No public statistics match this period.'}</p> : null}
       </div></section> : null}
-      {tab === 'documents' ? <section id="panel-documents" role="tabpanel" aria-labelledby="tab-documents" className="source-section"><h3><FileText size={14} />{t('common.sourceDate')}</h3>{sources.map((source) => <a key={source.id} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.provider}</b><small>{source.coveragePeriod} · {source.cadence}</small></span><ExternalLink size={13} /></a>)}</section> : null}
+      {tab === 'documents' ? <section id="panel-documents" role="tabpanel" aria-labelledby="tab-documents" className="source-section"><h3><FileText size={14} />{t('common.sourceDate')}</h3>{sources.length ? sources.map((source) => <a key={source.id} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.provider}</b><small>{source.coveragePeriod} · {source.cadence}</small></span><ExternalLink size={13} /></a>) : <p className="empty-metrics">{locale === 'ko' ? '표시할 출처가 없습니다.' : 'No sources are available for this selection.'}</p>}</section> : null}
     </aside>
   )
 }

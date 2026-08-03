@@ -96,7 +96,7 @@ test('advanced filters persist in the URL and change displayed routes and statis
 
   await page.getByRole('combobox', { name: 'Period' }).selectOption('2025')
   await page.getByRole('tab', { name: 'Statistics', exact: true }).click()
-  await expect(page.getByRole('tabpanel', { name: 'Statistics' })).toContainText('—')
+  await expect(page.getByRole('tabpanel', { name: 'Statistics' })).toContainText('No public statistics match this period.')
 
   await page.reload()
   await expect(page.getByRole('combobox', { name: 'Currency' })).toHaveValue('token')
@@ -146,4 +146,14 @@ test('editorial cards navigate to stable deep links', async ({ page }) => {
   await swiftCard.click()
   await expect(page).toHaveURL(/\/en\/networks\/swift$/)
   await expect(swiftCard).toHaveAttribute('aria-current', 'page')
+})
+
+test('keeps the explanatory map available when the source snapshot fails', async ({ page }) => {
+  await page.route('**/data/*.json', async (route) => {
+    await route.fulfill({ status: 503, contentType: 'application/json', body: '{}' })
+  })
+  await page.goto('/en/map?network=usdc')
+  await expect(page.locator('.flow-map')).toBeVisible()
+  await expect(page.getByRole('alert')).toContainText('Source statistics are unavailable. The map remains available.')
+  await expect(page.getByRole('button', { name: 'Try again' })).toBeEnabled()
 })

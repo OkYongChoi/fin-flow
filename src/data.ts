@@ -44,12 +44,27 @@ export async function fetchDataBundle(): Promise<DataBundle> {
   const [manifestResponse, sourcesResponse, metricsResponse] = await Promise.all([
     fetch('/data/manifest.json'), fetch('/data/sources.json'), fetch('/data/metrics.json'),
   ])
-  if (!manifestResponse.ok || !sourcesResponse.ok || !metricsResponse.ok) throw new Error('Unable to load source-backed data')
+  if (!manifestResponse.ok || !sourcesResponse.ok || !metricsResponse.ok) {
+    throw new Error('The published source snapshot is temporarily unavailable')
+  }
   const [manifest, sources, metrics] = await Promise.all([
-    manifestResponse.json() as Promise<{ version: string; generatedAt: string }>,
+    manifestResponse.json() as Promise<{ version: string; generatedAt: string; reviewDueAt: string; coverageNotice: string }>,
     sourcesResponse.json() as Promise<SourceRecord[]>,
     metricsResponse.json() as Promise<Metric[]>,
   ])
+  if (!/^\d{4}\.\d{2}\.\d{2}$/.test(manifest.version) || !manifest.generatedAt || !/^\d{4}-\d{2}-\d{2}$/.test(manifest.reviewDueAt) || !manifest.coverageNotice) {
+    throw new Error('The published source snapshot has an invalid manifest')
+  }
+  if (!Array.isArray(sources) || !Array.isArray(metrics)) {
+    throw new Error('The published source snapshot has an invalid shape')
+  }
+  const sourceIds = new Set(sources.map((source) => source.id))
+  if (sourceIds.size !== sources.length || sources.some((source) => !source.id || !source.url.startsWith('https://'))) {
+    throw new Error('The published source registry is invalid')
+  }
+  if (metrics.some((metric) => !metric.id || !sourceIds.has(metric.sourceId) || !Number.isFinite(metric.value))) {
+    throw new Error('The published metric registry is invalid')
+  }
   return { ...manifest, sources, metrics }
 }
 
@@ -87,4 +102,8 @@ export function filterEdges(edges: FlowEdge[], filters: DashboardFilters): FlowE
 
 export function metricMatchesPeriod(metric: Metric, period: DashboardFilters['period']): boolean {
   return period === 'all' || metric.coveragePeriod.includes(period)
+}
+
+export function isSnapshotReviewOverdue(reviewDueAt: string, now = new Date()): boolean {
+  return now.getTime() > new Date(`${reviewDueAt}T23:59:59.999Z`).getTime()
 }
