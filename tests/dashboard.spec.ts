@@ -84,6 +84,46 @@ test('network filter updates the selected network', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Circle USDC/ })).toHaveAttribute('aria-pressed', 'true')
 })
 
+test('advanced filters persist in the URL and change displayed routes and statistics', async ({ page }) => {
+  await page.goto('/en/map?network=usdc')
+  await page.getByRole('combobox', { name: 'Currency' }).selectOption('token')
+  await page.getByRole('combobox', { name: 'Region' }).selectOption('apac')
+  await expect(page).toHaveURL(/currency=token/)
+  await expect(page).toHaveURL(/region=apac/)
+
+  const rows = page.locator('.map-data-table tbody tr')
+  await expect(rows).toHaveCount(3)
+
+  await page.getByRole('combobox', { name: 'Period' }).selectOption('2025')
+  await page.getByRole('tab', { name: 'Statistics', exact: true }).click()
+  await expect(page.getByRole('tabpanel', { name: 'Statistics' })).toContainText('—')
+
+  await page.reload()
+  await expect(page.getByRole('combobox', { name: 'Currency' })).toHaveValue('token')
+  await expect(page.getByRole('combobox', { name: 'Period' })).toHaveValue('2025')
+})
+
+test('filters expose an empty state and reset to the default view', async ({ page }) => {
+  await page.goto('/en/map?network=swift')
+  await page.getByRole('combobox', { name: 'Currency' }).selectOption('token')
+  await expect(page.locator('.map-empty')).toContainText('The selected network does not match the current filters.')
+  await page.getByRole('button', { name: 'Reset filters' }).click()
+  await expect(page).toHaveURL(/network=chips-fedwire/)
+  await expect(page.getByRole('combobox', { name: 'Currency' })).toHaveValue('all')
+})
+
+test('timeline content follows the selected network and speed control works', async ({ page }) => {
+  await page.goto('/en/map?network=usdc')
+  const timeline = page.locator('.flow-timeline')
+  await expect(timeline.getByText('Fiat deposit', { exact: true }).first()).toBeVisible()
+  const speed = page.getByRole('button', { name: 'Playback speed 1x' })
+  await speed.click()
+  await expect(page.getByRole('button', { name: 'Playback speed 2x' })).toBeVisible()
+  await page.locator('.network-sidebar').getByRole('button', { name: /SWIFT/ }).click()
+  await expect(timeline.getByText('Instruction', { exact: true }).first()).toBeVisible()
+  await expect(timeline.getByText('Fiat deposit', { exact: true })).toHaveCount(0)
+})
+
 test('English institution and asset pages have translated, distinct content', async ({ page }) => {
   await page.goto('/en/institutions')
   await expect(page.getByRole('heading', { name: 'Institutions', level: 1 })).toBeVisible()

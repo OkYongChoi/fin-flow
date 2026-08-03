@@ -47,7 +47,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
   }, [menuOpen])
 
   return (
-    <header className={`app-header ${compact ? 'compact' : ''}`}>
+    <header className={`app-header ${compact ? 'compact' : ''} ${menuOpen ? 'menu-open' : ''}`}>
       <button
         className="mobile-menu icon-button"
         aria-label={locale === 'ko' ? (menuOpen ? '메뉴 닫기' : '메뉴 열기') : (menuOpen ? 'Close menu' : 'Open menu')}

@@ -1,4 +1,4 @@
-import type { DataBundle, FlowEdge, FlowNode, Metric, NetworkId, SourceRecord } from './types'
+import type { DashboardFilters, DataBundle, FlowEdge, FlowNode, Metric, NetworkId, SourceRecord } from './types'
 
 export const NETWORKS: Array<{ id: NetworkId; label: string; labelEn: string; description: string; descriptionEn: string }> = [
   { id: 'swift', label: 'SWIFT', labelEn: 'SWIFT', description: '은행 간 메시지 네트워크', descriptionEn: 'Interbank messaging network' },
@@ -54,3 +54,37 @@ export async function fetchDataBundle(): Promise<DataBundle> {
 }
 
 export const getNode = (id: string) => NODES.find((node) => node.id === id)!
+
+const NETWORK_LENSES: Record<NetworkId, { currencies: DashboardFilters['currency'][]; institutions: DashboardFilters['institution'][] }> = {
+  swift: { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  visa: { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  'chips-fedwire': { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  derivatives: { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  usdc: { currencies: ['usd', 'token'], institutions: ['issuer-chain'] },
+}
+
+const NODE_REGIONS: Record<string, Exclude<DashboardFilters['region'], 'all'>> = {
+  'new-york': 'americas',
+  'sao-paulo': 'americas',
+  london: 'emea',
+  frankfurt: 'emea',
+  dubai: 'emea',
+  seoul: 'apac',
+  tokyo: 'apac',
+  'hong-kong': 'apac',
+  singapore: 'apac',
+}
+
+export function filterEdges(edges: FlowEdge[], filters: DashboardFilters): FlowEdge[] {
+  return edges.filter((item) => {
+    const lens = NETWORK_LENSES[item.networkId]
+    const currencyMatch = filters.currency === 'all' || lens.currencies.includes(filters.currency)
+    const institutionMatch = filters.institution === 'all' || lens.institutions.includes(filters.institution)
+    const regionMatch = filters.region === 'all' || NODE_REGIONS[item.source] === filters.region || NODE_REGIONS[item.target] === filters.region
+    return currencyMatch && institutionMatch && regionMatch
+  })
+}
+
+export function metricMatchesPeriod(metric: Metric, period: DashboardFilters['period']): boolean {
+  return period === 'all' || metric.coveragePeriod.includes(period)
+}
