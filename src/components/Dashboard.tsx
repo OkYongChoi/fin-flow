@@ -35,11 +35,11 @@ export function Dashboard({ locale }: { locale: Locale }) {
       <AppHeader locale={locale} compact />
       <section className="mode-and-filter">
         <div className="view-toggle" aria-label="View density">
-          <button className={!proMode ? 'active' : ''} onClick={() => setProMode(false)}>{t('view.basic')}</button>
-          <button className={proMode ? 'active' : ''} onClick={() => setProMode(true)}>{t('view.pro')}</button>
+          <button aria-pressed={!proMode} className={!proMode ? 'active' : ''} onClick={() => setProMode(false)}>{t('view.basic')}</button>
+          <button aria-pressed={proMode} className={proMode ? 'active' : ''} onClick={() => setProMode(true)}>{t('view.pro')}</button>
         </div>
-        <FilterBar proMode={proMode} onReset={() => navigate(`${pathname}?network=chips-fedwire`, true)} />
-        <div className="data-freshness" title={data?.generatedAt}>
+        <FilterBar proMode={proMode} selected={selected} locale={locale} onSelect={selectNetwork} onReset={() => navigate(`${pathname}?network=chips-fedwire`, true)} />
+        <div className="data-freshness" title={data?.generatedAt} role="status">
           <span>{t('inspector.updated')}</span><strong>{data?.version ?? '—'}</strong><i aria-hidden="true" />
         </div>
       </section>

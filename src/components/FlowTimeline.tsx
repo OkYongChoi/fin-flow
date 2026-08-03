@@ -18,9 +18,9 @@ export function FlowTimeline({ selected, locale }: { selected: NetworkId; locale
   }, [playing])
   return (
     <section className="flow-timeline">
-      <header><h2>{t('timeline.title')}</h2><nav><button className="active">{t('timeline.timeline')}</button><button>{t('timeline.comparison')}</button><button>{t('timeline.institution')}</button></nav><div className="simulation-badge"><i />{t('inspector.simulation')}</div></header>
+      <header><h2>{t('timeline.title')}</h2><div /><div className="simulation-badge"><i />{t('inspector.simulation')}</div></header>
       <div className="timeline-body">
-        <div className="playback"><span>{t('timeline.play')}</span><div><button onClick={() => setStep(0)} aria-label="Restart"><RotateCcw size={15} /></button><button className="play" onClick={() => setPlaying((value) => !value)} aria-label={playing ? t('timeline.pause') : t('timeline.play')}>{playing ? <Pause /> : <Play />}</button><b>1×</b></div><small>{t('notices.simulated')}</small></div>
+        <div className="playback"><span>{t('timeline.play')}</span><div><button onClick={() => setStep(0)} aria-label={locale === 'ko' ? '처음부터 재생' : 'Restart'}><RotateCcw size={15} /></button><button className="play" onClick={() => setPlaying((value) => !value)} aria-label={playing ? t('timeline.pause') : t('timeline.play')}>{playing ? <Pause /> : <Play />}</button><b>1×</b></div><small>{t('notices.simulated')}</small></div>
         <div className="timeline-track" style={{ '--progress': `${step / (EVENTS.length - 1) * 100}%` } as React.CSSProperties}>
           <span className="track-line" />
           {EVENTS.map(([time, ko, en], index) => <button key={time} className={index <= step ? 'complete' : ''} onClick={() => setStep(index)}><time>{time}</time><i /><b>{locale === 'ko' ? ko : en}</b><small>{index === step ? (selected === 'chips-fedwire' ? 'CHIPS / Fedwire' : selected.toUpperCase()) : '—'}</small></button>)}

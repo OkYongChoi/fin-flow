@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Landmark, Menu, Orbit } from 'lucide-react'
 import { Dashboard } from './components/Dashboard'
@@ -20,7 +20,7 @@ function LocaleRoutes() {
   useEffect(() => { if (!VALID_PAGES.has(page)) navigate(`/${locale}/map`, true) }, [locale, navigate, page])
   if (page === 'map') return <Dashboard locale={locale} />
   if (page === 'networks') return <InfoPage type="networks" locale={locale} slug={slug} />
-  if (page === 'institutions') return <InfoPage type="institutions" locale={locale} />
+  if (page === 'institutions') return <InfoPage type="institutions" locale={locale} slug={slug} />
   if (page === 'assets') return <InfoPage type="assets" locale={locale} slug={slug} />
   if (page === 'learn') return <InfoPage type="learn" locale={locale} slug={slug} />
   if (page === 'data') return <Suspense fallback={<PageLoader />}><DataPage locale={locale} /></Suspense>
@@ -30,19 +30,44 @@ function LocaleRoutes() {
 export function AppHeader({ locale, compact = false }: { locale: Locale; compact?: boolean }) {
   const { t } = useTranslation()
   const { navigate, pathname, search } = useRouter()
-  const switchLocale = () => navigate(pathname.replace(/^\/(ko|en)/, locale === 'ko' ? '/en' : '/ko') + search)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const navigateFromHeader = (to: string) => {
+    setMenuOpen(false)
+    navigate(to)
+  }
+  const switchLocale = () => navigateFromHeader(pathname.replace(/^\/(ko|en)/, locale === 'ko' ? '/en' : '/ko') + search)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [menuOpen])
+
   return (
     <header className={`app-header ${compact ? 'compact' : ''}`}>
-      <button className="mobile-menu icon-button" aria-label="Open menu"><Menu size={21} /></button>
-      <button className="brand" onClick={() => navigate(`/${locale}/map`)}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
-      <nav aria-label="Primary">
-        {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')]].map(([path, label]) => (
-          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} onClick={() => navigate(`/${locale}/${path}`)}>{label}</button>
+      <button
+        className="mobile-menu icon-button"
+        aria-label={locale === 'ko' ? (menuOpen ? '메뉴 닫기' : '메뉴 열기') : (menuOpen ? 'Close menu' : 'Open menu')}
+        aria-expanded={menuOpen}
+        aria-controls="primary-navigation"
+        onClick={() => setMenuOpen((open) => !open)}
+      ><Menu size={21} /></button>
+      <button className="brand" onClick={() => navigateFromHeader(`/${locale}/map`)}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
+      <nav
+        id="primary-navigation"
+        className={menuOpen ? 'mobile-nav-open' : undefined}
+        aria-label={locale === 'ko' ? '주요 메뉴' : 'Primary'}
+      >
+        {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['learn', t('pages.learn')], ['data', t('nav.data')]].map(([path, label]) => (
+          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} onClick={() => navigateFromHeader(`/${locale}/${path}`)}>{label}</button>
         ))}
       </nav>
       <div className="header-actions">
         <button className="locale-button" onClick={switchLocale}>{locale === 'ko' ? 'EN' : 'KO'}</button>
-        <button className="icon-button" aria-label="About the project"><Landmark size={18} /></button>
+        <button className="icon-button" aria-label={locale === 'ko' ? '프로젝트 소개' : 'About the project'} onClick={() => navigateFromHeader(`/${locale}/learn`)}><Landmark size={18} /></button>
       </div>
     </header>
   )

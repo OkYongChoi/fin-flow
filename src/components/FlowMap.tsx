@@ -49,7 +49,6 @@ export default function FlowMap({ selected, proMode, locale }: { selected: Netwo
         <FullscreenControl position="top-right" />
       </Map>
       <h2 className="map-title">{locale === 'ko' ? '글로벌 지도' : 'Global map'}</h2>
-      <div className="map-range"><button>1H</button><button>6H</button><button className="active">1D</button><button>7D</button><button>30D</button></div>
       {selectedNode ? <div className="node-tooltip"><header><b>{selectedNode.label}</b><button aria-label="Close tooltip" onClick={() => setActiveNode('')}>×</button></header><dl><dt>{locale === 'ko' ? '역할' : 'Role'}</dt><dd>{locale === 'ko' ? '글로벌 금융 허브' : 'Global financial hub'}</dd><dt>{locale === 'ko' ? '표현' : 'Representation'}</dt><dd>{locale === 'ko' ? '설명용 노드' : 'Schematic node'}</dd></dl></div> : null}
       <div className="map-disclaimer"><span className="status-dot simulation" />{locale === 'ko' ? '구조도 · 실거래 위치 아님' : 'Schematic · not transaction locations'}</div>
       <details className="map-data-table"><summary>{locale === 'ko' ? '지도 데이터 표로 보기' : 'View map data as a table'}</summary><table><thead><tr><th>{locale === 'ko' ? '출발' : 'Source'}</th><th>{locale === 'ko' ? '도착' : 'Target'}</th><th>{locale === 'ko' ? '유형' : 'Type'}</th></tr></thead><tbody>{edges.filter((item) => item.networkId === selected).map((item) => <tr key={item.id}><td>{getNode(item.source).label}</td><td>{getNode(item.target).label}</td><td>{item.semantic}</td></tr>)}</tbody></table></details>
