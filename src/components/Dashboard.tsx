@@ -45,12 +45,10 @@ export function Dashboard({ locale }: { locale: Locale }) {
     navigate(`${pathname}?${next.toString()}`, true)
   })
 
-  const updateFilters = (nextFilters: DashboardFilters) => startTransition(() => {
+  const updateFilter = <K extends keyof DashboardFilters>(key: K, value: DashboardFilters[K]) => startTransition(() => {
     const next = new URLSearchParams(window.location.search)
-    for (const [key, value] of Object.entries(nextFilters)) {
-      if (value === 'all') next.delete(key)
-      else next.set(key, value)
-    }
+    if (value === 'all') next.delete(key)
+    else next.set(key, value)
     navigate(`${pathname}?${next.toString()}`, true)
   })
 
@@ -67,7 +65,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
           <button aria-pressed={!proMode} className={!proMode ? 'active' : ''} onClick={() => setProMode(false)}>{t('view.basic')}</button>
           <button aria-pressed={proMode} className={proMode ? 'active' : ''} onClick={() => setProMode(true)}>{t('view.pro')}</button>
         </div>
-        <FilterBar proMode={proMode} selected={selected} filters={filters} locale={locale} onSelect={selectNetwork} onFiltersChange={updateFilters} onReset={resetFilters} />
+        <FilterBar proMode={proMode} selected={selected} filters={filters} locale={locale} onSelect={selectNetwork} onFilterChange={updateFilter} onReset={resetFilters} />
         <div className="data-freshness" title={data?.generatedAt} role="status">
           <span>{t('inspector.updated')}</span><strong>{data?.version ?? '—'}</strong><i aria-hidden="true" />
         </div>
