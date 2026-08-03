@@ -2,6 +2,17 @@ export type Locale = 'ko' | 'en'
 export type NetworkId = 'swift' | 'visa' | 'chips-fedwire' | 'derivatives' | 'usdc'
 export type FlowSemantic = 'message' | 'authorization' | 'clearing' | 'settlement' | 'asset_transfer'
 export type Representation = 'observed_aggregate' | 'schematic' | 'simulated'
+export type PeriodFilter = 'all' | '2025' | '2026'
+export type CurrencyFilter = 'all' | 'usd' | 'token'
+export type InstitutionFilter = 'all' | 'banks' | 'market-infrastructure' | 'issuer-chain'
+export type RegionFilter = 'all' | 'americas' | 'emea' | 'apac'
+
+export interface DashboardFilters {
+  period: PeriodFilter
+  currency: CurrencyFilter
+  institution: InstitutionFilter
+  region: RegionFilter
+}
 
 export interface SourceRecord {
   id: string
@@ -47,6 +58,8 @@ export interface FlowEdge {
 export interface DataBundle {
   version: string
   generatedAt: string
+  reviewDueAt: string
+  coverageNotice: string
   sources: SourceRecord[]
   metrics: Metric[]
 }

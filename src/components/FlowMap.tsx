@@ -5,7 +5,7 @@ import { ArcLayer } from '@deck.gl/layers'
 import { feature } from 'topojson-client'
 import countries from 'world-atlas/countries-110m.json'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { EDGES, getNode, NETWORK_COLORS, NODES } from '../data'
+import { getNode, NETWORK_COLORS, NODES } from '../data'
 import type { FlowEdge, Locale, NetworkId } from '../types'
 
 const WORLD = feature(countries as never, (countries as { objects: { countries: never } }).objects.countries) as unknown as GeoJSON.FeatureCollection
@@ -17,10 +17,10 @@ function DeckOverlay({ layers }: { layers: ArcLayer<FlowEdge>[] }) {
   return null
 }
 
-export default function FlowMap({ selected, proMode, locale }: { selected: NetworkId; proMode: boolean; locale: Locale }) {
+export default function FlowMap({ selected, proMode, locale, edges: filteredEdges }: { selected: NetworkId; proMode: boolean; locale: Locale; edges: FlowEdge[] }) {
   const mobile = window.matchMedia('(max-width: 820px)').matches
   const [activeNode, setActiveNode] = useState(mobile ? '' : 'new-york')
-  const edges = proMode ? EDGES : EDGES.filter((edge) => edge.networkId === selected)
+  const edges = proMode ? filteredEdges : filteredEdges.filter((edge) => edge.networkId === selected)
   const layers = useMemo(() => [new ArcLayer<FlowEdge>({
     id: `flows-${selected}-${proMode}`,
     data: edges,
@@ -34,6 +34,14 @@ export default function FlowMap({ selected, proMode, locale }: { selected: Netwo
     greatCircle: false,
     pickable: true,
   })], [edges, proMode, selected])
+  const nodeDegrees = useMemo(() => {
+    const counts = new globalThis.Map<string, number>()
+    for (const item of edges) {
+      counts.set(item.source, (counts.get(item.source) ?? 0) + 1)
+      counts.set(item.target, (counts.get(item.target) ?? 0) + 1)
+    }
+    return counts
+  }, [edges])
   const selectedNode = NODES.find((node) => node.id === activeNode)
 
   return (
@@ -44,14 +52,17 @@ export default function FlowMap({ selected, proMode, locale }: { selected: Netwo
           <Layer id="countries-outline" type="line" paint={{ 'line-color': '#315474', 'line-width': 0.55, 'line-opacity': 0.75 }} />
         </Source>
         <DeckOverlay layers={layers} />
-        {NODES.map((node) => <Marker key={node.id} longitude={node.coordinates[0]} latitude={node.coordinates[1]} anchor="center"><button className={`map-node ${node.id === activeNode ? 'active' : ''}`} onClick={() => setActiveNode(node.id)} aria-label={`Select ${node.label}`}><i /><span>{node.label}</span></button></Marker>)}
+        {NODES.map((node) => {
+          const size = 7 + Math.min(nodeDegrees.get(node.id) ?? 0, 7)
+          return <Marker key={node.id} longitude={node.coordinates[0]} latitude={node.coordinates[1]} anchor="center"><button className={`map-node ${node.id === activeNode ? 'active' : ''}`} style={{ '--node-size': `${size}px` } as React.CSSProperties} onClick={() => setActiveNode(node.id)} aria-label={`Select ${node.label}`}><i /><span>{node.label}</span></button></Marker>
+        })}
         <NavigationControl position="bottom-right" showCompass={false} />
         <FullscreenControl position="top-right" />
       </Map>
       <h2 className="map-title">{locale === 'ko' ? '글로벌 지도' : 'Global map'}</h2>
-      <div className="map-range"><button>1H</button><button>6H</button><button className="active">1D</button><button>7D</button><button>30D</button></div>
       {selectedNode ? <div className="node-tooltip"><header><b>{selectedNode.label}</b><button aria-label="Close tooltip" onClick={() => setActiveNode('')}>×</button></header><dl><dt>{locale === 'ko' ? '역할' : 'Role'}</dt><dd>{locale === 'ko' ? '글로벌 금융 허브' : 'Global financial hub'}</dd><dt>{locale === 'ko' ? '표현' : 'Representation'}</dt><dd>{locale === 'ko' ? '설명용 노드' : 'Schematic node'}</dd></dl></div> : null}
       <div className="map-disclaimer"><span className="status-dot simulation" />{locale === 'ko' ? '구조도 · 실거래 위치 아님' : 'Schematic · not transaction locations'}</div>
+      {edges.every((edge) => edge.networkId !== selected) ? <div className="map-empty" role="status">{locale === 'ko' ? '선택한 네트워크와 현재 필터가 일치하지 않습니다.' : 'The selected network does not match the current filters.'}</div> : null}
       <details className="map-data-table"><summary>{locale === 'ko' ? '지도 데이터 표로 보기' : 'View map data as a table'}</summary><table><thead><tr><th>{locale === 'ko' ? '출발' : 'Source'}</th><th>{locale === 'ko' ? '도착' : 'Target'}</th><th>{locale === 'ko' ? '유형' : 'Type'}</th></tr></thead><tbody>{edges.filter((item) => item.networkId === selected).map((item) => <tr key={item.id}><td>{getNode(item.source).label}</td><td>{getNode(item.target).label}</td><td>{item.semantic}</td></tr>)}</tbody></table></details>
     </div>
   )

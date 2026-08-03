@@ -1,4 +1,4 @@
-import type { DataBundle, FlowEdge, FlowNode, Metric, NetworkId, SourceRecord } from './types'
+import type { DashboardFilters, DataBundle, FlowEdge, FlowNode, Metric, NetworkId, SourceRecord } from './types'
 
 export const NETWORKS: Array<{ id: NetworkId; label: string; labelEn: string; description: string; descriptionEn: string }> = [
   { id: 'swift', label: 'SWIFT', labelEn: 'SWIFT', description: '은행 간 메시지 네트워크', descriptionEn: 'Interbank messaging network' },
@@ -44,13 +44,66 @@ export async function fetchDataBundle(): Promise<DataBundle> {
   const [manifestResponse, sourcesResponse, metricsResponse] = await Promise.all([
     fetch('/data/manifest.json'), fetch('/data/sources.json'), fetch('/data/metrics.json'),
   ])
-  if (!manifestResponse.ok || !sourcesResponse.ok || !metricsResponse.ok) throw new Error('Unable to load source-backed data')
+  if (!manifestResponse.ok || !sourcesResponse.ok || !metricsResponse.ok) {
+    throw new Error('The published source snapshot is temporarily unavailable')
+  }
   const [manifest, sources, metrics] = await Promise.all([
-    manifestResponse.json() as Promise<{ version: string; generatedAt: string }>,
+    manifestResponse.json() as Promise<{ version: string; generatedAt: string; reviewDueAt: string; coverageNotice: string }>,
     sourcesResponse.json() as Promise<SourceRecord[]>,
     metricsResponse.json() as Promise<Metric[]>,
   ])
+  if (!/^\d{4}\.\d{2}\.\d{2}$/.test(manifest.version) || !manifest.generatedAt || !/^\d{4}-\d{2}-\d{2}$/.test(manifest.reviewDueAt) || !manifest.coverageNotice) {
+    throw new Error('The published source snapshot has an invalid manifest')
+  }
+  if (!Array.isArray(sources) || !Array.isArray(metrics)) {
+    throw new Error('The published source snapshot has an invalid shape')
+  }
+  const sourceIds = new Set(sources.map((source) => source.id))
+  if (sourceIds.size !== sources.length || sources.some((source) => !source.id || !source.url.startsWith('https://'))) {
+    throw new Error('The published source registry is invalid')
+  }
+  if (metrics.some((metric) => !metric.id || !sourceIds.has(metric.sourceId) || !Number.isFinite(metric.value))) {
+    throw new Error('The published metric registry is invalid')
+  }
   return { ...manifest, sources, metrics }
 }
 
 export const getNode = (id: string) => NODES.find((node) => node.id === id)!
+
+const NETWORK_LENSES: Record<NetworkId, { currencies: DashboardFilters['currency'][]; institutions: DashboardFilters['institution'][] }> = {
+  swift: { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  visa: { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  'chips-fedwire': { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  derivatives: { currencies: ['usd'], institutions: ['banks', 'market-infrastructure'] },
+  usdc: { currencies: ['usd', 'token'], institutions: ['issuer-chain'] },
+}
+
+const NODE_REGIONS: Record<string, Exclude<DashboardFilters['region'], 'all'>> = {
+  'new-york': 'americas',
+  'sao-paulo': 'americas',
+  london: 'emea',
+  frankfurt: 'emea',
+  dubai: 'emea',
+  seoul: 'apac',
+  tokyo: 'apac',
+  'hong-kong': 'apac',
+  singapore: 'apac',
+}
+
+export function filterEdges(edges: FlowEdge[], filters: DashboardFilters): FlowEdge[] {
+  return edges.filter((item) => {
+    const lens = NETWORK_LENSES[item.networkId]
+    const currencyMatch = filters.currency === 'all' || lens.currencies.includes(filters.currency)
+    const institutionMatch = filters.institution === 'all' || lens.institutions.includes(filters.institution)
+    const regionMatch = filters.region === 'all' || NODE_REGIONS[item.source] === filters.region || NODE_REGIONS[item.target] === filters.region
+    return currencyMatch && institutionMatch && regionMatch
+  })
+}
+
+export function metricMatchesPeriod(metric: Metric, period: DashboardFilters['period']): boolean {
+  return period === 'all' || metric.coveragePeriod.includes(period)
+}
+
+export function isSnapshotReviewOverdue(reviewDueAt: string, now = new Date()): boolean {
+  return now.getTime() > new Date(`${reviewDueAt}T23:59:59.999Z`).getTime()
+}
