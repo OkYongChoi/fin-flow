@@ -1,0 +1,9 @@
+[
+  {"id":"swift-2025","provider":"SWIFT","title":"Annual Review 2025","url":"https://www.swift.com/swift-resource/252570/download","publishedAt":"2026-06-01","retrievedAt":"2026-08-02","coveragePeriod":"2025","cadence":"annual"},
+  {"id":"visa-2025","provider":"Visa","title":"Fiscal 2025 operational highlights","url":"https://annualreport.visa.com/financials/default.aspx","publishedAt":"2025-11-01","retrievedAt":"2026-08-02","coveragePeriod":"FY2025","cadence":"annual"},
+  {"id":"chips-2025","provider":"The Clearing House","title":"CHIPS annual statistics","url":"https://www.theclearinghouse.org/payment-systems/CHIPS/chips-annual-statistics","publishedAt":"2026-04-07","retrievedAt":"2026-08-02","coveragePeriod":"2025","cadence":"annual"},
+  {"id":"fedwire-2025","provider":"Federal Reserve Financial Services","title":"Fedwire Funds Service annual statistics","url":"https://www.frbservices.org/resources/financial-services/wires/volume-value-stats/annual-stats.html","publishedAt":"2026-01-26","retrievedAt":"2026-08-02","coveragePeriod":"2025","cadence":"annual"},
+  {"id":"bis-otc","provider":"Bank for International Settlements","title":"OTC derivatives statistics","url":"https://www.bis.org/statistics/dataportal/derivatives.htm","publishedAt":"2026-05-15","retrievedAt":"2026-08-02","coveragePeriod":"latest semiannual release","cadence":"semiannual"},
+  {"id":"circle-transparency","provider":"Circle","title":"USDC transparency and stability","url":"https://www.circle.com/transparency","publishedAt":"2026-07-27","retrievedAt":"2026-08-02","coveragePeriod":"2026-07-27","cadence":"weekly / monthly assurance"},
+  {"id":"circle-contracts","provider":"Circle Developers","title":"Official USDC contract addresses","url":"https://developers.circle.com/stablecoins/usdc-contract-addresses","publishedAt":"2026-07-01","retrievedAt":"2026-08-02","coveragePeriod":"current at retrieval","cadence":"event driven"}
+]

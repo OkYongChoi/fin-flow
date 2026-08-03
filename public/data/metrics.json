@@ -1,0 +1,12 @@
+[
+  {"id":"swift-emea-sent","networkId":"swift","labelKo":"EMEA 일평균 발신 메시지","labelEn":"EMEA average daily sent messages","value":13244,"display":"13.24M","unit":"messages/day","coveragePeriod":"2025","sourceId":"swift-2025"},
+  {"id":"swift-apac-sent","networkId":"swift","labelKo":"APAC 일평균 발신 메시지","labelEn":"APAC average daily sent messages","value":3924,"display":"3.92M","unit":"messages/day","coveragePeriod":"2025","sourceId":"swift-2025"},
+  {"id":"visa-volume","networkId":"visa","labelKo":"결제 규모","labelEn":"Payments volume","value":14.2,"display":"$14.2T","unit":"USD","coveragePeriod":"FY2025","sourceId":"visa-2025"},
+  {"id":"visa-transactions","networkId":"visa","labelKo":"처리 거래","labelEn":"Processed transactions","value":257.5,"display":"257.5B","unit":"transactions","coveragePeriod":"FY2025","sourceId":"visa-2025"},
+  {"id":"chips-daily-value","networkId":"chips-fedwire","labelKo":"CHIPS 일평균 처리액","labelEn":"CHIPS average daily value","value":2.014,"display":"$2.014T","unit":"USD/day","coveragePeriod":"2025","sourceId":"chips-2025"},
+  {"id":"fedwire-daily-value","networkId":"chips-fedwire","labelKo":"Fedwire 일평균 처리액","labelEn":"Fedwire average daily value","value":4.593069,"display":"$4.593T","unit":"USD/day","coveragePeriod":"2025","sourceId":"fedwire-2025"},
+  {"id":"fedwire-daily-volume","networkId":"chips-fedwire","labelKo":"Fedwire 일평균 이체","labelEn":"Fedwire average daily transfers","value":869187,"display":"869,187","unit":"transfers/day","coveragePeriod":"2025","sourceId":"fedwire-2025"},
+  {"id":"bis-cadence","networkId":"derivatives","labelKo":"OTC 통계 갱신","labelEn":"OTC statistics release","value":2,"display":"반기","unit":"releases/year","coveragePeriod":"latest release","sourceId":"bis-otc"},
+  {"id":"usdc-circulation","networkId":"usdc","labelKo":"USDC 유통량","labelEn":"USDC in circulation","value":72.3,"display":"$72.3B","unit":"USD","coveragePeriod":"2026-07-27","sourceId":"circle-transparency"},
+  {"id":"usdc-chains","networkId":"usdc","labelKo":"공식 지원 메인넷","labelEn":"Official supported mainnets","value":35,"display":"35","unit":"networks","coveragePeriod":"2026-07-27","sourceId":"circle-contracts"}
+]
