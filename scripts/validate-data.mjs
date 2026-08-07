@@ -9,6 +9,7 @@ const [manifest, sources, metrics] = await Promise.all([
 
 const fail = (message) => { throw new Error(`Data validation failed: ${message}`) }
 if (!/^\d{4}\.\d{2}\.\d{2}$/.test(manifest.version)) fail('manifest.version must be YYYY.MM.DD')
+if (typeof manifest.generatedAt !== 'string' || Number.isNaN(Date.parse(manifest.generatedAt))) fail('manifest.generatedAt must be a valid timestamp')
 if (typeof manifest.coverageNotice !== 'string' || !manifest.coverageNotice.trim()) fail('manifest.coverageNotice must be a non-empty string')
 if (!Array.isArray(sources) || sources.length === 0) fail('sources must not be empty')
 if (!Array.isArray(metrics) || metrics.length === 0) fail('metrics must not be empty')
