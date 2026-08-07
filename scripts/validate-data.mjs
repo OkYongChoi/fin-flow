@@ -18,6 +18,7 @@ const sourceIds = new Set()
 for (const source of sources) {
   for (const key of ['id', 'provider', 'title', 'url', 'publishedAt', 'retrievedAt', 'coveragePeriod', 'cadence']) if (!source[key]) fail(`source ${source.id ?? '?'} missing ${key}`)
   if (!source.url.startsWith('https://')) fail(`source ${source.id} must use HTTPS`)
+  try { if (!new URL(source.url).hostname) fail(`source ${source.id} must have a hostname`) } catch { fail(`source ${source.id} must use a valid URL`) }
   if (Number.isNaN(Date.parse(source.publishedAt)) || Number.isNaN(Date.parse(source.retrievedAt))) fail(`source ${source.id} has an invalid publication or retrieval date`)
   if (new Date(source.retrievedAt) < new Date(source.publishedAt)) fail(`source ${source.id} was retrieved before publication`)
   if (sourceIds.has(source.id)) fail(`duplicate source ${source.id}`)
