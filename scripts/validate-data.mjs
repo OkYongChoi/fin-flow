@@ -21,8 +21,13 @@ for (const source of sources) {
   sourceIds.add(source.id)
 }
 
+const networkIds = new Set(['swift', 'visa', 'chips-fedwire', 'derivatives', 'usdc'])
+const metricIds = new Set()
 for (const metric of metrics) {
   for (const key of ['id', 'networkId', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) if (!metric[key]) fail(`metric ${metric.id ?? '?'} missing ${key}`)
+  if (metricIds.has(metric.id)) fail(`duplicate metric ${metric.id}`)
+  metricIds.add(metric.id)
+  if (!networkIds.has(metric.networkId)) fail(`metric ${metric.id} references unknown network ${metric.networkId}`)
   if (!Number.isFinite(metric.value)) fail(`metric ${metric.id} has a non-numeric value`)
   if (!sourceIds.has(metric.sourceId)) fail(`metric ${metric.id} references unknown source ${metric.sourceId}`)
 }
