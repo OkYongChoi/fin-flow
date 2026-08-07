@@ -35,6 +35,7 @@ for (const metric of metrics) {
   if (metricIds.has(metric.id)) fail(`duplicate metric ${metric.id}`)
   metricIds.add(metric.id)
   if (!networkIds.has(metric.networkId)) fail(`metric ${metric.id} references unknown network ${metric.networkId}`)
+  if (!metric.labelKo.trim() || !metric.labelEn.trim() || !metric.display.trim()) fail(`metric ${metric.id} has an empty display label`)
   if (!Number.isFinite(metric.value)) fail(`metric ${metric.id} has a non-numeric value`)
   if (!sourceIds.has(metric.sourceId)) fail(`metric ${metric.id} references unknown source ${metric.sourceId}`)
 }
