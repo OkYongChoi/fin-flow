@@ -7,7 +7,7 @@ import type { Locale } from '../types'
 export default function DataPage({ locale }: { locale: Locale }) {
   const { data, isLoading, error, refetch } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
   return (
-    <main className="data-page">
+    <main id="main-content" tabIndex={-1} className="data-page">
       <AppHeader locale={locale} />
       <section className="data-heading"><span>{locale === 'ko' ? '데이터 원칙' : 'Data principles'}</span><h1>{locale === 'ko' ? '숫자보다 먼저 출처를 보여줍니다.' : 'The source comes before the number.'}</h1><p>{locale === 'ko' ? '서로 다른 금융망의 공개 자료는 빈도와 단위가 다릅니다. Flow of Money는 이 차이를 감추지 않습니다.' : 'Public datasets across financial rails differ in cadence and units. Flow of Money makes those differences visible.'}</p><div><span><b>{data?.version ?? '—'}</b>{locale === 'ko' ? '데이터 버전' : 'Data version'}</span><span><b>{data?.sources.length ?? '—'}</b>{locale === 'ko' ? '공식 출처' : 'Official sources'}</span><span><b>{data?.metrics.length ?? '—'}</b>{locale === 'ko' ? '검증 지표' : 'Verified metrics'}</span></div></section>
       <section className="method-strip"><div><FileCheck2 /><h2>{locale === 'ko' ? '원문 연결' : 'Primary links'}</h2><p>{locale === 'ko' ? '모든 지표는 원 발행기관 문서로 돌아갑니다.' : 'Every metric links back to its original publisher.'}</p></div><div><RefreshCw /><h2>{locale === 'ko' ? '버전 고정' : 'Versioned snapshots'}</h2><p>{locale === 'ko' ? '수집일과 적용 기간을 데이터와 함께 보존합니다.' : 'Retrieval and coverage dates stay attached to data.'}</p></div><div><ShieldCheck /><h2>{locale === 'ko' ? '표현 구분' : 'Representation labels'}</h2><p>{locale === 'ko' ? '집계 통계, 구조도, 시뮬레이션을 명시합니다.' : 'Aggregates, schematics and simulations are explicit.'}</p></div></section>

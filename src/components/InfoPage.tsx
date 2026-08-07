@@ -46,7 +46,7 @@ export function InfoPage({ type, locale, slug }: { type: 'networks' | 'instituti
   const openItem = (target: string) => navigate(target)
   const copy = COPY[locale][type]
   return (
-    <main className="info-page">
+    <main id="main-content" tabIndex={-1} className="info-page">
       <AppHeader locale={locale} />
       <section className="info-hero"><button className="back-link" onClick={() => navigate(`/${locale}/map`)}><ArrowLeft size={15} />{locale === 'ko' ? '지도로 돌아가기' : 'Back to map'}</button><h1>{copy[0]}</h1><p>{copy[1]}</p><small>{copy[2]}</small></section>
       <section className="editorial-grid">
