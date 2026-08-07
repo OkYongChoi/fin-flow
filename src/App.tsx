@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Landmark, Menu, Orbit } from 'lucide-react'
 import { Dashboard } from './components/Dashboard'
@@ -30,19 +30,21 @@ function LocaleRoutes() {
 export function AppHeader({ locale, compact = false }: { locale: Locale; compact?: boolean }) {
   const { t } = useTranslation()
   const { navigate, pathname, search } = useRouter()
+  const [menuOpen, setMenuOpen] = useState(false)
   const switchLocale = () => navigate(pathname.replace(/^\/(ko|en)/, locale === 'ko' ? '/en' : '/ko') + search)
+  const go = (path: string) => { setMenuOpen(false); navigate(`/${locale}/${path}`) }
   return (
-    <header className={`app-header ${compact ? 'compact' : ''}`}>
-      <button className="mobile-menu icon-button" aria-label="Open menu"><Menu size={21} /></button>
-      <button className="brand" onClick={() => navigate(`/${locale}/map`)}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
+    <header className={`app-header ${compact ? 'compact' : ''} ${menuOpen ? 'menu-open' : ''}`}>
+      <button className="mobile-menu icon-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
+      <button className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
       <nav aria-label="Primary">
         {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')]].map(([path, label]) => (
-          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} onClick={() => navigate(`/${locale}/${path}`)}>{label}</button>
+          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} onClick={() => go(path)}>{label}</button>
         ))}
       </nav>
       <div className="header-actions">
         <button className="locale-button" onClick={switchLocale}>{locale === 'ko' ? 'EN' : 'KO'}</button>
-        <button className="icon-button" aria-label="About the project"><Landmark size={18} /></button>
+        <button className="icon-button" aria-label="About the project" onClick={() => go('learn')}><Landmark size={18} /></button>
       </div>
     </header>
   )

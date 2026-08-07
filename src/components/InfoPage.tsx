@@ -28,6 +28,9 @@ const LESSONS = [
 
 export function InfoPage({ type, locale, slug }: { type: 'networks' | 'institutions' | 'assets' | 'learn'; locale: Locale; slug?: string }) {
   const { navigate } = useRouter()
+  const openItem = (item: (typeof NETWORKS)[number] | (typeof LESSONS)[number]) => {
+    if ('id' in item) navigate(`/${locale}/map?network=${item.id}`)
+  }
   const copy = COPY[locale][type]
   return (
     <main className="info-page">
@@ -37,7 +40,7 @@ export function InfoPage({ type, locale, slug }: { type: 'networks' | 'instituti
         {(type === 'networks' ? NETWORKS : LESSONS).map((item, index) => {
           const title = 'id' in item ? (locale === 'ko' ? item.label : item.labelEn) : item[locale === 'ko' ? 0 : 1]
           const description = 'id' in item ? (locale === 'ko' ? item.description : item.descriptionEn) : item[2]
-          return <article key={title} className={slug === ('id' in item ? item.id : '') ? 'active' : ''}><span>0{index + 1}</span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight /></article>
+          return <article key={title} className={slug === ('id' in item ? item.id : '') ? 'active' : ''} tabIndex={('id' in item) ? 0 : undefined} role={('id' in item) ? 'link' : undefined} onClick={() => openItem(item)} onKeyDown={(event) => { if ('id' in item && (event.key === 'Enter' || event.key === ' ')) openItem(item) }}><span>0{index + 1}</span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight /></article>
         })}
       </section>
       <section className="flow-principles"><div><Network /><h2>{locale === 'ko' ? '하나의 선, 하나의 의미' : 'One line, one meaning'}</h2><p>{locale === 'ko' ? '메시지·청산·결제·자산 이전을 서로 다른 선으로 구분합니다.' : 'Messaging, clearing, settlement and asset transfer use distinct visual encodings.'}</p></div><div><Landmark /><h2>{locale === 'ko' ? '출처가 있는 숫자' : 'Source-backed figures'}</h2><p>{locale === 'ko' ? '모든 수치에 기관, 기준 기간과 갱신 주기를 연결합니다.' : 'Every figure links to its provider, coverage period and release cadence.'}</p></div><div><BookOpen /><h2>{locale === 'ko' ? '두 단계의 깊이' : 'Two levels of depth'}</h2><p>{locale === 'ko' ? '기본 보기는 개념을, 전문 보기는 비교와 방법론을 강조합니다.' : 'Basic mode teaches concepts; Pro mode emphasizes comparison and methodology.'}</p></div></section>
