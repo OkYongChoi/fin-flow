@@ -33,6 +33,11 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
   const [menuOpen, setMenuOpen] = useState(false)
   const switchLocale = () => navigate(pathname.replace(/^\/(ko|en)/, locale === 'ko' ? '/en' : '/ko') + search)
   const go = (path: string) => { setMenuOpen(false); navigate(`/${locale}/${path}`) }
+  useEffect(() => {
+    const closeMenu = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuOpen(false) }
+    window.addEventListener('keydown', closeMenu)
+    return () => window.removeEventListener('keydown', closeMenu)
+  }, [])
   return (
     <header className={`app-header ${compact ? 'compact' : ''} ${menuOpen ? 'menu-open' : ''}`}>
       <button className="mobile-menu icon-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
