@@ -20,7 +20,7 @@ export function FlowTimeline({ selected, locale }: { selected: NetworkId; locale
   }, [playing, speed])
   return (
     <section className="flow-timeline">
-      <header><h2>{t('timeline.title')}</h2><nav>{(['timeline', 'comparison', 'institution'] as const).map((item) => <button key={item} className={view === item ? 'active' : ''} onClick={() => setView(item)}>{t(`timeline.${item}`)}</button>)}</nav><div className="simulation-badge"><i />{t('inspector.simulation')}</div></header>
+      <header><h2>{t('timeline.title')}</h2><nav role="tablist" aria-label={t('timeline.title')}>{(['timeline', 'comparison', 'institution'] as const).map((item) => <button key={item} role="tab" aria-selected={view === item} className={view === item ? 'active' : ''} onClick={() => setView(item)}>{t(`timeline.${item}`)}</button>)}</nav><div className="simulation-badge"><i />{t('inspector.simulation')}</div></header>
       <div className="timeline-body">
         <div className="playback"><span>{t('timeline.play')}</span><div><button onClick={() => { setPlaying(false); setStep(0) }} aria-label="Restart"><RotateCcw size={15} /></button><button className="play" onClick={() => setPlaying((value) => !value)} aria-label={playing ? t('timeline.pause') : t('timeline.play')}>{playing ? <Pause /> : <Play />}</button><button className="speed-button" onClick={() => setSpeed((value) => value === 1 ? 2 : 1)} aria-label={`Playback speed ${speed}x`}>{speed}×</button></div><small>{t('notices.simulated')}</small></div>
         <div className="timeline-track" style={{ '--progress': `${step / (EVENTS.length - 1) * 100}%` } as React.CSSProperties}>

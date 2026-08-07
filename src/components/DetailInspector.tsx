@@ -1,5 +1,5 @@
 import { ExternalLink, FileText, Landmark, MessageCircle, ShieldCheck } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NETWORKS } from '../data'
 import type { Locale, Metric, NetworkId, SourceRecord } from '../types'
@@ -15,14 +15,15 @@ const STEPS = {
 export function DetailInspector({ selected, metrics, sources, locale }: { selected: NetworkId; metrics: Metric[]; sources: SourceRecord[]; locale: Locale }) {
   const { t } = useTranslation()
   const [tab, setTab] = useState('route')
+  useEffect(() => { setTab('route') }, [selected])
   const network = NETWORKS.find((item) => item.id === selected)!
   return (
     <aside className="detail-inspector">
       <div className="sheet-handle" />
       <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2>{selected === 'chips-fedwire' ? t('inspector.title') : (locale === 'ko' ? network.label : network.labelEn)}</h2></div><ShieldCheck size={19} /></header>
       <div className="representation-label"><i />{t('inspector.schematic')}<span>≠ LIVE</span></div>
-      <nav className="inspector-tabs">
-        {['route', 'institutions', 'statistics', 'documents'].map((item) => <button key={item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{t(`inspector.${item}`)}</button>)}
+      <nav className="inspector-tabs" role="tablist" aria-label={locale === 'ko' ? '네트워크 상세 탭' : 'Network detail tabs'}>
+        {['route', 'institutions', 'statistics', 'documents'].map((item) => <button key={item} role="tab" aria-selected={tab === item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{t(`inspector.${item}`)}</button>)}
       </nav>
       {tab === 'route' ? <div className="settlement-steps">
         {STEPS[selected].map(([ko, en], index) => <div key={ko} className="settlement-step"><span>{index + 1}</span><i>{index === 1 ? <MessageCircle /> : <Landmark />}</i><div><b>{locale === 'ko' ? ko : en}</b><small>{index === 2 && selected === 'chips-fedwire' ? (locale === 'ko' ? '별도 결제 경로 · 직렬 아님' : 'Alternative rails · not sequential') : (locale === 'ko' ? '설명용 단계' : 'Explanatory stage')}</small></div></div>)}

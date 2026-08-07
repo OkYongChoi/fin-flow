@@ -183,3 +183,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+.map-error { display: grid; place-items: center; align-content: center; gap: 12px; height: 100%; color: #c8d8e5; }
+.map-error button { border: 1px solid var(--line); border-radius: 4px; background: #0a1d2e; color: #b9d8ef; padding: 8px 12px; cursor: pointer; }

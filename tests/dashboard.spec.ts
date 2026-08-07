@@ -34,11 +34,11 @@ test('data registry links every rendered metric to primary sources', async ({ pa
 
 test('network filter, inspector tabs, and timeline controls are interactive', async ({ page }) => {
   await page.goto('/en/map?network=swift')
-  await page.getByLabel('Network').selectOption('usdc')
+  await page.getByLabel('Network', { exact: true }).selectOption('usdc')
   await expect(page).toHaveURL(/network=usdc/)
-  await page.getByRole('button', { name: 'Statistics' }).click()
+  await page.getByRole('tab', { name: 'Statistics' }).click()
   await expect(page.getByText('USDC in circulation')).toBeVisible()
-  await page.getByRole('button', { name: 'Documents' }).click()
+  await page.getByRole('tab', { name: 'Documents' }).click()
   await expect(page.getByRole('link', { name: /Circle 2026-07-27/ })).toBeVisible()
   await page.getByLabel('Playback speed 1x').click()
   await expect(page.getByLabel('Playback speed 2x')).toBeVisible()
@@ -50,4 +50,24 @@ test('mobile menu exposes primary navigation', async ({ page }) => {
   await page.getByRole('button', { name: 'Open menu' }).click()
   await page.getByRole('button', { name: 'Data' }).click()
   await expect(page).toHaveURL(/\/en\/data/)
+})
+
+
+test('tabs expose their selected state and reset with a new network', async ({ page }) => {
+  await page.goto('/en/map?network=swift')
+  const documents = page.getByRole('tab', { name: 'Documents' })
+  await documents.click()
+  await expect(documents).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: /Circle USDC/ }).click()
+  await expect(page.getByRole('tab', { name: 'Path' })).toHaveAttribute('aria-selected', 'true')
+})
+
+test('mobile menu closes with Escape', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/en/map')
+  const menu = page.getByRole('button', { name: 'Open menu' })
+  await menu.click()
+  await expect(page.getByRole('button', { name: 'Close menu' })).toHaveAttribute('aria-expanded', 'true')
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('button', { name: 'Open menu' })).toHaveAttribute('aria-expanded', 'false')
 })

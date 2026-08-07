@@ -20,7 +20,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const [proMode, setProMode] = useState(true)
   const requested = params.get('network') as NetworkId | null
   const selected = NETWORKS.some((item) => item.id === requested) ? requested! : 'chips-fedwire'
-  const { data, isLoading, error } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
+  const { data, isLoading, error, refetch } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
   const metrics = useMemo(() => data?.metrics.filter((metric) => metric.networkId === selected) ?? [], [data, selected])
   const sources = useMemo(() => data?.sources.filter((source) => metrics.some((metric) => metric.sourceId === source.id)) ?? [], [data, metrics])
 
@@ -46,7 +46,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
       <section className="workspace">
         <NetworkSidebar selected={selected} onSelect={selectNetwork} locale={locale} />
         <div className="map-region">
-          {error ? <div className="map-error">Source data could not be loaded.</div> : (
+          {error ? <div className="map-error" role="alert"><span>Source data could not be loaded.</span><button onClick={() => void refetch()}>Retry</button></div> : (
             <Suspense fallback={<div className="map-loader">Loading map layers…</div>}>
               <FlowMap selected={selected} proMode={proMode} locale={locale} />
             </Suspense>
