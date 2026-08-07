@@ -47,6 +47,7 @@ export interface FlowEdge {
 export interface DataBundle {
   version: string
   generatedAt: string
+  coverageNotice: string
   sources: SourceRecord[]
   metrics: Metric[]
 }
