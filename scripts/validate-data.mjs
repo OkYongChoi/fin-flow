@@ -15,6 +15,7 @@ if (!Array.isArray(sources) || sources.length === 0) fail('sources must not be e
 if (!Array.isArray(metrics) || metrics.length === 0) fail('metrics must not be empty')
 
 const sourceIds = new Set()
+const sourceUrls = new Set()
 for (const source of sources) {
   for (const key of ['id', 'provider', 'title', 'url', 'publishedAt', 'retrievedAt', 'coveragePeriod', 'cadence']) if (!source[key]) fail(`source ${source.id ?? '?'} missing ${key}`)
   if (!source.url.startsWith('https://')) fail(`source ${source.id} must use HTTPS`)
@@ -22,7 +23,9 @@ for (const source of sources) {
   if (Number.isNaN(Date.parse(source.publishedAt)) || Number.isNaN(Date.parse(source.retrievedAt))) fail(`source ${source.id} has an invalid publication or retrieval date`)
   if (new Date(source.retrievedAt) < new Date(source.publishedAt)) fail(`source ${source.id} was retrieved before publication`)
   if (sourceIds.has(source.id)) fail(`duplicate source ${source.id}`)
+  if (sourceUrls.has(source.url)) fail(`duplicate source URL ${source.url}`)
   sourceIds.add(source.id)
+  sourceUrls.add(source.url)
 }
 
 const networkIds = new Set(['swift', 'visa', 'chips-fedwire', 'derivatives', 'usdc'])
