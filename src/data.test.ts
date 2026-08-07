@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import metrics from '../public/data/metrics.json'
 import sources from '../public/data/sources.json'
 import { EDGES, NETWORKS, NODES } from './data'
 
@@ -25,6 +26,10 @@ describe('financial flow contract', () => {
     const dollarEdges = EDGES.filter((edge) => edge.networkId === 'chips-fedwire')
     expect(dollarEdges.every((edge) => edge.semantic === 'settlement')).toBe(true)
     expect(dollarEdges.some((edge) => edge.source.includes('chips') || edge.target.includes('fedwire'))).toBe(false)
+  })
+
+  it('gives every network at least one source-backed metric', () => {
+    expect(NETWORKS.every((network) => metrics.some((metric) => metric.networkId === network.id))).toBe(true)
   })
 
   it('gives every network a schematic edge', () => {
