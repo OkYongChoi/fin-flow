@@ -71,3 +71,21 @@ test('mobile menu closes with Escape', async ({ page }) => {
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: 'Open menu' })).toHaveAttribute('aria-expanded', 'false')
 })
+
+
+test('information pages expose distinct bilingual content and deep links', async ({ page }) => {
+  await page.goto('/en/institutions')
+  await expect(page.getByRole('heading', { name: 'Central banks & reserves' })).toBeVisible()
+  await expect(page.getByText('Stablecoin issuance and reserve custody')).toBeVisible()
+  await page.goto('/en/assets')
+  await expect(page.getByRole('heading', { name: 'On-chain tokens' })).toBeVisible()
+  await page.getByRole('button', { name: /On-chain tokens/ }).click()
+  await expect(page).toHaveURL(/\/en\/assets\/4/)
+  await expect(page.getByRole('button', { name: /On-chain tokens/ })).toHaveAttribute('aria-current', 'page')
+})
+
+test('network information cards route to their selected map rail', async ({ page }) => {
+  await page.goto('/en/networks')
+  await page.getByRole('button', { name: /Circle USDC/ }).click()
+  await expect(page).toHaveURL(/\/en\/map\?network=usdc/)
+})

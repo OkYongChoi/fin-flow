@@ -44,7 +44,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
       <button className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
       <nav aria-label="Primary">
         {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')]].map(([path, label]) => (
-          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} onClick={() => go(path)}>{label}</button>
+          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} aria-current={pathname.includes(`/${path}`) ? 'page' : undefined} onClick={() => go(path)}>{label}</button>
         ))}
       </nav>
       <div className="header-actions">
