@@ -9,7 +9,7 @@ const FILTERS = [
 
 export function FilterBar({ proMode, selected, locale, onNetworkChange, onReset }: { proMode: boolean; selected: NetworkId; locale: Locale; onNetworkChange: (network: NetworkId) => void; onReset: () => void }) {
   const { t } = useTranslation()
-  if (!proMode) return <div className="basic-notice"><span>{t('notices.schematic')}</span></div>
+  if (!proMode) return <div className="basic-notice"><span>{t('notices.schematic')}</span><button className="reset-button" onClick={onReset}><RotateCcw size={13} />{t('filters.reset')}</button></div>
   return (
     <div className="filter-bar">
       {FILTERS.map(([label, value], index) => (
