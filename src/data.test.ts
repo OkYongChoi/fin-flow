@@ -4,6 +4,11 @@ import sources from '../public/data/sources.json'
 import { EDGES, NETWORKS, NODES } from './data'
 
 describe('financial flow contract', () => {
+  it('keeps node coordinates unique for unambiguous map markers', () => {
+    const coordinates = NODES.map((node) => node.coordinates.join(','))
+    expect(new Set(coordinates).size).toBe(coordinates.length)
+  })
+
   it('keeps every edge linked to valid nodes and a source', () => {
     const nodeIds = new Set(NODES.map((node) => node.id))
     for (const edge of EDGES) {
