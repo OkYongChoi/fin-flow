@@ -30,3 +30,24 @@ test('data registry links every rendered metric to primary sources', async ({ pa
   await expect(page.getByText('Federal Reserve Financial Services')).toBeVisible()
   await expect(page.locator('.source-row a')).toHaveCount(7)
 })
+
+
+test('network filter, inspector tabs, and timeline controls are interactive', async ({ page }) => {
+  await page.goto('/en/map?network=swift')
+  await page.getByLabel('Network').selectOption('usdc')
+  await expect(page).toHaveURL(/network=usdc/)
+  await page.getByRole('button', { name: 'Statistics' }).click()
+  await expect(page.getByText('USDC in circulation')).toBeVisible()
+  await page.getByRole('button', { name: 'Documents' }).click()
+  await expect(page.getByRole('link', { name: /Circle 2026-07-27/ })).toBeVisible()
+  await page.getByLabel('Playback speed 1x').click()
+  await expect(page.getByLabel('Playback speed 2x')).toBeVisible()
+})
+
+test('mobile menu exposes primary navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/en/map')
+  await page.getByRole('button', { name: 'Open menu' }).click()
+  await page.getByRole('button', { name: 'Data' }).click()
+  await expect(page).toHaveURL(/\/en\/data/)
+})

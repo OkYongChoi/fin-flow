@@ -38,7 +38,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
           <button className={!proMode ? 'active' : ''} onClick={() => setProMode(false)}>{t('view.basic')}</button>
           <button className={proMode ? 'active' : ''} onClick={() => setProMode(true)}>{t('view.pro')}</button>
         </div>
-        <FilterBar proMode={proMode} onReset={() => navigate(`${pathname}?network=chips-fedwire`, true)} />
+        <FilterBar proMode={proMode} selected={selected} locale={locale} onNetworkChange={selectNetwork} onReset={() => navigate(`${pathname}?network=chips-fedwire`, true)} />
         <div className="data-freshness" title={data?.generatedAt}>
           <span>{t('inspector.updated')}</span><strong>{data?.version ?? '—'}</strong><i aria-hidden="true" />
         </div>
