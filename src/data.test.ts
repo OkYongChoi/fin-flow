@@ -13,6 +13,11 @@ describe('financial flow contract', () => {
     }
   })
 
+  it('keeps every registry source connected to a metric or route', () => {
+    const usedIds = new Set([...metrics.map((metric) => metric.sourceId), ...EDGES.flatMap((edge) => edge.sourceIds)])
+    expect(sources.every((source) => usedIds.has(source.id))).toBe(true)
+  })
+
   it('links every rendered route to a registered source', () => {
     const sourceIds = new Set(sources.map((source) => source.id))
     expect(EDGES.every((edge) => edge.sourceIds.every((sourceId) => sourceIds.has(sourceId)))).toBe(true)
