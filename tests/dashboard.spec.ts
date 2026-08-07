@@ -89,3 +89,16 @@ test('network information cards route to their selected map rail', async ({ page
   await page.getByRole('button', { name: /Circle USDC/ }).click()
   await expect(page).toHaveURL(/\/en\/map\?network=usdc/)
 })
+
+
+test('view density is shareable and reset returns to the default view', async ({ page }) => {
+  await page.goto('/en/map?network=swift')
+  await page.getByRole('button', { name: 'Basic' }).click()
+  await expect(page).toHaveURL(/network=swift&mode=basic/)
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Basic' })).toHaveClass(/active/)
+  await page.getByRole('button', { name: 'Reset filters' }).click()
+  await expect(page).toHaveURL(/network=chips-fedwire/)
+  await expect(page).not.toHaveURL(/mode=basic/)
+  await expect(page.getByRole('button', { name: 'Pro' })).toHaveClass(/active/)
+})
