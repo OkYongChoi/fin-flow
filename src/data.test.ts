@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import sources from '../public/data/sources.json'
 import { EDGES, NETWORKS, NODES } from './data'
 
 describe('financial flow contract', () => {
@@ -9,6 +10,11 @@ describe('financial flow contract', () => {
       expect(nodeIds.has(edge.target)).toBe(true)
       expect(edge.sourceIds.length).toBeGreaterThan(0)
     }
+  })
+
+  it('links every rendered route to a registered source', () => {
+    const sourceIds = new Set(sources.map((source) => source.id))
+    expect(EDGES.every((edge) => edge.sourceIds.every((sourceId) => sourceIds.has(sourceId)))).toBe(true)
   })
 
   it('labels all rendered routes as schematic rather than observed transactions', () => {
