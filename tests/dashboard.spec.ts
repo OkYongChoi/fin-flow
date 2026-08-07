@@ -28,6 +28,7 @@ test('data registry links every rendered metric to primary sources', async ({ pa
   await page.goto('/ko/data')
   await expect(page.getByRole('heading', { name: '출처 레지스트리' })).toBeVisible()
   await expect(page.getByText('Federal Reserve Financial Services')).toBeVisible()
+  await expect(page.getByRole('note')).toContainText('Routes are schematic')
   await expect(page.locator('.source-row a')).toHaveCount(7)
 })
 

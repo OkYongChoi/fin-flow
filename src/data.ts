@@ -49,7 +49,7 @@ export async function fetchDataBundle(): Promise<DataBundle> {
     throw new Error(`Unable to load source-backed data (${statuses})`)
   }
   const [manifest, sources, metrics] = await Promise.all([
-    manifestResponse.json() as Promise<{ version: string; generatedAt: string }>,
+    manifestResponse.json() as Promise<{ version: string; generatedAt: string; coverageNotice: string }>,
     sourcesResponse.json() as Promise<SourceRecord[]>,
     metricsResponse.json() as Promise<Metric[]>,
   ])
