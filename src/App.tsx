@@ -39,6 +39,8 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
     return () => window.removeEventListener('keydown', closeMenu)
   }, [])
   return (
+    <>
+      <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); const main = document.getElementById('main-content'); main?.scrollIntoView(); main?.focus() }} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); const main = document.getElementById('main-content'); main?.scrollIntoView(); main?.focus() } }}>{locale === 'ko' ? '본문으로 건너뛰기' : 'Skip to main content'}</a>
     <header className={`app-header ${compact ? 'compact' : ''} ${menuOpen ? 'menu-open' : ''}`}>
       <button className="mobile-menu icon-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
       <button className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
@@ -52,6 +54,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
         <button className="icon-button" aria-label="About the project" onClick={() => go('learn')}><Landmark size={18} /></button>
       </div>
     </header>
+    </>
   )
 }
 

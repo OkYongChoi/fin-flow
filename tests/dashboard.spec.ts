@@ -102,3 +102,16 @@ test('view density is shareable and reset returns to the default view', async ({
   await expect(page).not.toHaveURL(/mode=basic/)
   await expect(page.getByRole('button', { name: 'Pro' })).toHaveClass(/active/)
 })
+
+
+test('keyboard users can skip directly to each page main content', async ({ page }) => {
+  await page.goto('/en/map')
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#main-content')).toBeFocused()
+  await page.goto('/en/data')
+  await page.getByRole('link', { name: 'Skip to main content' }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#main-content')).toBeFocused()
+})

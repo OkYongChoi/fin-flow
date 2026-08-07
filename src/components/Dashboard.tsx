@@ -34,7 +34,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const resetView = () => updateView({ network: 'chips-fedwire', mode: null })
 
   return (
-    <main className={`dashboard ${isPending ? 'is-pending' : ''}`}>
+    <main id="main-content" tabIndex={-1} className={`dashboard ${isPending ? 'is-pending' : ''}`}>
       <AppHeader locale={locale} compact />
       <section className="mode-and-filter">
         <div className="view-toggle" aria-label="View density">
