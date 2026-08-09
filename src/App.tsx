@@ -32,6 +32,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
   const { navigate, pathname, search } = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const activePage = pathname.split('/').filter(Boolean)[1] ?? 'map'
   const switchLocale = () => navigate(pathname.replace(/^\/(ko|en)/, locale === 'ko' ? '/en' : '/ko') + search)
   const go = (path: string) => { setMenuOpen(false); navigate(`/${locale}/${path}`) }
   useEffect(() => {
@@ -47,7 +48,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
       <button className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
       <nav id="primary-navigation" aria-label="Primary">
         {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')]].map(([path, label]) => (
-          <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} aria-current={pathname.includes(`/${path}`) ? 'page' : undefined} onClick={() => go(path)}>{label}</button>
+          <button key={path} className={activePage === path ? 'active' : ''} aria-current={activePage === path ? 'page' : undefined} onClick={() => go(path)}>{label}</button>
         ))}
       </nav>
       <div className="header-actions">
