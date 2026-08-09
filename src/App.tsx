@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Landmark, Menu, Orbit } from 'lucide-react'
 import { Dashboard } from './components/Dashboard'
@@ -31,20 +31,21 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
   const { t } = useTranslation()
   const { navigate, pathname, search } = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const switchLocale = () => navigate(pathname.replace(/^\/(ko|en)/, locale === 'ko' ? '/en' : '/ko') + search)
   const go = (path: string) => { setMenuOpen(false); navigate(`/${locale}/${path}`) }
   useEffect(() => {
-    const closeMenu = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuOpen(false) }
+    const closeMenu = (event: KeyboardEvent) => { if (event.key === 'Escape' && menuOpen) { setMenuOpen(false); menuButtonRef.current?.focus() } }
     window.addEventListener('keydown', closeMenu)
     return () => window.removeEventListener('keydown', closeMenu)
-  }, [])
+  }, [menuOpen])
   return (
     <>
       <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); const main = document.getElementById('main-content'); main?.scrollIntoView(); main?.focus() }} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); const main = document.getElementById('main-content'); main?.scrollIntoView(); main?.focus() } }}>{locale === 'ko' ? '본문으로 건너뛰기' : 'Skip to main content'}</a>
     <header className={`app-header ${compact ? 'compact' : ''} ${menuOpen ? 'menu-open' : ''}`}>
-      <button className="mobile-menu icon-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
+      <button ref={menuButtonRef} className="mobile-menu icon-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-controls="primary-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
       <button className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
-      <nav aria-label="Primary">
+      <nav id="primary-navigation" aria-label="Primary">
         {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')]].map(([path, label]) => (
           <button key={path} className={pathname.includes(`/${path}`) ? 'active' : ''} aria-current={pathname.includes(`/${path}`) ? 'page' : undefined} onClick={() => go(path)}>{label}</button>
         ))}
