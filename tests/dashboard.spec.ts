@@ -118,7 +118,7 @@ test('keyboard users can skip directly to each page main content', async ({ page
 })
 
 test('invalid information deep links recover to the parent page', async ({ page }) => {
-  await page.goto('/en/learn/not-a-guide')
-  await expect(page).toHaveURL(/\\/en\\/learn$/)
-  await expect(page.getByRole('heading', { name: 'Learn' })).toBeVisible()
+ await page.goto('/en/learn/not-a-guide')
+  await expect(page).toHaveURL('/en/learn')
+ await expect(page.getByRole('heading', { name: 'Learn' })).toBeVisible()
 })
