@@ -15,7 +15,7 @@ export function FlowTimeline({ selected, locale }: { selected: NetworkId; locale
   const [speed, setSpeed] = useState(1)
   useEffect(() => {
     if (!playing) return
-    const timer = window.setInterval(() => setStep((current) => current >= EVENTS.length - 1 ? 0 : current + 1), 1100)
+    const timer = window.setInterval(() => setStep((current) => current >= EVENTS.length - 1 ? 0 : current + 1), 1100 / speed)
     return () => window.clearInterval(timer)
   }, [playing, speed])
   return (
