@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Map, { FullscreenControl, Marker, NavigationControl, Source, Layer, useControl } from 'react-map-gl/maplibre'
 import { MapboxOverlay } from '@deck.gl/mapbox'
 import { ArcLayer } from '@deck.gl/layers'
@@ -18,7 +18,13 @@ function DeckOverlay({ layers }: { layers: ArcLayer<FlowEdge>[] }) {
 }
 
 export default function FlowMap({ selected, proMode, locale }: { selected: NetworkId; proMode: boolean; locale: Locale }) {
-  const mobile = window.matchMedia('(max-width: 820px)').matches
+  const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 820px)').matches)
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 820px)')
+    const update = () => setMobile(query.matches)
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
   const [activeNode, setActiveNode] = useState(mobile ? '' : 'new-york')
   const edges = proMode ? EDGES : EDGES.filter((edge) => edge.networkId === selected)
   const layers = useMemo(() => [new ArcLayer<FlowEdge>({
