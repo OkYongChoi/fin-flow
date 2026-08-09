@@ -1,4 +1,5 @@
 import { ArrowLeft, ArrowRight, BookOpen, Cable, CircleDollarSign, Landmark, Network } from 'lucide-react'
+import { useEffect } from 'react'
 import { AppHeader } from '../App'
 import { NETWORKS } from '../data'
 import type { Locale } from '../types'
@@ -43,6 +44,8 @@ const GUIDES = {
 
 export function InfoPage({ type, locale, slug }: { type: 'networks' | 'institutions' | 'assets' | 'learn'; locale: Locale; slug?: string }) {
   const { navigate } = useRouter()
+  const validSlugs = type === 'networks' ? NETWORKS.map((network) => network.id) : GUIDES[type].map((_, index) => String(index + 1))
+  useEffect(() => { if (slug && !validSlugs.includes(slug)) navigate(`/${locale}/${type}`, true) }, [locale, navigate, slug, type, validSlugs])
   const openItem = (target: string) => navigate(target)
   const copy = COPY[locale][type]
   return (
