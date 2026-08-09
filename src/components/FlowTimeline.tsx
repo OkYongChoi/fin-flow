@@ -14,8 +14,12 @@ export function FlowTimeline({ selected, locale }: { selected: NetworkId; locale
   const [view, setView] = useState<'timeline' | 'comparison' | 'institution'>('timeline')
   const [speed, setSpeed] = useState(1)
   useEffect(() => {
+    setPlaying(false)
+    setStep(2)
+  }, [selected])
+  useEffect(() => {
     if (!playing) return
-    const timer = window.setInterval(() => setStep((current) => current >= EVENTS.length - 1 ? 0 : current + 1), 1100)
+    const timer = window.setInterval(() => setStep((current) => current >= EVENTS.length - 1 ? 0 : current + 1), 1100 / speed)
     return () => window.clearInterval(timer)
   }, [playing, speed])
   return (

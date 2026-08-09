@@ -23,9 +23,9 @@ export function DetailInspector({ selected, metrics, sources, locale }: { select
       <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2>{selected === 'chips-fedwire' ? t('inspector.title') : (locale === 'ko' ? network.label : network.labelEn)}</h2></div><ShieldCheck size={19} /></header>
       <div className="representation-label"><i />{t('inspector.schematic')}<span>≠ LIVE</span></div>
       <nav className="inspector-tabs" role="tablist" aria-label={locale === 'ko' ? '네트워크 상세 탭' : 'Network detail tabs'}>
-        {['route', 'institutions', 'statistics', 'documents'].map((item) => <button key={item} role="tab" aria-selected={tab === item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{t(`inspector.${item}`)}</button>)}
+        {['route', 'institutions', 'statistics', 'documents'].map((item) => <button key={item} id={`inspector-tab-${item}`} role="tab" aria-selected={tab === item} aria-controls={`inspector-panel-${item}`} tabIndex={tab === item ? 0 : -1} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{t(`inspector.${item}`)}</button>)}
       </nav>
-      {tab === 'route' ? <div className="settlement-steps">
+      {tab === 'route' ? <div id="inspector-panel-route" role="tabpanel" aria-labelledby="inspector-tab-route" className="settlement-steps">
         {STEPS[selected].map(([ko, en], index) => <div key={ko} className="settlement-step"><span>{index + 1}</span><i>{index === 1 ? <MessageCircle /> : <Landmark />}</i><div><b>{locale === 'ko' ? ko : en}</b><small>{index === 2 && selected === 'chips-fedwire' ? (locale === 'ko' ? '별도 결제 경로 · 직렬 아님' : 'Alternative rails · not sequential') : (locale === 'ko' ? '설명용 단계' : 'Explanatory stage')}</small></div></div>)}
       </div> : null}
       {tab === 'institutions' ? <section className="inspector-panel"><h3>{locale === 'ko' ? '관여 기관' : 'Participating institutions'}</h3><p>{locale === 'ko' ? '이 구조도는 발신·수취 기관, 네트워크 운영자, 청산·결제 기관의 역할을 구분해 설명합니다. 실제 거래 상대방이나 개별 장부를 나타내지 않습니다.' : 'This schematic separates sending and receiving institutions, network operators, and clearing or settlement roles. It does not identify real counterparties or individual ledgers.'}</p></section> : null}

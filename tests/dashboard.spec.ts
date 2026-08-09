@@ -101,7 +101,7 @@ test('view density is shareable and reset returns to the default view', async ({
   await page.getByRole('button', { name: 'Reset filters' }).click()
   await expect(page).toHaveURL(/network=chips-fedwire/)
   await expect(page).not.toHaveURL(/mode=basic/)
-  await expect(page.getByRole('button', { name: 'Pro' })).toHaveClass(/active/)
+  await expect(page.getByRole('button', { name: 'Pro', exact: true })).toHaveClass(/active/)
 })
 
 
@@ -115,4 +115,10 @@ test('keyboard users can skip directly to each page main content', async ({ page
   await page.getByRole('link', { name: 'Skip to main content' }).focus()
   await page.keyboard.press('Enter')
   await expect(page.locator('#main-content')).toBeFocused()
+})
+
+test('invalid information deep links recover to the parent page', async ({ page }) => {
+ await page.goto('/en/learn/not-a-guide')
+  await expect(page).toHaveURL('/en/learn')
+ await expect(page.getByRole('heading', { name: 'Learn' })).toBeVisible()
 })
