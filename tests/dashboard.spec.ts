@@ -101,7 +101,7 @@ test('view density is shareable and reset returns to the default view', async ({
   await page.getByRole('button', { name: 'Reset filters' }).click()
   await expect(page).toHaveURL(/network=chips-fedwire/)
   await expect(page).not.toHaveURL(/mode=basic/)
-  await expect(page.getByRole('button', { name: 'Pro' })).toHaveClass(/active/)
+  await expect(page.getByRole('button', { name: 'Pro', exact: true })).toHaveClass(/active/)
 })
 
 
