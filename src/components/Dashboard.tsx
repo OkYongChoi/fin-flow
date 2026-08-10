@@ -44,7 +44,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
     <main id="main-content" tabIndex={-1} className={`dashboard ${isPending ? 'is-pending' : ''}`}>
       <AppHeader locale={locale} compact />
       <section className="mode-and-filter">
-        <div className="view-toggle" role="group" aria-label="View density">
+        <div className="view-toggle" role="group" aria-label={t('view.density')}>
           <button type="button" aria-pressed={!proMode} className={!proMode ? 'active' : ''} onClick={() => setViewMode(false)}>{t('view.basic')}</button>
           <button type="button" aria-pressed={proMode} className={proMode ? 'active' : ''} onClick={() => setViewMode(true)}>{t('view.pro')}</button>
         </div>
@@ -57,7 +57,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
         <NetworkSidebar selected={selected} onSelect={selectNetwork} locale={locale} />
         <div className="map-region">
           {error ? <div className="map-error" role="alert"><span>{t('data.loadError')}</span><button type="button" onClick={() => void refetch()}>{t('data.retry')}</button></div> : (
-            <Suspense fallback={<div className="map-loader">Loading map layers…</div>}>
+            <Suspense fallback={<div className="map-loader" role="status">{t('data.loadingMap')}</div>}>
               <FlowMap selected={selected} proMode={proMode} locale={locale} />
             </Suspense>
           )}
