@@ -17,6 +17,15 @@ test('simulation playback stays explicitly labelled', async ({ page }) => {
   await expect(page.getByRole('button', { name: '일시정지' })).toBeVisible()
 })
 
+test('timeline tabs support keyboard navigation and announce their panel', async ({ page }) => {
+  await page.goto('/en/map')
+  await page.getByRole('tab', { name: 'Timeline' }).focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByRole('tab', { name: 'Comparison' })).toBeFocused()
+  await expect(page.getByRole('tab', { name: 'Comparison' })).toHaveAttribute('aria-selected', 'true')
+  await expect(page.getByRole('tabpanel', { name: 'Comparison' })).toContainText('Rail roles compared')
+})
+
 test('locale switch preserves route and selection', async ({ page }) => {
   await page.goto('/ko/map?network=swift')
   await page.getByRole('button', { name: 'EN', exact: true }).click()
