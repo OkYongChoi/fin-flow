@@ -1,15 +1,15 @@
-import { ArrowLeftRight, Cable, CircleDollarSign, CreditCard, Network } from 'lucide-react'
+import { ArrowLeftRight, Cable, CircleDollarSign, CreditCard, Landmark, Network } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NETWORK_COLORS, NETWORKS } from '../data'
 import type { Locale, NetworkId } from '../types'
 
-const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, derivatives: Network, usdc: CircleDollarSign }
+const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, derivatives: Network, usdc: CircleDollarSign }
 
 export function NetworkSidebar({ selected, onSelect, locale }: { selected: NetworkId; onSelect: (id: NetworkId) => void; locale: Locale }) {
   const { t } = useTranslation()
   return (
     <aside className="network-sidebar">
-      <h2>{t('sidebar.title')}<span>5</span></h2>
+      <h2>{t('sidebar.title')}<span>{NETWORKS.length}</span></h2>
       <div className="network-list">
         {NETWORKS.map((network) => {
           const Icon = ICONS[network.id]

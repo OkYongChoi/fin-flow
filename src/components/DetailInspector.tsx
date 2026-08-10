@@ -8,6 +8,7 @@ const STEPS = {
   'chips-fedwire': [['은행의 지급 지시', 'Originating bank'], ['SWIFT 메시지', 'SWIFT message'], ['CHIPS 또는 Fedwire', 'CHIPS or Fedwire'], ['수취은행 반영', 'Beneficiary bank']],
   swift: [['지급 지시 생성', 'Payment instruction'], ['메시지 검증', 'Message validation'], ['은행 간 전달', 'Interbank delivery'], ['수취 확인', 'Confirmation']],
   visa: [['승인 요청', 'Authorization'], ['거래 승인', 'Approval'], ['청산', 'Clearing'], ['은행 간 결제', 'Interbank settlement']],
+  'bond-issuance': [['발행 조건 설계', 'Structure the offering'], ['IB 주관·인수', 'Lead and underwrite'], ['예탁결제 적격성', 'Depository eligibility'], ['배정·인도대금결제', 'Allocation and delivery versus payment']],
   derivatives: [['계약 체결', 'Execution'], ['포지션·가치평가', 'Position & valuation'], ['담보·청산', 'Collateral & clearing'], ['만기·정산', 'Maturity & settlement']],
   usdc: [['USD 입금', 'USD deposit'], ['USDC 발행', 'USDC issuance'], ['온체인 이전', 'On-chain transfer'], ['상환', 'Redemption']],
 } as const

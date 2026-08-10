@@ -4,6 +4,7 @@ export const NETWORKS: Array<{ id: NetworkId; label: string; labelEn: string; de
   { id: 'swift', label: 'SWIFT', labelEn: 'SWIFT', description: '은행 간 메시지 네트워크', descriptionEn: 'Interbank messaging network' },
   { id: 'visa', label: 'Visa', labelEn: 'Visa', description: '카드 승인·청산·결제 네트워크', descriptionEn: 'Card authorization, clearing and settlement' },
   { id: 'chips-fedwire', label: 'CHIPS · Fedwire', labelEn: 'CHIPS · Fedwire', description: '미국 달러 고액 결제', descriptionEn: 'High-value US dollar payments' },
+  { id: 'bond-issuance', label: '채권 발행', labelEn: 'Bond issuance', description: '발행사·IB·예탁결제의 1차 시장 흐름', descriptionEn: 'Primary-market flow across issuer, IB and depository' },
   { id: 'derivatives', label: '파생상품', labelEn: 'OTC derivatives', description: 'OTC 계약·담보·청산', descriptionEn: 'OTC contracts, collateral and clearing' },
   { id: 'usdc', label: 'Circle USDC', labelEn: 'Circle USDC', description: '발행·상환·온체인 이동', descriptionEn: 'Issuance, redemption and on-chain transfer' },
 ]
@@ -12,6 +13,7 @@ export const NETWORK_COLORS: Record<NetworkId, [number, number, number]> = {
   swift: [48, 194, 241],
   visa: [43, 119, 255],
   'chips-fedwire': [255, 169, 36],
+  'bond-issuance': [255, 122, 89],
   derivatives: [173, 92, 255],
   usdc: [63, 211, 185],
 }
@@ -36,6 +38,7 @@ export const EDGES: FlowEdge[] = [
   edge('s1', 'swift', 'new-york', 'london', 'message', ['swift-2025']), edge('s2', 'swift', 'london', 'singapore', 'message', ['swift-2025']), edge('s3', 'swift', 'frankfurt', 'seoul', 'message', ['swift-2025']),
   edge('v1', 'visa', 'new-york', 'sao-paulo', 'authorization', ['visa-2025']), edge('v2', 'visa', 'london', 'dubai', 'clearing', ['visa-2025']), edge('v3', 'visa', 'singapore', 'tokyo', 'settlement', ['visa-2025']),
   edge('c1', 'chips-fedwire', 'new-york', 'london', 'settlement', ['chips-2025', 'fedwire-2025']), edge('c2', 'chips-fedwire', 'new-york', 'frankfurt', 'settlement', ['chips-2025', 'fedwire-2025']), edge('c3', 'chips-fedwire', 'new-york', 'singapore', 'settlement', ['chips-2025', 'fedwire-2025']),
+  edge('b1', 'bond-issuance', 'new-york', 'london', 'settlement', ['dtcc-underwriting', 'sec-t1']), edge('b2', 'bond-issuance', 'new-york', 'tokyo', 'settlement', ['dtcc-underwriting', 'sec-t1']), edge('b3', 'bond-issuance', 'london', 'singapore', 'settlement', ['dtcc-underwriting']),
   edge('d1', 'derivatives', 'london', 'new-york', 'clearing', ['bis-otc']), edge('d2', 'derivatives', 'london', 'tokyo', 'clearing', ['bis-otc']), edge('d3', 'derivatives', 'new-york', 'hong-kong', 'clearing', ['bis-otc']),
   edge('u1', 'usdc', 'new-york', 'singapore', 'asset_transfer', ['circle-contracts']), edge('u2', 'usdc', 'london', 'seoul', 'asset_transfer', ['circle-contracts']), edge('u3', 'usdc', 'singapore', 'tokyo', 'asset_transfer', ['circle-contracts']),
 ]
