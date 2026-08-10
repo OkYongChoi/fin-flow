@@ -56,7 +56,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
       <section className="workspace">
         <NetworkSidebar selected={selected} onSelect={selectNetwork} locale={locale} />
         <div className="map-region">
-          {error ? <div className="map-error" role="alert"><span>Source data could not be loaded.</span><button onClick={() => void refetch()}>Retry</button></div> : (
+          {error ? <div className="map-error" role="alert"><span>{t('data.loadError')}</span><button type="button" onClick={() => void refetch()}>{t('data.retry')}</button></div> : (
             <Suspense fallback={<div className="map-loader">Loading map layers…</div>}>
               <FlowMap selected={selected} proMode={proMode} locale={locale} />
             </Suspense>

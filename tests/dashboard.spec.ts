@@ -23,6 +23,14 @@ test('invalid network queries recover to the default canonical view', async ({ p
   await expect(page.locator('.network-list').getByRole('button', { name: /CHIPS.*Fedwire/ })).toHaveAttribute('aria-pressed', 'true')
 })
 
+test('source-data failure has a localized retry action', async ({ page }) => {
+  await page.route('**/data/metrics.json', (route) => route.fulfill({ status: 503, body: 'unavailable' }))
+  await page.goto('/ko/map')
+  const alert = page.getByRole('alert')
+  await expect(alert).toContainText('출처 데이터를 불러올 수 없습니다.')
+  await expect(alert.getByRole('button', { name: '다시 시도' })).toBeVisible()
+})
+
 test('simulation playback stays explicitly labelled', async ({ page }) => {
   await page.goto('/ko/map?network=chips-fedwire')
   await expect(page.locator('.simulation-badge')).toContainText('시뮬레이션')
@@ -161,8 +169,10 @@ test('view density is shareable and reset returns to the default view', async ({
 
 test('keyboard users can skip directly to each page main content', async ({ page }) => {
   await page.goto('/en/map')
+  const skipLink = page.getByRole('link', { name: 'Skip to main content' })
+  await expect(skipLink).toBeVisible()
   await page.keyboard.press('Tab')
-  await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused()
+  await expect(skipLink).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page.locator('#main-content')).toBeFocused()
   await page.goto('/en/data')
