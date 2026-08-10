@@ -14,7 +14,7 @@ test('invalid network queries recover to the default canonical view', async ({ p
   await page.goto('/en/map?network=not-a-rail&mode=basic')
   await expect(page).toHaveURL('/en/map?mode=basic')
   await expect(page.getByRole('button', { name: 'Basic' })).toHaveAttribute('aria-pressed', 'true')
-  await expect(page.getByRole('button', { name: /CHIPS.*Fedwire/ })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('.network-list').getByRole('button', { name: /CHIPS.*Fedwire/ })).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('simulation playback stays explicitly labelled', async ({ page }) => {
