@@ -44,21 +44,21 @@ export default function FlowMap({ selected, proMode, locale }: { selected: Netwo
   const tableEdges = proMode ? edges : edges.filter((edge) => edge.networkId === selected)
 
   return (
-    <div className="flow-map" aria-label={locale === 'ko' ? '국제 금융 흐름 지도' : 'International financial flow map'}>
+    <section className="flow-map" role="region" aria-labelledby="map-title" aria-describedby="map-disclaimer">
       <Map initialViewState={{ longitude: mobile ? 15 : 22, latitude: mobile ? 20 : 25, zoom: mobile ? -0.1 : 1.25 }} minZoom={mobile ? -0.5 : 0.85} maxZoom={6} mapStyle={BASE_STYLE} attributionControl={false}>
         <Source id="countries" type="geojson" data={WORLD}>
           <Layer id="countries-fill" type="fill" paint={{ 'fill-color': '#173653', 'fill-opacity': 0.9 }} />
           <Layer id="countries-outline" type="line" paint={{ 'line-color': '#315474', 'line-width': 0.55, 'line-opacity': 0.75 }} />
         </Source>
         <DeckOverlay layers={layers} />
-        {NODES.map((node) => <Marker key={node.id} longitude={node.coordinates[0]} latitude={node.coordinates[1]} anchor="center"><button className={`map-node ${node.id === activeNode ? 'active' : ''}`} onClick={() => setActiveNode(node.id)} aria-pressed={node.id === activeNode} aria-label={`Select ${node.label}`}><i /><span>{node.label}</span></button></Marker>)}
+        {NODES.map((node) => <Marker key={node.id} longitude={node.coordinates[0]} latitude={node.coordinates[1]} anchor="center"><button type="button" className={`map-node ${node.id === activeNode ? 'active' : ''}`} onClick={() => setActiveNode(node.id)} aria-pressed={node.id === activeNode} aria-label={locale === 'ko' ? `${node.label} 노드 선택` : `Select ${node.label} node`}><i /><span>{node.label}</span></button></Marker>)}
         <NavigationControl position="bottom-right" showCompass={false} />
         <FullscreenControl position="top-right" />
       </Map>
-      <h2 className="map-title">{locale === 'ko' ? '글로벌 지도' : 'Global map'}</h2>
-      {selectedNode ? <div className="node-tooltip"><header><b>{selectedNode.label}</b><button aria-label="Close tooltip" onClick={() => setActiveNode('')}>×</button></header><dl><dt>{locale === 'ko' ? '역할' : 'Role'}</dt><dd>{locale === 'ko' ? '글로벌 금융 허브' : 'Global financial hub'}</dd><dt>{locale === 'ko' ? '표현' : 'Representation'}</dt><dd>{locale === 'ko' ? '설명용 노드' : 'Schematic node'}</dd></dl></div> : null}
-      <div className="map-disclaimer"><span className="status-dot simulation" />{locale === 'ko' ? '구조도 · 실거래 위치 아님' : 'Schematic · not transaction locations'}</div>
+      <h2 id="map-title" className="map-title">{locale === 'ko' ? '글로벌 지도' : 'Global map'}</h2>
+      {selectedNode ? <div className="node-tooltip"><header><b>{selectedNode.label}</b><button type="button" aria-label={locale === 'ko' ? '도움말 닫기' : 'Close tooltip'} onClick={() => setActiveNode('')}>×</button></header><dl><dt>{locale === 'ko' ? '역할' : 'Role'}</dt><dd>{locale === 'ko' ? '글로벌 금융 허브' : 'Global financial hub'}</dd><dt>{locale === 'ko' ? '표현' : 'Representation'}</dt><dd>{locale === 'ko' ? '설명용 노드' : 'Schematic node'}</dd></dl></div> : null}
+      <div id="map-disclaimer" className="map-disclaimer"><span className="status-dot simulation" />{locale === 'ko' ? '구조도 · 실거래 위치 아님' : 'Schematic · not transaction locations'}</div>
       <details className="map-data-table"><summary>{locale === 'ko' ? '지도 데이터 표로 보기' : 'View map data as a table'}</summary><table><thead><tr><th>{locale === 'ko' ? '출발' : 'Source'}</th><th>{locale === 'ko' ? '도착' : 'Target'}</th><th>{locale === 'ko' ? '유형' : 'Type'}</th></tr></thead><tbody>{tableEdges.map((item) => <tr key={item.id}><td>{getNode(item.source).label}</td><td>{getNode(item.target).label}</td><td>{item.semantic}</td></tr>)}</tbody></table></details>
-    </div>
+    </section>
   )
 }
