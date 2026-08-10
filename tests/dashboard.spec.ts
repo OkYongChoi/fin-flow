@@ -16,6 +16,12 @@ test('dashboard exposes sourced metrics and updates selected network', async ({ 
   await expect(page.getByText('$72.3B')).toBeVisible()
 })
 
+test('network selection is exposed as a labelled navigation landmark', async ({ page }) => {
+  await page.goto('/en/map')
+  await expect(page.getByRole('complementary', { name: 'Financial networks' })).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Financial networks' }).getByRole('button')).toHaveCount(6)
+})
+
 test('invalid network queries recover to the default canonical view', async ({ page }) => {
   await page.goto('/en/map?network=not-a-rail&mode=basic')
   await expect(page).toHaveURL('/en/map?mode=basic')

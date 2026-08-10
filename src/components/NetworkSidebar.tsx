@@ -8,9 +8,9 @@ const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight,
 export function NetworkSidebar({ selected, onSelect, locale }: { selected: NetworkId; onSelect: (id: NetworkId) => void; locale: Locale }) {
   const { t } = useTranslation()
   return (
-    <aside className="network-sidebar">
-      <h2>{t('sidebar.title')}<span>{NETWORKS.length}</span></h2>
-      <div className="network-list">
+    <aside className="network-sidebar" aria-labelledby="network-sidebar-title">
+      <h2 id="network-sidebar-title">{t('sidebar.title')}<span>{NETWORKS.length}</span></h2>
+      <nav className="network-list" aria-label={t('sidebar.title')}>
         {NETWORKS.map((network) => {
           const Icon = ICONS[network.id]
           const color = `rgb(${NETWORK_COLORS[network.id].join(' ')})`
@@ -20,7 +20,7 @@ export function NetworkSidebar({ selected, onSelect, locale }: { selected: Netwo
             </button>
           )
         })}
-      </div>
+      </nav>
       <div className="legend-panel">
         <h3>{t('sidebar.legend')}</h3>
         {[['message', 'message'], ['payment', 'settlement'], ['clearing', 'clearing'], ['onchain', 'onchain']].map(([label, type]) => (
