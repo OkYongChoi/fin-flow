@@ -37,7 +37,13 @@ test('locale switch preserves route and selection', async ({ page }) => {
   await page.goto('/ko/map?network=swift')
   await page.getByRole('button', { name: 'EN', exact: true }).click()
   await expect(page).toHaveURL(/\/en\/map\?network=swift/)
+  await expect(page).toHaveTitle('Financial flow map · Flow of Money')
   await expect(page.getByText('Schematic · not transaction locations')).toBeVisible()
+})
+
+test('data route sets a descriptive document title', async ({ page }) => {
+  await page.goto('/ko/data')
+  await expect(page).toHaveTitle('데이터 · Flow of Money')
 })
 
 test('data registry links every rendered metric to primary sources', async ({ page }) => {

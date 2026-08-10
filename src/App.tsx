@@ -17,6 +17,10 @@ function LocaleRoutes() {
   const slug = parts[2]
   const { i18n } = useTranslation()
   useEffect(() => { void i18n.changeLanguage(locale); document.documentElement.lang = locale }, [i18n, locale])
+  useEffect(() => {
+    const labels: Record<string, [string, string]> = { map: ['금융 흐름 지도', 'Financial flow map'], networks: ['네트워크', 'Networks'], institutions: ['기관', 'Institutions'], assets: ['자산', 'Assets'], learn: ['학습', 'Learn'], data: ['데이터', 'Data'] }
+    document.title = `${labels[page]?.[locale === 'ko' ? 0 : 1] ?? 'Flow of Money'} · Flow of Money`
+  }, [locale, page])
   useEffect(() => { if (!VALID_PAGES.has(page)) navigate(`/${locale}/map`, true) }, [locale, navigate, page])
   if (page === 'map') return <Dashboard locale={locale} />
   if (page === 'networks') return <InfoPage type="networks" locale={locale} slug={slug} />
