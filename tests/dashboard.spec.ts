@@ -22,6 +22,11 @@ test('network selection is exposed as a labelled navigation landmark', async ({ 
   await expect(page.getByRole('navigation', { name: 'Financial networks' }).getByRole('button')).toHaveCount(6)
 })
 
+test('network details have an identifiable complementary landmark', async ({ page }) => {
+  await page.goto('/en/map?network=usdc')
+  await expect(page.getByRole('complementary', { name: 'Circle USDC' })).toBeVisible()
+})
+
 test('invalid network queries recover to the default canonical view', async ({ page }) => {
   await page.goto('/en/map?network=not-a-rail&mode=basic')
   await expect(page).toHaveURL('/en/map?mode=basic')

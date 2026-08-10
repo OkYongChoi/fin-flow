@@ -28,9 +28,9 @@ export function DetailInspector({ selected, metrics, sources, locale }: { select
     document.getElementById(`inspector-tab-${tabs[target]}`)?.focus()
   }
   return (
-    <aside className="detail-inspector">
+    <aside className="detail-inspector" aria-labelledby="detail-inspector-title">
       <div className="sheet-handle" />
-      <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2>{selected === 'chips-fedwire' ? t('inspector.title') : (locale === 'ko' ? network.label : network.labelEn)}</h2></div><ShieldCheck size={19} /></header>
+      <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2 id="detail-inspector-title">{selected === 'chips-fedwire' ? t('inspector.title') : (locale === 'ko' ? network.label : network.labelEn)}</h2></div><ShieldCheck size={19} /></header>
       <div className="representation-label"><i />{t('inspector.schematic')}<span>≠ LIVE</span></div>
       <nav className="inspector-tabs" role="tablist" aria-label={locale === 'ko' ? '네트워크 상세 탭' : 'Network detail tabs'}>
         {tabs.map((item) => <button key={item} id={`inspector-tab-${item}`} role="tab" aria-selected={tab === item} aria-controls={`inspector-panel-${item}`} tabIndex={tab === item ? 0 : -1} className={tab === item ? 'active' : ''} onClick={() => setTab(item)} onKeyDown={(event) => moveTab(event, item)}>{t(`inspector.${item}`)}</button>)}
