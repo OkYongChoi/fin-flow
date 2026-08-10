@@ -96,12 +96,15 @@ test('view density is shareable and reset returns to the default view', async ({
   await page.goto('/en/map?network=swift')
   await page.getByRole('button', { name: 'Basic' }).click()
   await expect(page).toHaveURL(/network=swift&mode=basic/)
+  await expect(page.getByRole('button', { name: 'Basic' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('button', { name: 'Pro', exact: true })).toHaveAttribute('aria-pressed', 'false')
   await page.reload()
   await expect(page.getByRole('button', { name: 'Basic' })).toHaveClass(/active/)
   await page.getByRole('button', { name: 'Reset filters' }).click()
   await expect(page).toHaveURL(/network=chips-fedwire/)
   await expect(page).not.toHaveURL(/mode=basic/)
   await expect(page.getByRole('button', { name: 'Pro', exact: true })).toHaveClass(/active/)
+  await expect(page.getByRole('button', { name: 'Pro', exact: true })).toHaveAttribute('aria-pressed', 'true')
 })
 
 
