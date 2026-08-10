@@ -1,6 +1,6 @@
 export type Locale = 'ko' | 'en'
 export type NetworkId = 'swift' | 'visa' | 'chips-fedwire' | 'bond-issuance' | 'derivatives' | 'usdc'
-export type FlowSemantic = 'message' | 'authorization' | 'clearing' | 'settlement' | 'asset_transfer'
+export type FlowSemantic = 'message' | 'authorization' | 'clearing' | 'settlement' | 'asset_transfer' | 'issuance'
 export type Representation = 'observed_aggregate' | 'schematic' | 'simulated'
 
 export interface SourceRecord {
