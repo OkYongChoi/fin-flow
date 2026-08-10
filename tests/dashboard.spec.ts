@@ -37,7 +37,7 @@ test('timeline tabs support keyboard navigation and announce their panel', async
 
 test('locale switch preserves route and selection', async ({ page }) => {
   await page.goto('/ko/map?network=swift')
-  await page.getByRole('button', { name: 'EN', exact: true }).click()
+  await page.getByRole('button', { name: 'Switch to English' }).click()
   await expect(page).toHaveURL(/\/en\/map\?network=swift/)
   await expect(page).toHaveTitle('Financial flow map · Flow of Money')
   await expect(page.getByText('Schematic · not transaction locations')).toBeVisible()
