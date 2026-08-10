@@ -17,13 +17,22 @@ export function DetailInspector({ selected, metrics, sources, locale }: { select
   const [tab, setTab] = useState('route')
   useEffect(() => { setTab('route') }, [selected])
   const network = NETWORKS.find((item) => item.id === selected)!
+  const tabs = ['route', 'institutions', 'statistics', 'documents'] as const
+  const moveTab = (event: React.KeyboardEvent<HTMLButtonElement>, item: typeof tabs[number]) => {
+    const current = tabs.indexOf(item)
+    const target = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : event.key === 'ArrowRight' ? (current + 1) % tabs.length : event.key === 'ArrowLeft' ? (current - 1 + tabs.length) % tabs.length : -1
+    if (target < 0) return
+    event.preventDefault()
+    setTab(tabs[target])
+    document.getElementById(`inspector-tab-${tabs[target]}`)?.focus()
+  }
   return (
     <aside className="detail-inspector">
       <div className="sheet-handle" />
       <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2>{selected === 'chips-fedwire' ? t('inspector.title') : (locale === 'ko' ? network.label : network.labelEn)}</h2></div><ShieldCheck size={19} /></header>
       <div className="representation-label"><i />{t('inspector.schematic')}<span>≠ LIVE</span></div>
       <nav className="inspector-tabs" role="tablist" aria-label={locale === 'ko' ? '네트워크 상세 탭' : 'Network detail tabs'}>
-        {['route', 'institutions', 'statistics', 'documents'].map((item) => <button key={item} id={`inspector-tab-${item}`} role="tab" aria-selected={tab === item} aria-controls={`inspector-panel-${item}`} tabIndex={tab === item ? 0 : -1} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{t(`inspector.${item}`)}</button>)}
+        {tabs.map((item) => <button key={item} id={`inspector-tab-${item}`} role="tab" aria-selected={tab === item} aria-controls={`inspector-panel-${item}`} tabIndex={tab === item ? 0 : -1} className={tab === item ? 'active' : ''} onClick={() => setTab(item)} onKeyDown={(event) => moveTab(event, item)}>{t(`inspector.${item}`)}</button>)}
       </nav>
       {tab === 'route' ? <div id="inspector-panel-route" role="tabpanel" aria-labelledby="inspector-tab-route" className="settlement-steps">
         {STEPS[selected].map(([ko, en], index) => <div key={ko} className="settlement-step"><span>{index + 1}</span><i>{index === 1 ? <MessageCircle /> : <Landmark />}</i><div><b>{locale === 'ko' ? ko : en}</b><small>{index === 2 && selected === 'chips-fedwire' ? (locale === 'ko' ? '별도 결제 경로 · 직렬 아님' : 'Alternative rails · not sequential') : (locale === 'ko' ? '설명용 단계' : 'Explanatory stage')}</small></div></div>)}
