@@ -73,6 +73,7 @@ test('data registry exposes labelled table semantics and descriptive source link
   await page.goto('/en/data')
   const table = page.getByRole('table', { name: 'Source registry' })
   await expect(table).toHaveAttribute('aria-busy', 'false')
+  await expect(table).toHaveAttribute('aria-describedby', 'source-registry-status')
   await expect(table.getByRole('columnheader')).toHaveCount(4)
   await expect(table.getByRole('cell')).toHaveCount(sourceCount * 4)
   await expect(table.getByRole('link', { name: 'Open Federal Reserve Financial Services source in a new tab' })).toBeVisible()
