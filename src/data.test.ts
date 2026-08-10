@@ -46,7 +46,7 @@ describe('financial flow contract', () => {
     expect(NETWORKS.every((network) => EDGES.some((edge) => edge.networkId === network.id))).toBe(true)
   })
 
-  it('covers the five requested network families', () => {
-    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'derivatives', 'usdc'])
+  it('covers the requested network families including primary-market bonds', () => {
+    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'derivatives', 'usdc'])
   })
 })
