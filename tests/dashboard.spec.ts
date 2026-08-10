@@ -10,6 +10,13 @@ test('dashboard exposes sourced metrics and updates selected network', async ({ 
   await expect(page.getByText('$72.3B')).toBeVisible()
 })
 
+test('invalid network queries recover to the default canonical view', async ({ page }) => {
+  await page.goto('/en/map?network=not-a-rail&mode=basic')
+  await expect(page).toHaveURL('/en/map?mode=basic')
+  await expect(page.getByRole('button', { name: 'Basic' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('button', { name: /CHIPS.*Fedwire/ })).toHaveAttribute('aria-pressed', 'true')
+})
+
 test('simulation playback stays explicitly labelled', async ({ page }) => {
   await page.goto('/ko/map?network=chips-fedwire')
   await expect(page.locator('.simulation-badge')).toContainText('시뮬레이션')
