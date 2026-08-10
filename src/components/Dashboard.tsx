@@ -37,9 +37,9 @@ export function Dashboard({ locale }: { locale: Locale }) {
     <main id="main-content" tabIndex={-1} className={`dashboard ${isPending ? 'is-pending' : ''}`}>
       <AppHeader locale={locale} compact />
       <section className="mode-and-filter">
-        <div className="view-toggle" aria-label="View density">
-          <button className={!proMode ? 'active' : ''} onClick={() => setViewMode(false)}>{t('view.basic')}</button>
-          <button className={proMode ? 'active' : ''} onClick={() => setViewMode(true)}>{t('view.pro')}</button>
+        <div className="view-toggle" role="group" aria-label="View density">
+          <button type="button" aria-pressed={!proMode} className={!proMode ? 'active' : ''} onClick={() => setViewMode(false)}>{t('view.basic')}</button>
+          <button type="button" aria-pressed={proMode} className={proMode ? 'active' : ''} onClick={() => setViewMode(true)}>{t('view.pro')}</button>
         </div>
         <FilterBar proMode={proMode} selected={selected} locale={locale} onNetworkChange={selectNetwork} onReset={resetView} />
         <div className="data-freshness" title={data?.generatedAt}>
