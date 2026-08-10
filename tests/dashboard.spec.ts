@@ -63,6 +63,18 @@ test('tabs expose their selected state and reset with a new network', async ({ p
   await expect(page.getByRole('tab', { name: 'Path' })).toHaveAttribute('aria-selected', 'true')
 })
 
+test('inspector tabs support roving keyboard navigation', async ({ page }) => {
+  await page.goto('/en/map')
+  const route = page.getByRole('tab', { name: 'Path' })
+  await route.focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByRole('tab', { name: 'Institutions' })).toBeFocused()
+  await expect(page.getByRole('tab', { name: 'Institutions' })).toHaveAttribute('aria-selected', 'true')
+  await page.keyboard.press('End')
+  await expect(page.getByRole('tab', { name: 'Documents' })).toBeFocused()
+  await expect(page.getByRole('tab', { name: 'Documents' })).toHaveAttribute('aria-selected', 'true')
+})
+
 test('mobile menu closes with Escape', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/en/map')
