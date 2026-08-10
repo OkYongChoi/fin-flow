@@ -39,6 +39,12 @@ test('simulation playback stays explicitly labelled', async ({ page }) => {
   await expect(page.getByRole('button', { name: '일시정지' })).toHaveAttribute('aria-pressed', 'true')
 })
 
+test('timeline controls announce their state in Korean', async ({ page }) => {
+  await page.goto('/ko/map')
+  await expect(page.getByRole('button', { name: '시뮬레이션 처음부터 재생' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '재생 속도 1배' })).toBeVisible()
+})
+
 test('timeline tabs support keyboard navigation and announce their panel', async ({ page }) => {
   await page.goto('/en/map')
   await page.getByRole('tab', { name: 'Timeline' }).focus()
