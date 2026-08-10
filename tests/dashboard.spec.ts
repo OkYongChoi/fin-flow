@@ -56,6 +56,11 @@ test('locale switch preserves route and selection', async ({ page }) => {
   await expect(page.getByText('Schematic · not transaction locations')).toBeVisible()
 })
 
+test('view-density controls use the active locale for their accessible name', async ({ page }) => {
+  await page.goto('/ko/map')
+  await expect(page.getByRole('group', { name: '화면 밀도' })).toBeVisible()
+})
+
 test('data route sets a descriptive document title', async ({ page }) => {
   await page.goto('/ko/data')
   await expect(page).toHaveTitle('데이터 · Flow of Money')
