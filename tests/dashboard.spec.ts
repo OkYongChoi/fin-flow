@@ -54,6 +54,14 @@ test('data registry links every rendered metric to primary sources', async ({ pa
   await expect(page.locator('.source-row a')).toHaveCount(7)
 })
 
+test('data registry exposes labelled table semantics and descriptive source links', async ({ page }) => {
+  await page.goto('/en/data')
+  const table = page.getByRole('table', { name: 'Source registry' })
+  await expect(table.getByRole('columnheader')).toHaveCount(4)
+  await expect(table.getByRole('cell')).toHaveCount(28)
+  await expect(table.getByRole('link', { name: 'Open Federal Reserve Financial Services source in a new tab' })).toBeVisible()
+})
+
 
 test('network filter, inspector tabs, and timeline controls are interactive', async ({ page }) => {
   await page.goto('/en/map?network=swift')
