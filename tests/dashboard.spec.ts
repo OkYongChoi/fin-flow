@@ -5,6 +5,8 @@ test('dashboard exposes sourced metrics and updates selected network', async ({ 
   await expect(page.getByText('Flow of Money')).toBeVisible()
   await expect(page.getByText('구조도 · 실거래 위치 아님')).toBeVisible()
   await expect(page.getByRole('region', { name: '글로벌 지도' })).toHaveAttribute('aria-describedby', 'map-disclaimer')
+  await page.locator('.map-data-table').evaluate((element) => { (element as HTMLDetailsElement).open = true })
+  await expect(page.locator('.map-data-table caption')).toHaveText('모든 금융망의 설명용 흐름')
   await page.getByRole('button', { name: /Circle USDC/ }).click()
   await expect(page).toHaveURL(/network=usdc/)
   await expect(page.getByText('USDC 유통량')).toBeVisible()
