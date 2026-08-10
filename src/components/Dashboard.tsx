@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useTransition } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useTransition } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { AppHeader } from '../App'
@@ -19,7 +19,8 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const [isPending, startTransition] = useTransition()
   const proMode = params.get('mode') !== 'basic'
   const requested = params.get('network') as NetworkId | null
-  const selected = NETWORKS.some((item) => item.id === requested) ? requested! : 'chips-fedwire'
+  const hasValidNetwork = NETWORKS.some((item) => item.id === requested)
+  const selected = hasValidNetwork ? requested! : 'chips-fedwire'
   const { data, isLoading, error, refetch } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
   const metrics = useMemo(() => data?.metrics.filter((metric) => metric.networkId === selected) ?? [], [data, selected])
   const sources = useMemo(() => data?.sources.filter((source) => metrics.some((metric) => metric.sourceId === source.id)) ?? [], [data, metrics])
@@ -32,6 +33,12 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const selectNetwork = (network: NetworkId) => updateView({ network })
   const setViewMode = (nextProMode: boolean) => updateView({ mode: nextProMode ? null : 'basic' })
   const resetView = () => updateView({ network: 'chips-fedwire', mode: null })
+  useEffect(() => {
+    if (requested === null || hasValidNetwork) return
+    const next = new URLSearchParams(search)
+    next.delete('network')
+    navigate(`${pathname}${next.size ? `?${next.toString()}` : ''}`, true)
+  }, [hasValidNetwork, navigate, pathname, requested, search])
 
   return (
     <main id="main-content" tabIndex={-1} className={`dashboard ${isPending ? 'is-pending' : ''}`}>
