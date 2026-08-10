@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+
+const sourceCount = JSON.parse(readFileSync(new URL('../public/data/sources.json', import.meta.url), 'utf8')).length
 
 test('dashboard exposes sourced metrics and updates selected network', async ({ page }) => {
   await page.goto('/ko/map')
@@ -55,7 +58,7 @@ test('data registry links every rendered metric to primary sources', async ({ pa
   await expect(page.getByRole('heading', { name: '출처 레지스트리' })).toBeVisible()
   await expect(page.getByText('Federal Reserve Financial Services')).toBeVisible()
   await expect(page.getByRole('note')).toContainText('Routes are schematic')
-  await expect(page.locator('.source-row a')).toHaveCount(9)
+  await expect(page.locator('.source-row a')).toHaveCount(sourceCount)
 })
 
 test('data registry exposes labelled table semantics and descriptive source links', async ({ page }) => {
@@ -63,7 +66,7 @@ test('data registry exposes labelled table semantics and descriptive source link
   const table = page.getByRole('table', { name: 'Source registry' })
   await expect(table).toHaveAttribute('aria-busy', 'false')
   await expect(table.getByRole('columnheader')).toHaveCount(4)
-  await expect(table.getByRole('cell')).toHaveCount(36)
+  await expect(table.getByRole('cell')).toHaveCount(sourceCount * 4)
   await expect(table.getByRole('link', { name: 'Open Federal Reserve Financial Services source in a new tab' })).toBeVisible()
 })
 
