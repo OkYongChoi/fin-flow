@@ -78,6 +78,11 @@ test('view-density controls use the active locale for their accessible name', as
   await expect(page.getByRole('group', { name: '화면 밀도' })).toBeVisible()
 })
 
+test('data snapshot version is exposed as a localized live status', async ({ page }) => {
+  await page.goto('/en/map')
+  await expect(page.getByRole('status', { name: 'Data snapshot version' })).toContainText('2026.08.10')
+})
+
 test('data route sets a descriptive document title', async ({ page }) => {
   await page.goto('/ko/data')
   await expect(page).toHaveTitle('데이터 · Flow of Money')

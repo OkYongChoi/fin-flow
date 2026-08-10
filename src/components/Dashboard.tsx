@@ -49,7 +49,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
           <button type="button" aria-pressed={proMode} className={proMode ? 'active' : ''} onClick={() => setViewMode(true)}>{t('view.pro')}</button>
         </div>
         <FilterBar proMode={proMode} selected={selected} locale={locale} onNetworkChange={selectNetwork} onReset={resetView} />
-        <div className="data-freshness" title={data?.generatedAt}>
+        <div className="data-freshness" title={data?.generatedAt} role="status" aria-live="polite" aria-label={locale === 'ko' ? '데이터 스냅샷 버전' : 'Data snapshot version'}>
           <span>{t('inspector.updated')}</span><strong>{data?.version ?? '—'}</strong><i aria-hidden="true" />
         </div>
       </section>
