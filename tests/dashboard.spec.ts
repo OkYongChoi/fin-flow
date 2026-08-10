@@ -22,6 +22,15 @@ test('network selection is exposed as a labelled navigation landmark', async ({ 
   await expect(page.getByRole('navigation', { name: 'Financial networks' }).getByRole('button')).toHaveCount(6)
 })
 
+test('network selection supports directional keyboard movement', async ({ page }) => {
+  await page.goto('/en/map')
+  const swift = page.getByRole('button', { name: /SWIFT/ })
+  await swift.focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(page).toHaveURL(/network=visa/)
+  await expect(page.getByRole('button', { name: /Visa/ })).toBeFocused()
+})
+
 test('network details have an identifiable complementary landmark', async ({ page }) => {
   await page.goto('/en/map?network=usdc')
   await expect(page.getByRole('complementary', { name: 'Circle USDC' })).toBeVisible()
