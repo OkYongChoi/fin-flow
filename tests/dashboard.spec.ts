@@ -22,6 +22,7 @@ test('simulation playback stays explicitly labelled', async ({ page }) => {
   await expect(page.locator('.simulation-badge')).toContainText('시뮬레이션')
   await page.getByRole('button', { name: '시뮬레이션 재생' }).click()
   await expect(page.getByRole('button', { name: '일시정지' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '일시정지' })).toHaveAttribute('aria-pressed', 'true')
 })
 
 test('timeline tabs support keyboard navigation and announce their panel', async ({ page }) => {
@@ -72,7 +73,8 @@ test('network filter, inspector tabs, and timeline controls are interactive', as
   await page.getByRole('tab', { name: 'Documents' }).click()
   await expect(page.getByRole('link', { name: /Circle 2026-07-27/ })).toBeVisible()
   await page.getByLabel('Playback speed 1x').click()
-  await expect(page.getByLabel('Playback speed 2x')).toBeVisible()
+  await expect(page.getByLabel('Playback speed 2x')).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('.timeline-track button[aria-current="step"]')).toHaveCount(1)
 })
 
 test('mobile menu exposes primary navigation', async ({ page }) => {
