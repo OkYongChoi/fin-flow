@@ -21,7 +21,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
   'chips-fedwire': {
     steps: [
       { ko: '은행의 지급 지시', en: 'Originating bank', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-      { ko: 'SWIFT 메시지', en: 'SWIFT message', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
+      { ko: '지급 메시지', en: 'Payment message', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
       { ko: 'CHIPS 또는 Fedwire', en: 'CHIPS or Fedwire', noteKo: '별도 결제 경로 · 직렬 아님', noteEn: 'Alternative rails · not sequential' },
       { ko: '수취은행 반영', en: 'Beneficiary bank', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
     ],
