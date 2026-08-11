@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import metrics from '../public/data/metrics.json'
 import sources from '../public/data/sources.json'
 import { EDGES, NETWORKS, NODES } from './data'
+import { getFlowGuide } from './flowGuides'
 
 describe('financial flow contract', () => {
   it('keeps node coordinates unique for unambiguous map markers', () => {
@@ -48,5 +49,10 @@ describe('financial flow contract', () => {
 
   it('covers the requested network families including primary-market bonds', () => {
     expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'derivatives', 'usdc'])
+  })
+
+  it('keeps bond issuance and OTC derivatives guidance distinct from generic payment stages', () => {
+    expect(getFlowGuide('bond-issuance').boundary.en).toContain('Primary issuance')
+    expect(getFlowGuide('derivatives').boundary.en).toContain('Bilateral OTC')
   })
 })
