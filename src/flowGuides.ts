@@ -4,6 +4,7 @@ export interface FlowGuide {
   steps: Array<{ ko: string; en: string; noteKo: string; noteEn: string }>
   roles: Array<{ ko: string; en: string }>
   boundary: { ko: string; en: string }
+  concepts?: Array<{ ko: string; en: string }>
 }
 
 const genericGuide: FlowGuide = {
@@ -41,6 +42,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '예탁결제기관: 증권 적격성과 보관·결제 인프라를 지원합니다.', en: 'Depository: supports eligibility plus custody and settlement infrastructure.' },
     ],
     boundary: { ko: '발행(1차 시장)과 유통시장 결제는 별개의 흐름입니다.', en: 'Primary issuance and secondary-market settlement are separate flows.' },
+    concepts: [],
   },
   derivatives: {
     steps: [
@@ -55,6 +57,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '중앙청산소(CCP): 청산되는 거래에서 당사자 사이에 개입합니다.', en: 'CCP: interposes between parties for cleared transactions.' },
     ],
     boundary: { ko: '양자 OTC 거래와 중앙청산 거래를 하나의 동일한 경로로 보지 않습니다.', en: 'Bilateral OTC and centrally cleared trades are not treated as one identical path.' },
+    concepts: [],
   },
 }
 
