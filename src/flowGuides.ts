@@ -42,7 +42,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '예탁결제기관: 증권 적격성과 보관·결제 인프라를 지원합니다.', en: 'Depository: supports eligibility plus custody and settlement infrastructure.' },
     ],
     boundary: { ko: '발행(1차 시장)과 유통시장 결제는 별개의 흐름입니다.', en: 'Primary issuance and secondary-market settlement are separate flows.' },
-    concepts: [],
+    concepts: [{ ko: '1차 발행은 신규 증권을 배정하는 과정이고, 유통시장 매매·결제와 다릅니다.', en: 'Primary issuance allocates new securities; it differs from secondary trading and settlement.' }],
   },
   derivatives: {
     steps: [
