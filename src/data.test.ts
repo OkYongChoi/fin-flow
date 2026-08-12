@@ -83,4 +83,8 @@ describe('financial flow contract', () => {
   it('does not treat mark-to-market valuation as a cash settlement event', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the same payment event'))).toBe(true)
   })
+
+  it('keeps bilateral collateral management separate from a CCP-cleared path', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not automatically become a CCP-cleared path'))).toBe(true)
+  })
 })
