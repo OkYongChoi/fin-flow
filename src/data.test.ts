@@ -63,4 +63,8 @@ describe('financial flow contract', () => {
   it('scopes lead-manager guidance to coordination rather than investor-level trades', () => {
     expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('does not display investor-level trades'))).toBe(true)
   })
+
+  it('separates depository infrastructure from the cash settlement leg of DvP', () => {
+    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('cash-settlement leg of DvP'))).toBe(true)
+  })
 })

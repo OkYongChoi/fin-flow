@@ -46,6 +46,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '1차 발행은 신규 증권을 배정하는 과정이고, 유통시장 매매·결제와 다릅니다.', en: 'Primary issuance allocates new securities; it differs from secondary trading and settlement.' },
       { ko: '발행사는 자금 조달 목적과 증권 조건을 정하지만, 모든 배정·결제 장부를 운영하지는 않습니다.', en: 'The issuer sets the funding purpose and security terms, but does not operate every allocation or settlement ledger.' },
       { ko: 'IB의 주관·인수 역할은 수요 취합과 배정을 조정하는 역할이며, 투자자별 거래를 표시하지 않습니다.', en: 'The IB lead-and-underwrite role coordinates demand and allocation; it does not display investor-level trades.' },
+      { ko: '예탁결제기관의 증권 적격성·보관 인프라 역할은 DvP의 현금 측 결제와 구분해 봐야 합니다.', en: 'A depository’s eligibility and custody infrastructure role should be distinguished from the cash-settlement leg of DvP.' },
     ],
   },
   derivatives: {
