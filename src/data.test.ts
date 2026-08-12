@@ -71,4 +71,8 @@ describe('financial flow contract', () => {
   it('does not treat offering allocation as secondary-market trading', () => {
     expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('secondary-market price discovery'))).toBe(true)
   })
+
+  it('keeps OTC counterparties distinct from CCP interposition', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('CCP can interpose'))).toBe(true)
+  })
 })
