@@ -55,4 +55,8 @@ describe('financial flow contract', () => {
     expect(getFlowGuide('bond-issuance').boundary.en).toContain('Primary issuance')
     expect(getFlowGuide('derivatives').boundary.en).toContain('Bilateral OTC')
   })
+
+  it('keeps the issuer role separate from downstream allocation and settlement ledgers', () => {
+    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('does not operate every allocation'))).toBe(true)
+  })
 })
