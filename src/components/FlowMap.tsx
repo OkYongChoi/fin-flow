@@ -22,6 +22,7 @@ const SEMANTIC_LABELS: Record<FlowEdge['semantic'], { ko: string; en: string }> 
 
 const NETWORK_TABLE_SCOPE: Partial<Record<NetworkId, { ko: string; en: string }>> = {
   'bond-issuance': { ko: '채권 발행의 1차 시장 구조도', en: 'Primary-market bond issuance schematic' },
+  derivatives: { ko: 'OTC 파생상품 청산 경로 구조도', en: 'OTC derivatives clearing-path schematic' },
 }
 
 function DeckOverlay({ layers }: { layers: ArcLayer<FlowEdge>[] }) {
