@@ -74,6 +74,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '증거금 콜의 산정·통지·이행 시점은 상품과 운영 약정에 따라 다를 수 있으므로, 하나의 즉시 결제 이벤트로 가정하지 않습니다.', en: 'Margin-call calculation, notice, and performance can occur at different times under product and operational terms; they are not assumed to be one instant settlement event.' },
       { ko: '중앙청산 거래의 노베이션은 CCP가 당사자 사이에 개입하는 법적·운영적 전환을 설명하며, 모든 양자 OTC 계약의 자동 이전을 뜻하지 않습니다.', en: 'Novation for a cleared trade describes the legal and operational interposition of a CCP; it does not mean every bilateral OTC contract is automatically transferred.' },
       { ko: '청산 거래의 디폴트 관리는 CCP 규정에 따른 위험 관리 절차이며, 일반적인 만기 정산 단계나 모든 양자 거래에 동일하게 적용되는 절차로 표시하지 않습니다.', en: 'Default management for a cleared trade is a CCP rule-governed risk process; it is not an ordinary maturity settlement step or a process identical for every bilateral trade.' },
+      { ko: '파생상품의 만기 및 정산은 상품 조건에 따르며, 현금결제와 실물인도는 구분됩니다. 명목금액만으로 결제 방식을 추정하지 않습니다.', en: 'Derivative maturity and settlement follow the product terms: cash settlement and physical delivery are distinct, and the method cannot be inferred from notional alone.' },
     ],
   },
 }
