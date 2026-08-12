@@ -68,6 +68,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '거래 확인은 합의된 경제 조건을 기록하는 단계이며, 가치평가·증거금 산정·현금 이동을 그 자체로 의미하지 않습니다.', en: 'Trade confirmation records agreed economic terms; it does not itself mean valuation, margin calculation, or cash movement.' },
       { ko: '시장가치 평가는 노출액을 측정하는 과정이며, 증거금 교환이나 최종 현금 결제와 동일한 지급 이벤트가 아닙니다.', en: 'Mark-to-market valuation measures exposure; it is not the same payment event as margin exchange or final cash settlement.' },
       { ko: '양자 담보관리는 거래상대방 간 증거금 운영이며, 중앙청산소가 개입하는 청산 경로와 자동으로 동일해지지 않습니다.', en: 'Bilateral collateral management operates margin between counterparties; it does not automatically become a CCP-cleared path.' },
+      { ko: '중앙청산이 적용되면 CCP는 정해진 청산 거래에서 당사자 사이에 개입하지만, 모든 OTC 계약이 자동으로 청산되는 것은 아닙니다.', en: 'For eligible cleared trades, a CCP interposes between parties; not every OTC contract is automatically cleared.' },
     ],
   },
 }

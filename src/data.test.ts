@@ -87,4 +87,8 @@ describe('financial flow contract', () => {
   it('keeps bilateral collateral management separate from a CCP-cleared path', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not automatically become a CCP-cleared path'))).toBe(true)
   })
+
+  it('limits CCP interposition to eligible cleared trades', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not every OTC contract is automatically cleared'))).toBe(true)
+  })
 })
