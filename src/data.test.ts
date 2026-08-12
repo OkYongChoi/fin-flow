@@ -79,4 +79,8 @@ describe('financial flow contract', () => {
   it('does not conflate trade confirmation with valuation, margin, or cash movement', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not itself mean valuation'))).toBe(true)
   })
+
+  it('does not treat mark-to-market valuation as a cash settlement event', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the same payment event'))).toBe(true)
+  })
 })
