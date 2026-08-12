@@ -69,6 +69,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '시장가치 평가는 노출액을 측정하는 과정이며, 증거금 교환이나 최종 현금 결제와 동일한 지급 이벤트가 아닙니다.', en: 'Mark-to-market valuation measures exposure; it is not the same payment event as margin exchange or final cash settlement.' },
       { ko: '양자 담보관리는 거래상대방 간 증거금 운영이며, 중앙청산소가 개입하는 청산 경로와 자동으로 동일해지지 않습니다.', en: 'Bilateral collateral management operates margin between counterparties; it does not automatically become a CCP-cleared path.' },
       { ko: '중앙청산이 적용되면 CCP는 정해진 청산 거래에서 당사자 사이에 개입하지만, 모든 OTC 계약이 자동으로 청산되는 것은 아닙니다.', en: 'For eligible cleared trades, a CCP interposes between parties; not every OTC contract is automatically cleared.' },
+      { ko: '초기증거금은 잠재적 미래 노출을 위한 담보이며, 이미 발생한 일일 가치변동을 정산하는 변동증거금과 구분합니다.', en: 'Initial margin covers potential future exposure; it is distinct from variation margin that settles realized daily value changes.' },
     ],
   },
 }

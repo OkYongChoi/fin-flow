@@ -91,4 +91,8 @@ describe('financial flow contract', () => {
   it('limits CCP interposition to eligible cleared trades', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not every OTC contract is automatically cleared'))).toBe(true)
   })
+
+  it('distinguishes initial margin from variation margin', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('potential future exposure'))).toBe(true)
+  })
 })
