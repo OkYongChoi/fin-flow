@@ -115,4 +115,8 @@ describe('financial flow contract', () => {
   it('does not infer the derivative settlement method from notional', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('cannot be inferred from notional alone'))).toBe(true)
   })
+
+  it('distinguishes derivative notional from market value and exposure', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the same as market value or credit exposure'))).toBe(true)
+  })
 })
