@@ -11,6 +11,15 @@ import type { FlowEdge, Locale, NetworkId } from '../types'
 const WORLD = feature(countries as never, (countries as { objects: { countries: never } }).objects.countries) as unknown as GeoJSON.FeatureCollection
 const BASE_STYLE = { version: 8 as const, sources: {}, layers: [{ id: 'background', type: 'background' as const, paint: { 'background-color': '#061728' } }] }
 
+const SEMANTIC_LABELS: Record<FlowEdge['semantic'], { ko: string; en: string }> = {
+  message: { ko: '메시지 전달', en: 'Message transfer' },
+  authorization: { ko: '승인', en: 'Authorization' },
+  clearing: { ko: '청산', en: 'Clearing' },
+  settlement: { ko: '결제', en: 'Settlement' },
+  asset_transfer: { ko: '자산 이전', en: 'Asset transfer' },
+  issuance: { ko: '발행', en: 'Issuance' },
+}
+
 function DeckOverlay({ layers }: { layers: ArcLayer<FlowEdge>[] }) {
   const overlay = useControl(() => new MapboxOverlay({ interleaved: false, layers }))
   overlay.setProps({ layers })
@@ -58,7 +67,7 @@ export default function FlowMap({ selected, proMode, locale }: { selected: Netwo
       <h2 id="map-title" className="map-title">{locale === 'ko' ? '글로벌 지도' : 'Global map'}</h2>
       {selectedNode ? <div className="node-tooltip"><header><b>{selectedNode.label}</b><button type="button" aria-label={locale === 'ko' ? '도움말 닫기' : 'Close tooltip'} onClick={() => setActiveNode('')}>×</button></header><dl><dt>{locale === 'ko' ? '역할' : 'Role'}</dt><dd>{locale === 'ko' ? '글로벌 금융 허브' : 'Global financial hub'}</dd><dt>{locale === 'ko' ? '표현' : 'Representation'}</dt><dd>{locale === 'ko' ? '설명용 노드' : 'Schematic node'}</dd></dl></div> : null}
       <div id="map-disclaimer" className="map-disclaimer"><span className="status-dot simulation" />{locale === 'ko' ? '구조도 · 실거래 위치 아님' : 'Schematic · not transaction locations'}</div>
-      <details className="map-data-table"><summary>{locale === 'ko' ? `지도 데이터 표로 보기 (${tableEdges.length}개 흐름)` : `View map data as a table (${tableEdges.length} flows)`}</summary><table><caption>{locale === 'ko' ? `${proMode ? '모든 금융망' : selected.toUpperCase()}의 설명용 흐름` : `Illustrative flows for ${proMode ? 'all financial rails' : selected.toUpperCase()}`}</caption><thead><tr><th scope="col">{locale === 'ko' ? '출발' : 'Source'}</th><th scope="col">{locale === 'ko' ? '도착' : 'Target'}</th><th scope="col">{locale === 'ko' ? '유형' : 'Type'}</th></tr></thead><tbody>{tableEdges.map((item) => <tr key={item.id}><td>{getNode(item.source).label}</td><td>{getNode(item.target).label}</td><td>{item.semantic}</td></tr>)}</tbody></table></details>
+      <details className="map-data-table"><summary>{locale === 'ko' ? `지도 데이터 표로 보기 (${tableEdges.length}개 흐름)` : `View map data as a table (${tableEdges.length} flows)`}</summary><table><caption>{locale === 'ko' ? `${proMode ? '모든 금융망' : selected.toUpperCase()}의 설명용 흐름` : `Illustrative flows for ${proMode ? 'all financial rails' : selected.toUpperCase()}`}</caption><thead><tr><th scope="col">{locale === 'ko' ? '출발' : 'Source'}</th><th scope="col">{locale === 'ko' ? '도착' : 'Target'}</th><th scope="col">{locale === 'ko' ? '유형' : 'Type'}</th></tr></thead><tbody>{tableEdges.map((item) => <tr key={item.id}><td>{getNode(item.source).label}</td><td>{getNode(item.target).label}</td><td>{SEMANTIC_LABELS[item.semantic][locale]}</td></tr>)}</tbody></table></details>
     </section>
   )
 }
