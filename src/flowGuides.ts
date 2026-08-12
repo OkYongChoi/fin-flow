@@ -66,6 +66,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
     concepts: [
       { ko: 'OTC 거래상대방이 계약 조건과 위험 이전을 합의하더라도, 중앙청산 거래에서는 CCP가 당사자 사이에 개입할 수 있습니다.', en: 'OTC counterparties agree contract terms and risk transfer, while a CCP can interpose between them for centrally cleared trades.' },
       { ko: '거래 확인은 합의된 경제 조건을 기록하는 단계이며, 가치평가·증거금 산정·현금 이동을 그 자체로 의미하지 않습니다.', en: 'Trade confirmation records agreed economic terms; it does not itself mean valuation, margin calculation, or cash movement.' },
+      { ko: '시장가치 평가는 노출액을 측정하는 과정이며, 증거금 교환이나 최종 현금 결제와 동일한 지급 이벤트가 아닙니다.', en: 'Mark-to-market valuation measures exposure; it is not the same payment event as margin exchange or final cash settlement.' },
     ],
   },
 }
