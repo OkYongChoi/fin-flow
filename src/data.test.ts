@@ -95,4 +95,8 @@ describe('financial flow contract', () => {
   it('distinguishes initial margin from variation margin', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('potential future exposure'))).toBe(true)
   })
+
+  it('keeps variation margin distinct from notional and final settlement', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the contract notional'))).toBe(true)
+  })
 })
