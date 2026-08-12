@@ -111,4 +111,8 @@ describe('financial flow contract', () => {
   it('keeps cleared-trade default management separate from ordinary settlement', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not an ordinary maturity settlement step'))).toBe(true)
   })
+
+  it('does not infer the derivative settlement method from notional', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('cannot be inferred from notional alone'))).toBe(true)
+  })
 })
