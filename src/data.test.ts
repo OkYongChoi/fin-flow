@@ -75,4 +75,8 @@ describe('financial flow contract', () => {
   it('keeps OTC counterparties distinct from CCP interposition', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('CCP can interpose'))).toBe(true)
   })
+
+  it('does not conflate trade confirmation with valuation, margin, or cash movement', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not itself mean valuation'))).toBe(true)
+  })
 })

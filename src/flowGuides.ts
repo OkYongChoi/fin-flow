@@ -63,7 +63,10 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '중앙청산소(CCP): 청산되는 거래에서 당사자 사이에 개입합니다.', en: 'CCP: interposes between parties for cleared transactions.' },
     ],
     boundary: { ko: '양자 OTC 거래와 중앙청산 거래를 하나의 동일한 경로로 보지 않습니다.', en: 'Bilateral OTC and centrally cleared trades are not treated as one identical path.' },
-    concepts: [{ ko: 'OTC 거래상대방이 계약 조건과 위험 이전을 합의하더라도, 중앙청산 거래에서는 CCP가 당사자 사이에 개입할 수 있습니다.', en: 'OTC counterparties agree contract terms and risk transfer, while a CCP can interpose between them for centrally cleared trades.' }],
+    concepts: [
+      { ko: 'OTC 거래상대방이 계약 조건과 위험 이전을 합의하더라도, 중앙청산 거래에서는 CCP가 당사자 사이에 개입할 수 있습니다.', en: 'OTC counterparties agree contract terms and risk transfer, while a CCP can interpose between them for centrally cleared trades.' },
+      { ko: '거래 확인은 합의된 경제 조건을 기록하는 단계이며, 가치평가·증거금 산정·현금 이동을 그 자체로 의미하지 않습니다.', en: 'Trade confirmation records agreed economic terms; it does not itself mean valuation, margin calculation, or cash movement.' },
+    ],
   },
 }
 
