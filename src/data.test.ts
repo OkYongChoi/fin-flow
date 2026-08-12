@@ -59,4 +59,8 @@ describe('financial flow contract', () => {
   it('keeps the issuer role separate from downstream allocation and settlement ledgers', () => {
     expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('does not operate every allocation'))).toBe(true)
   })
+
+  it('scopes lead-manager guidance to coordination rather than investor-level trades', () => {
+    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('does not display investor-level trades'))).toBe(true)
+  })
 })
