@@ -67,4 +67,8 @@ describe('financial flow contract', () => {
   it('separates depository infrastructure from the cash settlement leg of DvP', () => {
     expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('cash-settlement leg of DvP'))).toBe(true)
   })
+
+  it('does not treat offering allocation as secondary-market trading', () => {
+    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('secondary-market price discovery'))).toBe(true)
+  })
 })
