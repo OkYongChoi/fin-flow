@@ -32,3 +32,10 @@ This plan expands the current source-backed schematic without presenting live tr
 28. Network-card OTC lifecycle summary
 29. End-to-end accessibility coverage
 30. Final cross-network regression and documentation audit
+
+## Final audit scope
+
+- Keep bond issuance in the primary-market allocation and delivery-versus-payment context; do not represent it as secondary-market trading.
+- Keep OTC derivatives distinctions explicit: confirmation, valuation, collateral, clearing, margin, novation, default management, maturity, notional, and settlement are separate concepts.
+- Treat map paths and source links as explanatory, source-backed schematics rather than live trade records or legal/execution guidance.
+- Run data validation, unit tests, full Playwright coverage, production build, and whitespace checks before the final merge.
