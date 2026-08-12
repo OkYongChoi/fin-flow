@@ -107,4 +107,8 @@ describe('financial flow contract', () => {
   it('limits novation to the cleared-trade context', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not mean every bilateral OTC contract is automatically transferred'))).toBe(true)
   })
+
+  it('keeps cleared-trade default management separate from ordinary settlement', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not an ordinary maturity settlement step'))).toBe(true)
+  })
 })
