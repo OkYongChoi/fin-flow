@@ -37,7 +37,7 @@ export function DetailInspector({ selected, metrics, sources, locale }: { select
         {metrics.map((metric) => <div key={metric.id}><span>{locale === 'ko' ? metric.labelKo : metric.labelEn}</span><strong>{metric.display}</strong><small>{metric.coveragePeriod}</small></div>)}
         {metrics.length === 0 ? <p>—</p> : null}
       </div></section> : null}
-      {tab === 'documents' ? <section className="source-section"><h3><FileText size={14} />{t('common.sourceDate')}</h3><p>{locale === 'ko' ? '출처는 이 설명용 단계와 집계 지표의 범위를 뒷받침하며, 개별 거래·계약·실시간 상태를 증명하지 않습니다.' : 'Sources support the scope of these illustrative stages and aggregate metrics; they do not evidence an individual transaction, contract, or live status.'}</p>{sources.map((source) => <a key={source.id} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.provider}</b><small>{source.coveragePeriod} · {source.cadence}</small></span><ExternalLink size={13} /></a>)}</section> : null}
+      {tab === 'documents' ? <section className="source-section"><h3><FileText size={14} />{t('common.sourceDate')}</h3><p>{locale === 'ko' ? '출처는 이 설명용 단계와 집계 지표의 범위를 뒷받침하며, 개별 거래·계약·실시간 상태를 증명하지 않습니다.' : 'Sources support the scope of these illustrative stages and aggregate metrics; they do not evidence an individual transaction, contract, or live status.'}</p>{sources.map((source) => <a key={source.id} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.provider}</b><small>{source.coveragePeriod} · {source.cadence}</small><small>{locale === 'ko' ? `발행 ${source.publishedAt} · 조회 ${source.retrievedAt}` : `Published ${source.publishedAt} · retrieved ${source.retrievedAt}`}</small></span><ExternalLink size={13} /></a>)}</section> : null}
     </aside>
   )
 }
