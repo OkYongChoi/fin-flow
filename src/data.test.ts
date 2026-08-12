@@ -119,4 +119,8 @@ describe('financial flow contract', () => {
   it('distinguishes derivative notional from market value and exposure', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the same as market value or credit exposure'))).toBe(true)
   })
+
+  it('keeps collateral movement separate from settlement-asset delivery', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not interchangeable with delivery of a settlement asset'))).toBe(true)
+  })
 })

@@ -76,6 +76,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '청산 거래의 디폴트 관리는 CCP 규정에 따른 위험 관리 절차이며, 일반적인 만기 정산 단계나 모든 양자 거래에 동일하게 적용되는 절차로 표시하지 않습니다.', en: 'Default management for a cleared trade is a CCP rule-governed risk process; it is not an ordinary maturity settlement step or a process identical for every bilateral trade.' },
       { ko: '파생상품의 만기 및 정산은 상품 조건에 따르며, 현금결제와 실물인도는 구분됩니다. 명목금액만으로 결제 방식을 추정하지 않습니다.', en: 'Derivative maturity and settlement follow the product terms: cash settlement and physical delivery are distinct, and the method cannot be inferred from notional alone.' },
       { ko: '명목금액은 계약의 기준 금액일 수 있지만, 시장가치나 신용 노출액과 같지 않습니다. 따라서 명목금액만으로 현금흐름 또는 위험 규모를 판단하지 않습니다.', en: 'Notional is a contractual reference amount, not the same as market value or credit exposure; it alone does not determine cash flow or risk size.' },
+      { ko: '담보의 이전과 계약상 정산자산의 인도는 서로 바꿔 쓸 수 없습니다. 담보 적격성·통화·시점은 해당 담보 약정과 상품 조건을 따릅니다.', en: 'Collateral movement is not interchangeable with delivery of a settlement asset; eligibility, currency, and timing follow the collateral and product terms.' },
     ],
   },
 }
