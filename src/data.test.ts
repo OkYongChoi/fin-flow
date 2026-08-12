@@ -99,4 +99,8 @@ describe('financial flow contract', () => {
   it('keeps variation margin distinct from notional and final settlement', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the contract notional'))).toBe(true)
   })
+
+  it('does not collapse margin-call steps into one instant settlement event', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not assumed to be one instant settlement event'))).toBe(true)
+  })
 })
