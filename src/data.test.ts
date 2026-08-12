@@ -103,4 +103,8 @@ describe('financial flow contract', () => {
   it('does not collapse margin-call steps into one instant settlement event', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not assumed to be one instant settlement event'))).toBe(true)
   })
+
+  it('limits novation to the cleared-trade context', () => {
+    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not mean every bilateral OTC contract is automatically transferred'))).toBe(true)
+  })
 })

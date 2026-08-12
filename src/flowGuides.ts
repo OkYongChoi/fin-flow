@@ -72,6 +72,7 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '초기증거금은 잠재적 미래 노출을 위한 담보이며, 이미 발생한 일일 가치변동을 정산하는 변동증거금과 구분합니다.', en: 'Initial margin covers potential future exposure; it is distinct from variation margin that settles realized daily value changes.' },
       { ko: '변동증거금은 합의된 가치변동에 따라 이동할 수 있지만, 이는 계약의 명목금액이나 만기 시 최종 정산과 같은 값이 아닙니다.', en: 'Variation margin can move with agreed value changes, but it is not the contract notional or the same as final maturity settlement.' },
       { ko: '증거금 콜의 산정·통지·이행 시점은 상품과 운영 약정에 따라 다를 수 있으므로, 하나의 즉시 결제 이벤트로 가정하지 않습니다.', en: 'Margin-call calculation, notice, and performance can occur at different times under product and operational terms; they are not assumed to be one instant settlement event.' },
+      { ko: '중앙청산 거래의 노베이션은 CCP가 당사자 사이에 개입하는 법적·운영적 전환을 설명하며, 모든 양자 OTC 계약의 자동 이전을 뜻하지 않습니다.', en: 'Novation for a cleared trade describes the legal and operational interposition of a CCP; it does not mean every bilateral OTC contract is automatically transferred.' },
     ],
   },
 }
