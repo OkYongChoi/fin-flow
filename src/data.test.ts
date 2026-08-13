@@ -48,7 +48,7 @@ describe('financial flow contract', () => {
   })
 
   it('covers the requested network families including primary-market bonds', () => {
-    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'derivatives', 'fx-pvp', 'usdc'])
+    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'derivatives', 'fx-pvp', 'repo-financing', 'usdc'])
   })
 
   it('keeps bond issuance and OTC derivatives guidance distinct from generic payment stages', () => {
