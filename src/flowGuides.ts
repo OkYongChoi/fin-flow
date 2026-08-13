@@ -79,6 +79,25 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '담보의 이전과 계약상 정산자산의 인도는 서로 바꿔 쓸 수 없습니다. 담보 적격성·통화·시점은 해당 담보 약정과 상품 조건을 따릅니다.', en: 'Collateral movement is not interchangeable with delivery of a settlement asset; eligibility, currency, and timing follow the collateral and product terms.' },
     ],
   },
+  'fx-pvp': {
+    steps: [
+      { ko: 'FX 거래 정보 포착', en: 'Capture FX trade details', noteKo: '기초 거래 체결 자체를 재현하지 않습니다.', noteEn: 'Does not reproduce the underlying trade execution.' },
+      { ko: '지급지시 제출', en: 'Submit payment instructions', noteKo: '각 통화 지급지시는 별도 자금조달과 구분됩니다.', noteEn: 'Each currency instruction is distinct from funding.' },
+      { ko: 'PvP 동시 결제', en: 'Settle payment versus payment', noteKo: '두 통화 지급이 함께 결제되는 설명용 단계입니다.', noteEn: 'Illustrates linked settlement of the two currency payments.' },
+      { ko: '잔액 반환·확인', en: 'Return balances and confirm', noteKo: '상계 결과는 개별 거래의 가격이나 포지션이 아닙니다.', noteEn: 'Netting results are not trade prices or positions.' },
+    ],
+    roles: [
+      { ko: '결제 회원: 지급지시와 필요한 자금을 관리합니다.', en: 'Settlement member: manages payment instructions and required funding.' },
+      { ko: 'CLS: 해당 서비스 범위에서 다자간 상계와 PvP 결제를 운영합니다.', en: 'CLS: operates multilateral netting and PvP settlement within its service scope.' },
+      { ko: '중앙은행 RTGS: 적격 통화의 계좌·지급 인프라를 제공합니다.', en: 'Central-bank RTGS: provides account and payment infrastructure for eligible currencies.' },
+    ],
+    boundary: { ko: '이 흐름은 CLS 서비스 범위의 FX 지급결제를 설명하며, 모든 FX 거래 또는 통화를 나타내지 않습니다.', en: 'This route explains FX payment settlement within CLS service scope; it does not represent every FX trade or currency.' },
+    concepts: [
+      { ko: 'PvP는 두 통화 지급을 연계해 결제위험을 줄이는 방식이며, FX 가격 합의나 거래 체결 그 자체와 다릅니다.', en: 'PvP links the two currency payments to mitigate settlement risk; it is distinct from agreeing an FX price or executing the trade.' },
+      { ko: '다자간 상계는 결제 회원의 총 지급 필요액을 줄일 수 있지만, 각 기초 거래의 법적 조건이나 경제적 노출을 대체하지 않습니다.', en: 'Multilateral netting can reduce a member’s aggregate payment need; it does not replace the legal terms or economic exposure of each underlying trade.' },
+      { ko: 'CLSSettlement의 통화·회원·운영 시간 범위는 제한되어 있으므로, 이 구조도를 모든 통화쌍의 보편적 결제 경로로 해석하지 않습니다.', en: 'CLSSettlement has defined currency, membership, and operating-hour scope; this schematic is not a universal settlement route for every currency pair.' },
+    ],
+  },
 }
 
 export function getFlowGuide(networkId: NetworkId): FlowGuide {
