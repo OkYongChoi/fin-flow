@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { readFileSync } from 'node:fs'
+import { NETWORKS } from '../src/data'
 
 const sourceCount = JSON.parse(readFileSync(new URL('../public/data/sources.json', import.meta.url), 'utf8')).length
 
@@ -19,7 +20,7 @@ test('dashboard exposes sourced metrics and updates selected network', async ({ 
 test('network selection is exposed as a labelled navigation landmark', async ({ page }) => {
   await page.goto('/en/map')
   await expect(page.getByRole('complementary', { name: 'Financial networks' })).toBeVisible()
-  await expect(page.getByRole('navigation', { name: 'Financial networks' }).getByRole('button')).toHaveCount(6)
+  await expect(page.getByRole('navigation', { name: 'Financial networks' }).getByRole('button')).toHaveCount(NETWORKS.length)
 })
 
 test('network selection supports directional keyboard movement', async ({ page }) => {
