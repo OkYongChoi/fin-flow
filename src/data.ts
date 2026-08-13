@@ -7,6 +7,7 @@ export const NETWORKS: Array<{ id: NetworkId; label: string; labelEn: string; de
   { id: 'bond-issuance', label: '채권 발행', labelEn: 'Bond issuance', description: '발행사·IB·예탁결제의 1차 시장 배정·결제 구조', descriptionEn: 'Primary-market allocation and settlement across issuer, IB and depository' },
   { id: 'derivatives', label: '파생상품', labelEn: 'OTC derivatives', description: 'OTC 계약·확인·담보·청산의 수명주기', descriptionEn: 'OTC contract, confirmation, collateral, and clearing lifecycle' },
   { id: 'fx-pvp', label: 'FX PvP 결제', labelEn: 'FX PvP settlement', description: '외환 지급지시의 동시 결제와 다자간 상계 구조', descriptionEn: 'Simultaneous settlement and multilateral netting of FX payment instructions' },
+  { id: 'repo-financing', label: '레포 자금조달', labelEn: 'Repo financing', description: '담보증권을 이용한 단기 자금조달·반환 구조', descriptionEn: 'Short-term funding and return structure using securities collateral' },
   { id: 'usdc', label: 'Circle USDC', labelEn: 'Circle USDC', description: '발행·상환·온체인 이동', descriptionEn: 'Issuance, redemption and on-chain transfer' },
 ]
 
@@ -17,6 +18,7 @@ export const NETWORK_COLORS: Record<NetworkId, [number, number, number]> = {
   'bond-issuance': [255, 122, 89],
   derivatives: [173, 92, 255],
   'fx-pvp': [41, 185, 133],
+  'repo-financing': [224, 135, 49],
   usdc: [63, 211, 185],
 }
 
@@ -43,6 +45,7 @@ export const EDGES: FlowEdge[] = [
   edge('b1', 'bond-issuance', 'new-york', 'london', 'issuance', ['dtcc-underwriting', 'sec-t1']), edge('b2', 'bond-issuance', 'new-york', 'tokyo', 'issuance', ['dtcc-underwriting', 'sec-t1']), edge('b3', 'bond-issuance', 'london', 'singapore', 'issuance', ['dtcc-underwriting']),
   edge('d1', 'derivatives', 'london', 'new-york', 'clearing', ['bis-otc', 'isda-collateral']), edge('d2', 'derivatives', 'london', 'tokyo', 'clearing', ['bis-otc', 'isda-collateral']), edge('d3', 'derivatives', 'new-york', 'hong-kong', 'clearing', ['bis-otc', 'isda-collateral']),
   edge('f1', 'fx-pvp', 'london', 'new-york', 'settlement', ['cls-settlement']), edge('f2', 'fx-pvp', 'tokyo', 'london', 'settlement', ['cls-settlement']), edge('f3', 'fx-pvp', 'singapore', 'new-york', 'settlement', ['cls-settlement']),
+  edge('r1', 'repo-financing', 'new-york', 'london', 'clearing', ['ficc-repo']), edge('r2', 'repo-financing', 'new-york', 'tokyo', 'clearing', ['ficc-repo']), edge('r3', 'repo-financing', 'new-york', 'singapore', 'clearing', ['ficc-repo']),
   edge('u1', 'usdc', 'new-york', 'singapore', 'asset_transfer', ['circle-contracts']), edge('u2', 'usdc', 'london', 'seoul', 'asset_transfer', ['circle-contracts']), edge('u3', 'usdc', 'singapore', 'tokyo', 'asset_transfer', ['circle-contracts']),
 ]
 
