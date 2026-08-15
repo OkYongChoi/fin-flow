@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 import { NETWORKS } from '../src/data'
 
+const snapshotVersion = JSON.parse(readFileSync(new URL('../public/data/manifest.json', import.meta.url), 'utf8')).version
 const sourceCount = JSON.parse(readFileSync(new URL('../public/data/sources.json', import.meta.url), 'utf8')).length
 
 test('dashboard exposes sourced metrics and updates selected network', async ({ page }) => {
@@ -90,7 +91,7 @@ test('view-density controls use the active locale for their accessible name', as
 
 test('data snapshot version is exposed as a localized live status', async ({ page }) => {
   await page.goto('/en/map')
-  await expect(page.getByRole('status', { name: 'Data snapshot version' })).toContainText('2026.08.10')
+  await expect(page.getByRole('status', { name: 'Data snapshot version' })).toContainText(snapshotVersion)
 })
 
 test('data route sets a descriptive document title', async ({ page }) => {
