@@ -123,4 +123,11 @@ describe('financial flow contract', () => {
   it('keeps collateral movement separate from settlement-asset delivery', () => {
     expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not interchangeable with delivery of a settlement asset'))).toBe(true)
   })
+
+  it('keeps the FX PvP route available as a distinct, source-backed guide', () => {
+    const guide = getFlowGuide('fx-pvp')
+    expect(NETWORKS.some((network) => network.id === 'fx-pvp')).toBe(true)
+    expect(guide.boundary.en).toContain('CLS service scope')
+    expect(guide.steps.map((step) => step.en)).toContain('Settle payment versus payment')
+  })
 })
