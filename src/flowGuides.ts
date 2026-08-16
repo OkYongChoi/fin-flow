@@ -79,6 +79,26 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '담보의 이전과 계약상 정산자산의 인도는 서로 바꿔 쓸 수 없습니다. 담보 적격성·통화·시점은 해당 담보 약정과 상품 조건을 따릅니다.', en: 'Collateral movement is not interchangeable with delivery of a settlement asset; eligibility, currency, and timing follow the collateral and product terms.' },
     ],
   },
+  'listed-derivatives': {
+    steps: [
+      { ko: '거래소 주문 체결', en: 'Exchange execution', noteKo: '표준화된 상장계약의 체결 단계이며, OTC 양자 협상이 아닙니다.', noteEn: 'Execution of a standardised listed contract, not bilateral OTC negotiation.' },
+      { ko: '청산회원 제출·노베이션', en: 'Submit through a clearing member', noteKo: '고객은 통상 FCM을 통해 접근하고, 적격 거래에서 CCP가 개입합니다.', noteEn: 'Customers ordinarily access through an FCM; the CCP interposes for eligible cleared trades.' },
+      { ko: '일일 시가평가·증거금', en: 'Daily mark-to-market and margin', noteKo: '일일 손익 정산과 초기증거금은 같은 의무가 아닙니다.', noteEn: 'Daily gain/loss settlement is distinct from initial performance-bond coverage.' },
+      { ko: '만기·행사 또는 인도', en: 'Expiry, exercise, or delivery', noteKo: '현금결제·행사·인도 여부는 상품 조건에 따릅니다.', noteEn: 'Cash settlement, exercise, or delivery follows the product terms.' },
+    ],
+    roles: [
+      { ko: '거래소: 표준화된 상장계약의 체결 장소를 제공합니다.', en: 'Exchange: provides a venue for standardised listed-contract execution.' },
+      { ko: 'FCM·청산회원: 고객 접근과 청산소에 대한 재무 의무를 지원합니다.', en: 'FCM and clearing member: support customer access and financial obligations to the clearinghouse.' },
+      { ko: '중앙청산소(CCP): 적격 청산 거래에서 매수자와 매도자 사이에 개입합니다.', en: 'CCP: interposes between buyer and seller for eligible cleared trades.' },
+    ],
+    boundary: { ko: '이 안내는 CME 교육 자료를 바탕으로 한 상장 파생상품 청산 수명주기이며, OTC 경로·실시간 증거금 계산·거래별 포지션·지리적 서비스 범위를 나타내지 않습니다.', en: 'This guide describes a listed-derivatives clearing lifecycle using a CME educational reference; it is not an OTC lifecycle, live margin calculation, trade-specific position, or geographic service map.' },
+    concepts: [
+      { ko: '상장 파생상품은 거래소의 표준계약 체결과 청산회원 경로를 설명하며, 기존 OTC 화면의 양자 계약·확인 절차와 동일시하지 않습니다.', en: 'Listed derivatives use exchange-standardised execution and a clearing-member route; they are not the bilateral OTC contract-and-confirmation lifecycle.' },
+      { ko: '청산회원은 고객의 CME Clearing 접근을 제공할 수 있고 고객 의무를 보증하지만, 모든 시장참가자가 CCP의 직접 회원이라는 뜻은 아닙니다.', en: 'A clearing member can provide customer access to CME Clearing and guarantee customer obligations; this does not make every market participant a direct CCP member.' },
+      { ko: '일일 시가평가는 청산주기마다 손익 현금을 이동시킬 수 있으며, 잠재 미래 손실을 담보하는 초기증거금과 최종 만기정산을 구분합니다.', en: 'Daily mark-to-market can move gain/loss cash at a clearing cycle; it is distinct from initial margin for potential future loss and from final expiry settlement.' },
+      { ko: '만기 시 현금결제·옵션행사·실물인도는 상품 규칙에 따르므로, 하나의 모든 상장상품에 공통인 결과로 표시하지 않습니다.', en: 'Cash settlement, option exercise, and physical delivery at expiry follow product rules; they are not one universal outcome for every listed product.' },
+    ],
+  },
   'fx-pvp': {
     steps: [
       { ko: 'FX 거래 정보 포착', en: 'Capture FX trade details', noteKo: '기초 거래 체결 자체를 재현하지 않습니다.', noteEn: 'Does not reproduce the underlying trade execution.' },
