@@ -70,6 +70,26 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '만기·전부 또는 일부 상환·환매는 해당 약관과 DTC 절차에 따르며, 하나의 보편적 이표 계산이나 세금 처리로 일반화하지 않습니다.', en: 'Maturity, full/partial redemption, and calls follow the applicable terms and DTC procedures; they are not generalised into one universal coupon or tax calculation.' },
     ],
   },
+  'asset-backed-securitization': {
+    steps: [
+      { ko: '기초자산 풀 정의', en: 'Define the asset pool', noteKo: '기초자산의 범주를 설명하며, 법적 양도 의견이나 개별 계약을 판단하지 않습니다.', noteEn: 'Describes an asset-pool category; it does not determine legal transfer treatment or an individual contract.' },
+      { ko: 'SPV·트랜치 조건 설정', en: 'Set SPV and tranche terms', noteKo: '구조와 증권 조건은 신용등급·가격·투자 권고와 구분됩니다.', noteEn: 'Structure and security terms are distinct from a credit rating, price, or investment recommendation.' },
+      { ko: '증권 발행·종결', en: 'Issue securities and close', noteKo: '등록·공시 및 종결은 투자자별 배정 장부를 재현하지 않습니다.', noteEn: 'Registration, disclosure, and closing do not reproduce investor-level allocation ledgers.' },
+      { ko: '회수금·워터폴 배분', en: 'Collect cash flows and apply waterfall', noteKo: '설명용 우선순위이며 실제 지급액·손실·트리거를 계산하지 않습니다.', noteEn: 'An explanatory priority, not a calculation of actual payments, losses, or triggers.' },
+    ],
+    roles: [
+      { ko: '자산보유자·발행 주체: 기초자산과 자금조달 구조를 정합니다.', en: 'Asset owner and sponsor: define the assets and financing structure.' },
+      { ko: 'SPV·신탁: 거래 문서에 따른 증권 발행과 현금흐름 구조를 분리합니다.', en: 'SPV or trust: separates security issuance and cash-flow structure under the transaction documents.' },
+      { ko: '서비서·지급대행: 기초자산 회수와 정해진 배분 운영을 지원할 수 있습니다.', en: 'Servicer and paying agent: can support receivable collection and specified distribution operations.' },
+    ],
+    boundary: { ko: '이 안내는 SEC의 ABS 공시·발행 맥락을 바탕으로 한 구조도입니다. 특정 거래·자산 풀·법적 양도·신용등급·손실·가격·실시간 워터폴을 식별하거나 계산하지 않습니다.', en: 'This is a schematic based on the SEC ABS disclosure and issuance context. It does not identify a deal, asset pool, legal transfer, credit rating, loss, price, or live waterfall calculation.' },
+    concepts: [
+      { ko: '자산유동화는 기초자산에서 발생하는 현금흐름으로 증권을 서비스하는 구조를 설명하며, 단일 회사채 발행이나 신디케이트 론의 대주 약정과 다릅니다.', en: 'Asset-backed securitization describes securities serviced by cash flows from financial assets; it differs from a single corporate-bond issuance or lender commitments in a syndicated loan.' },
+      { ko: 'SPV·신탁의 역할을 표시하더라도 실제 거래의 법적 양도, 파산격리, 세무 또는 회계 결론을 이 화면에서 판단하지 않습니다.', en: 'Showing an SPV or trust role does not determine legal transfer, bankruptcy remoteness, tax, or accounting conclusions for a real transaction.' },
+      { ko: '트랜치의 우선순위는 현금흐름 배분 순서를 설명하는 개념이며, 특정 증권의 신용등급·수익률·손실률 또는 매매가격을 뜻하지 않습니다.', en: 'Tranche priority explains a cash-flow distribution concept; it does not state a security’s rating, yield, loss rate, or trading price.' },
+      { ko: '서비싱과 워터폴은 발행 뒤의 운영 단계이며, 유통시장 체결이나 개별 투자자 지급 내역을 재현하지 않습니다.', en: 'Servicing and the waterfall are post-issuance operational stages; they do not reproduce secondary-market execution or individual investor payments.' },
+    ],
+  },
   derivatives: {
     steps: [
       { ko: '계약 체결', en: 'Execution', noteKo: '계약은 명목금액이나 현금 이동과 동일하지 않습니다.', noteEn: 'A contract is not the same as notional or cash movement.' },
