@@ -50,6 +50,26 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '발행 배정은 신규 증권의 배분 절차이며, 이후 유통시장의 가격 발견이나 매매 체결을 뜻하지 않습니다.', en: 'Offering allocation distributes new securities; it does not represent subsequent secondary-market price discovery or trade execution.' },
     ],
   },
+  'bond-servicing': {
+    steps: [
+      { ko: '공시·지급 일정', en: 'Announce payment terms and date', noteKo: '공시는 시장가격이나 신규 발행 배정을 뜻하지 않습니다.', noteEn: 'An announcement is not a market price or a new-issue allocation.' },
+      { ko: '기준일·권리 확정', en: 'Set record-date entitlement', noteKo: '권리 기준일은 개별 보유자 장부를 표시하지 않습니다.', noteEn: 'The record date does not display individual holder ledgers.' },
+      { ko: '지급대행 자금 납부', en: 'Fund the paying agent', noteKo: '발행사·지급대행자의 자금 제공과 예탁결제 배분은 분리됩니다.', noteEn: 'Issuer/paying-agent funding is distinct from depository allocation.' },
+      { ko: '예탁결제 배분·상환', en: 'Allocate payment and reduce position', noteKo: '상환일 처리 예시이며, 이표·세금·개별 계좌를 재현하지 않습니다.', noteEn: 'An example of payment-date processing, not a replay of coupons, tax, or individual accounts.' },
+    ],
+    roles: [
+      { ko: '발행사: 약관과 지급 또는 상환 의무를 정합니다.', en: 'Issuer: sets the terms and payment or redemption obligation.' },
+      { ko: '지급대행인: 공시·지급 자금을 준비하고 운영합니다.', en: 'Paying agent: prepares notices and payment funding operations.' },
+      { ko: 'DTC: 적격 증권의 공시·권리·배분·기록상 포지션 조정을 지원합니다.', en: 'DTC: supports notices, entitlements, allocation, and record-position updates for eligible securities.' },
+    ],
+    boundary: { ko: '이 안내는 DTC 상환 서비스 가이드의 적격 증권 처리 예시입니다. 모든 이표·세금·투자자 보유·유통시장 거래 또는 실시간 지급 상태를 표시하지 않습니다.', en: 'This guide is an eligible-security servicing example based on the DTC Redemptions Service Guide. It does not depict every coupon, tax treatment, investor holding, secondary-market trade, or live payment status.' },
+    concepts: [
+      { ko: '채권 발행 화면은 신규 증권의 주관·배정·DvP를 다루고, 이 화면은 발행 후 공시와 현금 권리 처리라는 별도 수명주기를 다룹니다.', en: 'Bond issuance covers underwriting, allocation, and DvP for new securities; this route covers the separate post-issuance lifecycle of notices and cash entitlements.' },
+      { ko: '지급대행인 또는 발행사가 자금을 제공하는 단계와 DTC가 참여자에게 수령액을 배분하는 단계는 서로 다른 역할입니다.', en: 'Funding by a paying agent or issuer and allocation of received proceeds by DTC to participants are different roles.' },
+      { ko: '기준일의 권리 판단·상환 공시·지급일 배분은 유통시장 매매를 새로 체결하거나 보유자의 개별 거래를 표시하는 것이 아닙니다.', en: 'Record-date entitlement, redemption notice, and payment-date allocation do not execute a new secondary-market trade or reveal a holder’s individual transaction.' },
+      { ko: '만기·전부 또는 일부 상환·환매는 해당 약관과 DTC 절차에 따르며, 하나의 보편적 이표 계산이나 세금 처리로 일반화하지 않습니다.', en: 'Maturity, full/partial redemption, and calls follow the applicable terms and DTC procedures; they are not generalised into one universal coupon or tax calculation.' },
+    ],
+  },
   derivatives: {
     steps: [
       { ko: '계약 체결', en: 'Execution', noteKo: '계약은 명목금액이나 현금 이동과 동일하지 않습니다.', noteEn: 'A contract is not the same as notional or cash movement.' },
