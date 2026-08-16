@@ -27,6 +27,7 @@ const NETWORK_TABLE_SCOPE: Partial<Record<NetworkId, { ko: string; en: string }>
   derivatives: { ko: 'OTC 파생상품 청산 경로 구조도', en: 'OTC derivatives clearing-path schematic' },
   'credit-derivatives': { ko: '신용사건·경매 정산 구조도', en: 'Credit-event and auction-settlement schematic' },
   'listed-derivatives': { ko: '상장 파생상품 청산·일일 정산 구조도', en: 'Listed-derivatives clearing and daily-settlement schematic' },
+  'triparty-collateral': { ko: 'Tri-party 담보관리 구조도', en: 'Tri-party collateral-management schematic' },
 }
 
 function DeckOverlay({ layers }: { layers: ArcLayer<FlowEdge>[] }) {

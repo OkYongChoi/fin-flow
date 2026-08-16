@@ -195,6 +195,26 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '담보 적격성·배정은 거래별 DvP 자체가 아니며, 가격·헤어컷·마진·결제 세부 조건은 별도 약정에 따릅니다.', en: 'Collateral eligibility and allocation are not trade-by-trade DvP; price, haircut, margin, and settlement details follow separate terms.' },
     ],
   },
+  'triparty-collateral': {
+    steps: [
+      { ko: '적격성·계정 통제 조건 합의', en: 'Agree eligibility and account-control arrangements', noteKo: '적격성은 가격·헤어컷·실시간 가치가 아닙니다.', noteEn: 'Eligibility is not a price, haircut, or live valuation.' },
+      { ko: 'Tri-party 계정으로 적격 담보 배정', en: 'Allocate eligible collateral through the triparty account', noteKo: '계정 배정은 서비스·약정상 통제 조건을 따릅니다.', noteEn: 'Account allocation follows the service and agreement controls.' },
+      { ko: '허용된 범위의 가치평가·대체', en: 'Value and substitute only as permitted', noteKo: '가치평가·대체가 모든 자산에 자동 적용되는 것은 아닙니다.', noteEn: 'Valuation and substitution are not automatic for every asset.' },
+      { ko: '시작·종료 레그 결제', en: 'Settle the start and end legs', noteKo: '종료 레그는 최초 레그와 별도 이행입니다.', noteEn: 'The end leg is a separate performance from the start leg.' },
+    ],
+    roles: [
+      { ko: '현금 제공자·담보 제공자: 레포·적격성·계정 통제 조건을 합의합니다.', en: 'Cash provider and collateral provider: agree repo, eligibility, and account-control arrangements.' },
+      { ko: 'Tri-party 에이전트·수탁기관: 서비스 약정 범위에서 담보 선별·가치평가·대체·적격성 통제를 지원할 수 있습니다.', en: 'Tri-party agent and custodian: can support collateral selection, valuation, substitution, and eligibility controls within the service terms.' },
+      { ko: 'FICC·에이전트 청산회원: ACS 서비스 범위에서 적격 tri-party 레포를 청산할 수 있습니다.', en: 'FICC and agent clearing member: can clear eligible triparty repo within the ACS service scope.' },
+    ],
+    boundary: { ko: '이 안내는 DTCC ACS Tri-party와 별도 BNY 담보관리 공시를 예시로 한 설명용 경로입니다. 모든 tri-party 레포 시장·적격자산·실시간 헤어컷·가치평가·대체·계정·결제를 포괄한다고 주장하지 않으며, 지도는 지리적 서비스 범위를 나타내지 않습니다.', en: 'This guide is an illustrative tri-party collateral-management path using DTCC ACS Triparty and a separate BNY collateral-management announcement. It does not claim coverage for every tri-party repo market, eligible asset, live haircut, valuation, substitution, account, or settlement, and the map does not state geographic service coverage.' },
+    concepts: [
+      { ko: 'Tri-party 에이전트·수탁기관의 담보 보관·통제는 FICC CCP 청산·노베이션과 구분합니다. 수탁기관이 있다고 해서 모든 레포에 CCP 보증이 있다는 뜻은 아닙니다.', en: 'A tri-party agent or custodian’s collateral-control functions are distinct from FICC CCP clearing and novation; custody is not a CCP guarantee for every repo.' },
+      { ko: '적격성 스케줄은 사용 가능 조건이며, 가격·헤어컷·실시간 가치평가와 같지 않습니다.', en: 'An eligibility schedule is a use constraint, not a price, haircut, or live valuation.' },
+      { ko: '대체는 계정 약정과 적격성 규칙이 허용할 때만 가능하며, 자동 권리나 실시간 사용 가능 신호가 아닙니다.', en: 'Substitution is possible only where account terms and eligibility rules permit it; it is not an automatic right or a live availability signal.' },
+      { ko: '시작·종료 레그는 레포 조건에 따른 이행이며, 현물 매각이나 증권대차의 반환의무와 동일하지 않습니다.', en: 'Start and end legs follow repo terms; they are not an outright sale or a securities-lending return obligation.' },
+    ],
+  },
   'etf-primary-market': {
     steps: [
       { ko: '설정 바스켓 공시', en: 'Publish creation basket', noteKo: '개별 투자자의 거래 지시가 아닙니다.', noteEn: 'Not a retail investor trade instruction.' },
