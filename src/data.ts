@@ -6,6 +6,7 @@ export const NETWORKS: Array<{ id: NetworkId; label: string; labelEn: string; de
   { id: 'chips-fedwire', label: 'CHIPS · Fedwire', labelEn: 'CHIPS · Fedwire', description: '미국 달러 고액 결제', descriptionEn: 'High-value US dollar payments' },
   { id: 'bond-issuance', label: '채권 발행', labelEn: 'Bond issuance', description: '발행사·IB·예탁결제의 1차 시장 배정·결제 구조', descriptionEn: 'Primary-market allocation and settlement across issuer, IB and depository' },
   { id: 'derivatives', label: '파생상품', labelEn: 'OTC derivatives', description: 'OTC 계약·확인·담보·청산의 수명주기', descriptionEn: 'OTC contract, confirmation, collateral, and clearing lifecycle' },
+  { id: 'listed-derivatives', label: '상장 파생상품', labelEn: 'Listed derivatives', description: '거래소 체결·청산회원·일일 정산·만기의 상장상품 구조', descriptionEn: 'Exchange execution, clearing-member, daily settlement, and expiry structure' },
   { id: 'fx-pvp', label: 'FX PvP 결제', labelEn: 'FX PvP settlement', description: '외환 지급지시의 동시 결제와 다자간 상계 구조', descriptionEn: 'Simultaneous settlement and multilateral netting of FX payment instructions' },
   { id: 'repo-financing', label: '레포 자금조달', labelEn: 'Repo financing', description: '담보증권을 이용한 단기 자금조달·반환 구조', descriptionEn: 'Short-term funding and return structure using securities collateral' },
   { id: 'etf-primary-market', label: 'ETF 1차시장', labelEn: 'ETF primary market', description: 'AP의 설정·환매와 바스켓 인도 구조', descriptionEn: 'AP creation/redemption and basket-delivery structure' },
@@ -20,6 +21,7 @@ export const NETWORK_COLORS: Record<NetworkId, [number, number, number]> = {
   'chips-fedwire': [255, 169, 36],
   'bond-issuance': [255, 122, 89],
   derivatives: [173, 92, 255],
+  'listed-derivatives': [141, 112, 255],
   'fx-pvp': [41, 185, 133],
   'repo-financing': [224, 135, 49],
   'etf-primary-market': [34, 155, 219],
@@ -30,6 +32,7 @@ export const NETWORK_COLORS: Record<NetworkId, [number, number, number]> = {
 
 export const NODES: FlowNode[] = [
   { id: 'new-york', label: 'New York', coordinates: [-74, 40.7], kind: 'financial_center' },
+  { id: 'chicago', label: 'Chicago', coordinates: [-87.63, 41.88], kind: 'financial_center' },
   { id: 'london', label: 'London', coordinates: [-0.1, 51.5], kind: 'financial_center' },
   { id: 'frankfurt', label: 'Frankfurt', coordinates: [8.7, 50.1], kind: 'financial_center' },
   { id: 'seoul', label: 'Seoul', coordinates: [126.98, 37.57], kind: 'financial_center' },
@@ -50,6 +53,7 @@ export const EDGES: FlowEdge[] = [
   edge('c1', 'chips-fedwire', 'new-york', 'london', 'settlement', ['chips-2025', 'fedwire-2025']), edge('c2', 'chips-fedwire', 'new-york', 'frankfurt', 'settlement', ['chips-2025', 'fedwire-2025']), edge('c3', 'chips-fedwire', 'new-york', 'singapore', 'settlement', ['chips-2025', 'fedwire-2025']),
   edge('b1', 'bond-issuance', 'new-york', 'london', 'issuance', ['dtcc-underwriting', 'sec-t1']), edge('b2', 'bond-issuance', 'new-york', 'tokyo', 'issuance', ['dtcc-underwriting', 'sec-t1']), edge('b3', 'bond-issuance', 'london', 'singapore', 'issuance', ['dtcc-underwriting']),
   edge('d1', 'derivatives', 'london', 'new-york', 'clearing', ['bis-otc', 'isda-collateral']), edge('d2', 'derivatives', 'london', 'tokyo', 'clearing', ['bis-otc', 'isda-collateral']), edge('d3', 'derivatives', 'new-york', 'hong-kong', 'clearing', ['bis-otc', 'isda-collateral']),
+  edge('ld1', 'listed-derivatives', 'chicago', 'new-york', 'clearing', ['cme-clearing']), edge('ld2', 'listed-derivatives', 'chicago', 'london', 'clearing', ['cme-clearing']), edge('ld3', 'listed-derivatives', 'chicago', 'singapore', 'settlement', ['cme-clearing']),
   edge('f1', 'fx-pvp', 'london', 'new-york', 'settlement', ['cls-settlement']), edge('f2', 'fx-pvp', 'tokyo', 'london', 'settlement', ['cls-settlement']), edge('f3', 'fx-pvp', 'singapore', 'new-york', 'settlement', ['cls-settlement']),
   edge('r1', 'repo-financing', 'new-york', 'london', 'clearing', ['ficc-repo']), edge('r2', 'repo-financing', 'new-york', 'tokyo', 'clearing', ['ficc-repo']), edge('r3', 'repo-financing', 'new-york', 'singapore', 'clearing', ['ficc-repo']),
   edge('e1', 'etf-primary-market', 'new-york', 'london', 'issuance', ['sec-etf']), edge('e2', 'etf-primary-market', 'new-york', 'tokyo', 'issuance', ['sec-etf']), edge('e3', 'etf-primary-market', 'new-york', 'singapore', 'issuance', ['sec-etf']),
