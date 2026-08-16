@@ -119,6 +119,26 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '담보의 이전과 계약상 정산자산의 인도는 서로 바꿔 쓸 수 없습니다. 담보 적격성·통화·시점은 해당 담보 약정과 상품 조건을 따릅니다.', en: 'Collateral movement is not interchangeable with delivery of a settlement asset; eligibility, currency, and timing follow the collateral and product terms.' },
     ],
   },
+  'credit-derivatives': {
+    steps: [
+      { ko: '신용사건 요청·문서 확인', en: 'Submit a credit-event request and check documentation', noteKo: '요청 또는 시장 뉴스는 신용사건 발생의 확정이 아닙니다.', noteEn: 'A request or market news is not a confirmed credit event.' },
+      { ko: '결정위원회 판단', en: 'Determinations Committee assesses the request', noteKo: '공개 사실과 적용 문서에 따른 조건부 판단입니다.', noteEn: 'A conditional determination under public facts and applicable documentation.' },
+      { ko: '경매 정산 조건 공시', en: 'Publish auction settlement terms if an auction is held', noteKo: '경매 개최·인도가능채무·일정은 사건별 조건에 따릅니다.', noteEn: 'Whether an auction is held, deliverables, and timing are event-specific.' },
+      { ko: '계약상 정산', en: 'Settle under the contract terms', noteKo: '경매·현금·실물 정산은 계약과 적용 절차에 따릅니다.', noteEn: 'Auction, cash, or physical settlement follows the contract and applicable procedure.' },
+    ],
+    roles: [
+      { ko: '매수자·매도자: 적용 정의와 확인서에 따른 계약 상대방입니다.', en: 'Buyer and seller: contractual counterparties under the applicable definitions and confirmation.' },
+      { ko: 'ISDA 결정위원회: 적용된 보충문서의 범위에서 신용사건·경매·인도가능채무 등의 판단을 할 수 있습니다.', en: 'ISDA Determinations Committee: can make determinations on credit events, auctions, and deliverables within the incorporated supplement’s scope.' },
+      { ko: '경매 운영 인프라: 해당 경매 조건에 따른 주문·최종가격 절차를 지원할 수 있습니다.', en: 'Auction infrastructure: can support order and final-price procedures under the applicable auction terms.' },
+    ],
+    boundary: { ko: '이 안내는 ISDA 문서화 프레임워크의 조건부 신용사건·경매 정산 경로입니다. 특정 채무자 사건, 회수율, 최종가격, 지급액, CCP 회원 디폴트 또는 모든 CDS 계약의 결과를 표시하지 않습니다.', en: 'This guide is a conditional credit-event and auction-settlement path in the ISDA documentation framework. It does not state that a debtor event occurred, give recovery, final price, payment amount, CCP member default, or the outcome for every CDS contract.' },
+    concepts: [
+      { ko: '신용사건 경로는 기준기업·의무와 연계된 계약상 사건을 다루며, 중앙청산소 청산회원의 디폴트 관리나 일반 OTC 증거금 절차와 구분합니다.', en: 'A credit-event path concerns a contractually defined event linked to a reference entity or obligation; it is distinct from CCP clearing-member default management and ordinary OTC margin operations.' },
+      { ko: '결정위원회 판단은 적용된 정의와 공개 사실에 관한 절차이며, 신용등급·투자 의견·파산 법률 자문 또는 거래상대방의 개별 판단을 대체하지 않습니다.', en: 'A Determinations Committee decision is a process under applicable definitions and public facts; it is not a credit rating, investment view, insolvency legal advice, or replacement for a counterparty’s own assessment.' },
+      { ko: '경매 정산은 문서에 포함되고 해당 사건에서 조건이 정해진 계약에 적용될 수 있습니다. 모든 CDS가 자동으로 같은 경매·같은 최종가격으로 정산되는 것은 아닙니다.', en: 'Auction settlement can apply where incorporated by documentation and set for the event. Not every CDS automatically settles through the same auction or at the same final price.' },
+      { ko: '현금·실물·경매 정산의 결과는 개별 확인서·정의·경매 조건을 따르므로, 이 구조도에서 회수율이나 지급액을 계산하거나 표시하지 않습니다.', en: 'Cash, physical, and auction settlement outcomes follow the confirmation, definitions, and auction terms; this schematic does not calculate or display recovery or payment amounts.' },
+    ],
+  },
   'listed-derivatives': {
     steps: [
       { ko: '거래소 주문 체결', en: 'Exchange execution', noteKo: '표준화된 상장계약의 체결 단계이며, OTC 양자 협상이 아닙니다.', noteEn: 'Execution of a standardised listed contract, not bilateral OTC negotiation.' },

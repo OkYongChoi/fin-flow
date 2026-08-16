@@ -25,6 +25,7 @@ const NETWORK_TABLE_SCOPE: Partial<Record<NetworkId, { ko: string; en: string }>
   'bond-servicing': { ko: '채권 사후지급·상환 구조도', en: 'Post-issuance bond servicing and redemption schematic' },
   'asset-backed-securitization': { ko: '자산유동화 SPV·트랜치·워터폴 구조도', en: 'Asset-backed securitization SPV, tranche, and waterfall schematic' },
   derivatives: { ko: 'OTC 파생상품 청산 경로 구조도', en: 'OTC derivatives clearing-path schematic' },
+  'credit-derivatives': { ko: '신용사건·경매 정산 구조도', en: 'Credit-event and auction-settlement schematic' },
   'listed-derivatives': { ko: '상장 파생상품 청산·일일 정산 구조도', en: 'Listed-derivatives clearing and daily-settlement schematic' },
 }
 
