@@ -137,4 +137,11 @@ describe('financial flow contract', () => {
     expect(getFlowGuide('securities-lending').boundary.en).toContain('term return obligation')
     expect(getFlowGuide('syndicated-loans').boundary.en).toContain('secondary loan trading are separate')
   })
+  it('keeps tri-party collateral control separate from generic repo and securities-lending claims', () => {
+    const guide = getFlowGuide('triparty-collateral')
+    expect(NETWORKS.some((network) => network.id === 'triparty-collateral')).toBe(true)
+    expect(guide.boundary.en).toContain('does not claim coverage for every tri-party repo market')
+    expect(guide.concepts?.some((concept) => concept.en.includes('not a CCP guarantee'))).toBe(true)
+    expect(guide.concepts?.some((concept) => concept.en.includes('not an automatic right'))).toBe(true)
+  })
 })
