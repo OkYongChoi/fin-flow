@@ -1,10 +1,10 @@
-import { ArrowLeftRight, Cable, CircleDollarSign, CreditCard, Landmark, Network, Repeat2, Scale } from 'lucide-react'
+import { ArrowLeftRight, BookOpenCheck, Cable, CircleDollarSign, CreditCard, Handshake, Landmark, Layers3, Network, Repeat2, Scale } from 'lucide-react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NETWORK_COLORS, NETWORKS } from '../data'
 import type { Locale, NetworkId } from '../types'
 
-const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, derivatives: Network, 'fx-pvp': Repeat2, 'repo-financing': Scale, usdc: CircleDollarSign }
+const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, derivatives: Network, 'fx-pvp': Repeat2, 'repo-financing': Scale, 'etf-primary-market': Layers3, 'securities-lending': Handshake, 'syndicated-loans': BookOpenCheck, usdc: CircleDollarSign }
 
 export function NetworkSidebar({ selected, onSelect, locale }: { selected: NetworkId; onSelect: (id: NetworkId) => void; locale: Locale }) {
   const { t } = useTranslation()

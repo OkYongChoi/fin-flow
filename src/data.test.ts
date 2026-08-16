@@ -48,7 +48,7 @@ describe('financial flow contract', () => {
   })
 
   it('covers the requested network families including primary-market bonds', () => {
-    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'derivatives', 'fx-pvp', 'repo-financing', 'usdc'])
+    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'derivatives', 'fx-pvp', 'repo-financing', 'etf-primary-market', 'securities-lending', 'syndicated-loans', 'usdc'])
   })
 
   it('keeps bond issuance and OTC derivatives guidance distinct from generic payment stages', () => {
@@ -129,5 +129,12 @@ describe('financial flow contract', () => {
     expect(NETWORKS.some((network) => network.id === 'fx-pvp')).toBe(true)
     expect(guide.boundary.en).toContain('CLS service scope')
     expect(guide.steps.map((step) => step.en)).toContain('Settle payment versus payment')
+  })
+
+  it('keeps adjacent institutional routes separate from trading, price, and position claims', () => {
+    expect(getFlowGuide('repo-financing').boundary.en).toContain('not an outright sale')
+    expect(getFlowGuide('etf-primary-market').boundary.en).toContain('different flows')
+    expect(getFlowGuide('securities-lending').boundary.en).toContain('term return obligation')
+    expect(getFlowGuide('syndicated-loans').boundary.en).toContain('secondary loan trading are separate')
   })
 })

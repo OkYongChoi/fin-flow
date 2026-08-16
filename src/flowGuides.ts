@@ -98,6 +98,76 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: 'CLSSettlement의 통화·회원·운영 시간 범위는 제한되어 있으므로, 이 구조도를 모든 통화쌍의 보편적 결제 경로로 해석하지 않습니다.', en: 'CLSSettlement has defined currency, membership, and operating-hour scope; this schematic is not a universal settlement route for every currency pair.' },
     ],
   },
+  'repo-financing': {
+    steps: [
+      { ko: '레포 조건 합의', en: 'Agree repo terms', noteKo: '매도·환매 약정이며 현물 매각과 구분됩니다.', noteEn: 'A sale-and-repurchase agreement, distinct from an outright sale.' },
+      { ko: '담보 적격성 확인', en: 'Confirm collateral eligibility', noteKo: '적격성은 가격·헤어컷·자금 지급과 별개입니다.', noteEn: 'Eligibility is distinct from price, haircut, and cash payment.' },
+      { ko: '청산·상계 경로', en: 'Clear and net where applicable', noteKo: '청산 서비스 사용 여부는 거래 구조에 따라 다릅니다.', noteEn: 'Use of a clearing service depends on the trade structure.' },
+      { ko: '반환 레그', en: 'Return leg', noteKo: '만기 반환은 최초 레그와 별도 이행입니다.', noteEn: 'The maturity return is a separate performance from the opening leg.' },
+    ],
+    roles: [
+      { ko: '현금 제공자·차입자: 레포 조건과 결제 의무를 합의합니다.', en: 'Cash provider and borrower: agree repo terms and settlement obligations.' },
+      { ko: '청산기관: 적격한 거래의 청산·상계 서비스를 지원할 수 있습니다.', en: 'Clearing service: can support clearing and netting for eligible trades.' },
+    ],
+    boundary: { ko: '레포는 환매 약정이 있는 담보부 자금조달 구조이며, 단순 현물 매각이나 개별 DvP의 재현이 아닙니다.', en: 'Repo is collateralised financing with a repurchase obligation, not an outright sale or a replay of individual DvP.' },
+    concepts: [
+      { ko: '레포의 최초 레그와 반환 레그는 환매 약정으로 연결되며, 최종적으로 소유권을 처분하는 현물 매각과 동일하게 보지 않습니다.', en: 'A repo opening and return leg are linked by a repurchase obligation; they are not treated as an outright disposal of ownership.' },
+      { ko: '담보 적격성·배정은 거래별 DvP 자체가 아니며, 가격·헤어컷·마진·결제 세부 조건은 별도 약정에 따릅니다.', en: 'Collateral eligibility and allocation are not trade-by-trade DvP; price, haircut, margin, and settlement details follow separate terms.' },
+    ],
+  },
+  'etf-primary-market': {
+    steps: [
+      { ko: '설정 바스켓 공시', en: 'Publish creation basket', noteKo: '개별 투자자의 거래 지시가 아닙니다.', noteEn: 'Not a retail investor trade instruction.' },
+      { ko: 'AP 설정 단위 주문', en: 'AP orders creation units', noteKo: 'AP만 펀드와 직접 설정·환매할 수 있습니다.', noteEn: 'Only APs can create or redeem directly with the fund.' },
+      { ko: '바스켓·현금 교환', en: 'Exchange basket and cash', noteKo: '현물·현금 방식은 펀드 조건에 따라 달라집니다.', noteEn: 'In-kind and cash mechanics depend on fund terms.' },
+      { ko: '거래소 유통', en: 'Secondary-market trading', noteKo: '거래소 가격은 NAV와 다를 수 있습니다.', noteEn: 'Exchange price can differ from NAV.' },
+    ],
+    roles: [
+      { ko: 'ETF: 설정 단위와 바스켓을 관리합니다.', en: 'ETF: administers creation units and baskets.' },
+      { ko: 'AP: 펀드와 직접 설정·환매합니다.', en: 'Authorized participant: creates and redeems directly with the fund.' },
+      { ko: '일반 투자자: 통상 거래소 유통시장에서 매매합니다.', en: 'Other investors: ordinarily trade in the exchange secondary market.' },
+    ],
+    boundary: { ko: 'ETF 설정·환매와 유통시장 주식 매매는 다른 흐름이며, 이 화면은 개별 주문·NAV·가격을 표시하지 않습니다.', en: 'ETF creation/redemption and secondary-market share trading are different flows; this view does not show individual orders, NAV, or prices.' },
+    concepts: [
+      { ko: 'AP는 대규모 설정 단위를 펀드와 직접 교환하지만, 일반 투자자는 통상 거래소에서 ETF 지분을 매매합니다.', en: 'APs exchange large creation units directly with the fund, while other investors ordinarily trade ETF shares on an exchange.' },
+      { ko: '바스켓 인도·현금 조정은 설정·환매 구조의 일부이며, 유통시장 체결가나 NAV 자체를 뜻하지 않습니다.', en: 'Basket delivery and cash balancing are parts of creation/redemption mechanics, not a secondary-market execution price or NAV itself.' },
+    ],
+  },
+  'securities-lending': {
+    steps: [
+      { ko: '차입 요청·계약', en: 'Request and agree loan', noteKo: '대차는 매도 체결과 다릅니다.', noteEn: 'A loan is distinct from sale execution.' },
+      { ko: '증권·담보 인도', en: 'Deliver securities and collateral', noteKo: '담보 이전은 대차수수료와 분리됩니다.', noteEn: 'Collateral movement is separate from the lending fee.' },
+      { ko: '시가평가·담보 조정', en: 'Mark to market and adjust collateral', noteKo: '평가는 가격 정보 제공이나 투자 권고가 아닙니다.', noteEn: 'Valuation is not a price feed or investment recommendation.' },
+      { ko: '반환·담보 해제', en: 'Return securities and release collateral', noteKo: '반환 시점과 권리처리는 계약에 따릅니다.', noteEn: 'Return timing and entitlement treatment follow the agreement.' },
+    ],
+    roles: [
+      { ko: '대여자·차입자: 증권 대여와 반환 의무를 합의합니다.', en: 'Lender and borrower: agree security loan and return obligations.' },
+      { ko: '에이전트·인프라: 담보·결제·보고 운영을 지원할 수 있습니다.', en: 'Agent and infrastructure: can support collateral, settlement, and reporting operations.' },
+    ],
+    boundary: { ko: '증권대차는 기간성 반환의무가 있는 구조이며, 현물 매각·일반 결제·실시간 담보가치를 재현하지 않습니다.', en: 'Securities lending has a term return obligation; it does not reproduce an outright sale, ordinary settlement, or live collateral values.' },
+    concepts: [
+      { ko: '증권대차의 반환의무는 현물 매각의 최종 이전과 다르며, 대여 증권의 매매가격을 표시하지 않습니다.', en: 'The return obligation in securities lending differs from final transfer in an outright sale and does not show a sale price for the borrowed security.' },
+      { ko: '담보 시가평가와 조정은 대차수수료 산정과 별개이며, 한 값으로 경제적 비용을 추정하지 않습니다.', en: 'Collateral mark-to-market and adjustment are separate from lending-fee calculation; one value is not used to infer the other economic cost.' },
+    ],
+  },
+  'syndicated-loans': {
+    steps: [
+      { ko: '차입 조건·주선 위임', en: 'Set terms and mandate arranger', noteKo: '주선은 대주 자금 제공과 다릅니다.', noteEn: 'Arranging is distinct from lender funding.' },
+      { ko: '신디케이션·참여', en: 'Syndicate and commit', noteKo: '참여 약정은 개별 대출 잔액이 아닙니다.', noteEn: 'A commitment is not an individual loan balance.' },
+      { ko: '종결·자금조달', en: 'Close and fund', noteKo: '종결 조건과 자금 지급은 문서에 따릅니다.', noteEn: 'Closing conditions and funding follow documentation.' },
+      { ko: '에이전시·사후 관리', en: 'Administer and service', noteKo: '에이전트는 모든 대주의 투자 결정을 대신하지 않습니다.', noteEn: 'The agent does not make every lender’s investment decision.' },
+    ],
+    roles: [
+      { ko: '차입자: 자금조달 조건을 협의합니다.', en: 'Borrower: negotiates funding terms.' },
+      { ko: '주선기관: 신디케이션과 문서·종결 조정을 지원합니다.', en: 'Arranger: supports syndication and documentation/closing coordination.' },
+      { ko: '대주·행정대리인: 약정·자금조달·사후관리 역할을 분담합니다.', en: 'Lenders and administrative agent: divide commitment, funding, and servicing roles.' },
+    ],
+    boundary: { ko: '신디케이트 론의 1차 주선·종결과 2차 대출채권 거래는 별개이며, 이 화면은 계약상 포지션이나 가격을 표시하지 않습니다.', en: 'Primary loan arrangement/closing and secondary loan trading are separate; this view does not show contractual positions or prices.' },
+    concepts: [
+      { ko: '주선기관은 수요 취합·문서·종결을 조정할 수 있지만, 각 대주의 자금 제공이나 신용 판단을 대신하지 않습니다.', en: 'An arranger can coordinate commitments, documentation, and closing; it does not replace each lender’s funding or credit decision.' },
+      { ko: '1차 신디케이션은 차입자의 신규 자금조달을 위한 구조이며, 기존 대출채권의 2차 양도·거래와 구분합니다.', en: 'Primary syndication structures new borrower funding and is distinct from secondary assignment or trading of an existing loan.' },
+    ],
+  },
 }
 
 export function getFlowGuide(networkId: NetworkId): FlowGuide {
