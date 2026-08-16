@@ -1,5 +1,5 @@
 export type Locale = 'ko' | 'en'
-export type NetworkId = 'swift' | 'visa' | 'chips-fedwire' | 'bond-issuance' | 'bond-servicing' | 'derivatives' | 'listed-derivatives' | 'fx-pvp' | 'repo-financing' | 'etf-primary-market' | 'securities-lending' | 'syndicated-loans' | 'usdc'
+export type NetworkId = 'swift' | 'visa' | 'chips-fedwire' | 'bond-issuance' | 'bond-servicing' | 'asset-backed-securitization' | 'derivatives' | 'listed-derivatives' | 'fx-pvp' | 'repo-financing' | 'etf-primary-market' | 'securities-lending' | 'syndicated-loans' | 'usdc'
 export type FlowSemantic = 'message' | 'authorization' | 'clearing' | 'settlement' | 'asset_transfer' | 'issuance'
 export type Representation = 'observed_aggregate' | 'schematic' | 'simulated'
 

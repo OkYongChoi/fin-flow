@@ -29,7 +29,7 @@ for (const source of sources) {
   sourceUrls.add(source.url)
 }
 
-const networkIds = new Set(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'bond-servicing', 'derivatives', 'listed-derivatives', 'fx-pvp', 'repo-financing', 'etf-primary-market', 'securities-lending', 'syndicated-loans', 'usdc'])
+const networkIds = new Set(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'bond-servicing', 'asset-backed-securitization', 'derivatives', 'listed-derivatives', 'fx-pvp', 'repo-financing', 'etf-primary-market', 'securities-lending', 'syndicated-loans', 'usdc'])
 const metricIds = new Set()
 for (const metric of metrics) {
   for (const key of ['id', 'networkId', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) if (!metric[key]) fail(`metric ${metric.id ?? '?'} missing ${key}`)
