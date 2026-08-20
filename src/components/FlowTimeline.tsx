@@ -12,6 +12,7 @@ export function FlowTimeline({ selected, locale }: { selected: NetworkId; locale
   const [speed, setSpeed] = useState(1)
   const views = ['timeline', 'comparison', 'institution'] as const
   const events = getFlowGuide(selected).steps
+  const roles = getFlowGuide(selected).roles
   useEffect(() => {
     setPlaying(false)
     setStep(2)
@@ -34,10 +35,14 @@ export function FlowTimeline({ selected, locale }: { selected: NetworkId; locale
       <header><h2>{t('timeline.title')}</h2><nav role="tablist" aria-label={t('timeline.title')}>{views.map((item) => <button key={item} id={`timeline-tab-${item}`} role="tab" aria-controls="timeline-summary" aria-selected={view === item} tabIndex={view === item ? 0 : -1} className={view === item ? 'active' : ''} onClick={() => setView(item)} onKeyDown={(event) => moveView(event, item)}>{t(`timeline.${item}`)}</button>)}</nav><div className="simulation-badge"><i />{t('inspector.simulation')}</div></header>
       <div className="timeline-body">
         <div className="playback"><span>{t('timeline.play')}</span><div><button type="button" onClick={() => { setPlaying(false); setStep(0) }} aria-label={t('timeline.restart')}><RotateCcw size={15} /></button><button type="button" className="play" onClick={() => setPlaying((value) => !value)} aria-pressed={playing} aria-label={playing ? t('timeline.pause') : t('timeline.play')}>{playing ? <Pause /> : <Play />}</button><button type="button" className="speed-button" onClick={() => setSpeed((value) => value === 1 ? 2 : 1)} aria-pressed={speed === 2} aria-label={t('timeline.speed', { speed })}>{speed}×</button></div><small>{t('notices.simulated')}</small></div>
-        <div className="timeline-track" style={{ '--progress': `${step / (events.length - 1) * 100}%` } as React.CSSProperties}>
+        {view === 'timeline' ? <div className="timeline-track" style={{ '--progress': `${step / (events.length - 1) * 100}%` } as React.CSSProperties}>
           <span className="track-line" />
           {events.map((event, index) => <button type="button" key={event.en} className={index <= step ? 'complete' : ''} aria-current={index === step ? 'step' : undefined} onClick={() => setStep(index)}><time>{`0${index}:00`}</time><i /><b>{locale === 'ko' ? event.ko : event.en}</b><small>{index === step ? (selected === 'chips-fedwire' ? 'CHIPS / Fedwire' : selected.toUpperCase()) : '—'}</small></button>)}
-        </div>
+        </div> : view === 'comparison' ? <div className="timeline-view-panel comparison-panel" aria-label={locale === 'ko' ? '단계별 거래망 비교' : 'Stage-by-stage rail comparison'}>
+          {events.map((event, index) => <article key={event.en}><span>{`0${index}:00`}</span><b>{locale === 'ko' ? event.ko : event.en}</b><small>{selected === 'chips-fedwire' ? 'CHIPS / Fedwire' : selected.toUpperCase()}</small></article>)}
+        </div> : <div className="timeline-view-panel institution-panel" aria-label={locale === 'ko' ? '참여 기관 역할' : 'Participating institution roles'}>
+          {roles.map((role) => <article key={role.en}><i /><b>{locale === 'ko' ? role.ko : role.en}</b></article>)}
+        </div>}
         <div id="timeline-summary" className="event-summary" role="tabpanel" aria-live="polite" aria-labelledby={`timeline-tab-${view}`}><span>{view === 'timeline' ? (locale === 'ko' ? '선택 단계' : 'Selected stage') : view === 'comparison' ? (locale === 'ko' ? '비교 관점' : 'Comparison lens') : (locale === 'ko' ? '기관 관점' : 'Institution lens')}</span><b>{view === 'timeline' ? (locale === 'ko' ? events[step].ko : events[step].en) : view === 'comparison' ? (locale === 'ko' ? '망별 역할 비교' : 'Rail roles compared') : (locale === 'ko' ? '장부 간 전달' : 'Across ledgers')}</b><small>{locale === 'ko' ? '인과관계를 주장하지 않는 설명용 재생' : 'Illustrative playback; no causal claim'}</small></div>
       </div>
     </section>
