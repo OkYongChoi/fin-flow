@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useTransition } from 'react'
+import { useEffect, useMemo, useTransition } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { AppHeader } from '../App'
@@ -6,18 +6,16 @@ import { fetchDataBundle, NETWORKS } from '../data'
 import type { Locale, NetworkId } from '../types'
 import { FilterBar } from './FilterBar'
 import { NetworkSidebar } from './NetworkSidebar'
-import { DetailInspector } from './DetailInspector'
-import { FlowTimeline } from './FlowTimeline'
+import { SourceDataBoard } from './SourceDataBoard'
+import { SourceDetails } from './SourceDetails'
+import { SourceTimeline } from './SourceTimeline'
 import { useRouter } from '../router'
-
-const FlowMap = lazy(() => import('./FlowMap'))
 
 export function Dashboard({ locale }: { locale: Locale }) {
   const { t } = useTranslation()
   const { pathname, search, navigate } = useRouter()
   const params = useMemo(() => new URLSearchParams(search), [search])
   const [isPending, startTransition] = useTransition()
-  const proMode = params.get('mode') !== 'basic'
   const requested = params.get('network') as NetworkId | null
   const hasValidNetwork = NETWORKS.some((item) => item.id === requested)
   const selected = hasValidNetwork ? requested! : 'chips-fedwire'
@@ -31,7 +29,6 @@ export function Dashboard({ locale }: { locale: Locale }) {
     navigate(`${pathname}?${next.toString()}`, true)
   })
   const selectNetwork = (network: NetworkId) => updateView({ network })
-  const setViewMode = (nextProMode: boolean) => updateView({ mode: nextProMode ? null : 'basic' })
   const resetView = () => updateView({ network: 'chips-fedwire', mode: null })
   useEffect(() => {
     if (requested === null || hasValidNetwork) return
@@ -44,11 +41,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
     <main id="main-content" tabIndex={-1} className={`dashboard ${isPending ? 'is-pending' : ''}`}>
       <AppHeader locale={locale} compact />
       <section className="mode-and-filter">
-        <div className="view-toggle" role="group" aria-label={t('view.density')}>
-          <button type="button" aria-pressed={!proMode} className={!proMode ? 'active' : ''} onClick={() => setViewMode(false)}>{t('view.basic')}</button>
-          <button type="button" aria-pressed={proMode} className={proMode ? 'active' : ''} onClick={() => setViewMode(true)}>{t('view.pro')}</button>
-        </div>
-        <FilterBar proMode={proMode} selected={selected} locale={locale} onNetworkChange={selectNetwork} onReset={resetView} />
+        <FilterBar selected={selected} locale={locale} metrics={metrics} sources={sources} generatedAt={data?.generatedAt} onNetworkChange={selectNetwork} onReset={resetView} />
         <div className="data-freshness" title={data?.generatedAt} role="status" aria-live="polite" aria-label={locale === 'ko' ? '데이터 스냅샷 버전' : 'Data snapshot version'}>
           <span>{t('inspector.updated')}</span><strong>{data?.version ?? '—'}</strong><i aria-hidden="true" />
         </div>
@@ -57,15 +50,13 @@ export function Dashboard({ locale }: { locale: Locale }) {
         <NetworkSidebar selected={selected} onSelect={selectNetwork} locale={locale} />
         <div className="map-region">
           {error ? <div className="map-error" role="alert"><span>{t('data.loadError')}</span><button type="button" onClick={() => void refetch()}>{t('data.retry')}</button></div> : (
-            <Suspense fallback={<div className="map-loader" role="status">{t('data.loadingMap')}</div>}>
-              <FlowMap selected={selected} proMode={proMode} locale={locale} />
-            </Suspense>
+            <SourceDataBoard selected={selected} metrics={metrics} sources={sources} generatedAt={data?.generatedAt} locale={locale} />
           )}
           {isLoading ? <div className="loading-line" /> : null}
         </div>
-        <DetailInspector selected={selected} metrics={metrics} sources={sources} locale={locale} />
+        <SourceDetails selected={selected} metrics={metrics} sources={sources} locale={locale} />
       </section>
-      <FlowTimeline selected={selected} locale={locale} />
+      <SourceTimeline selected={selected} sources={sources} generatedAt={data?.generatedAt} locale={locale} />
     </main>
   )
 }
