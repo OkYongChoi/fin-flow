@@ -4,9 +4,9 @@ import { initReactI18next } from 'react-i18next'
 const resources = {
   ko: {
     translation: {
-      nav: { map: '글로벌 지도', networks: '네트워크', institutions: '기관', assets: '자산', data: '데이터' },
+      nav: { map: '네트워크 데이터', networks: '네트워크', institutions: '기관', assets: '자산', data: '데이터' },
       view: { basic: '기본', pro: '전문', density: '화면 밀도' },
-      filters: { period: '기간', currency: '통화', network: '네트워크', institution: '기관 유형', region: '지역', observed: '실거래 통계', simulation: '시뮬레이션', reset: '필터 초기화', all: '전체' },
+      filters: { coverage: '적용 기간', metrics: '검증 지표', sources: '원문 수', sourceSnapshot: '공식 출처 스냅샷', network: '네트워크', reset: '선택 초기화', all: '전체' },
       sidebar: { title: '금융 네트워크', legend: '범례', message: '메시지', payment: '결제', clearing: '청산', onchain: '온체인', nodeSize: '노드 크기 · 처리량' },
       inspector: { title: '미국 달러 결제 경로', route: '경로', institutions: '기관', statistics: '통계', documents: '문서', compare: '경로 비교', source: '원문 보기', actual: '공개 통계', schematic: '구조도', simulation: '시뮬레이션', updated: '최근 업데이트', coverage: '기준일', latency: '데이터 지연' },
       timeline: { title: '시장 이벤트와 자금 이동', timeline: '타임라인', comparison: '거래망 비교', institution: '기관 흐름', play: '시뮬레이션 재생', pause: '일시정지', restart: '시뮬레이션 처음부터 재생', speed: '재생 속도 {{speed}}배' },
@@ -18,9 +18,9 @@ const resources = {
   },
   en: {
     translation: {
-      nav: { map: 'Global map', networks: 'Networks', institutions: 'Institutions', assets: 'Assets', data: 'Data' },
+      nav: { map: 'Network data', networks: 'Networks', institutions: 'Institutions', assets: 'Assets', data: 'Data' },
       view: { basic: 'Basic', pro: 'Pro', density: 'View density' },
-      filters: { period: 'Period', currency: 'Currency', network: 'Network', institution: 'Institution type', region: 'Region', observed: 'Observed statistics', simulation: 'Simulation', reset: 'Reset filters', all: 'All' },
+      filters: { coverage: 'Coverage', metrics: 'Verified metrics', sources: 'Primary sources', sourceSnapshot: 'Official-source snapshot', network: 'Network', reset: 'Reset selection', all: 'All' },
       sidebar: { title: 'Financial networks', legend: 'Legend', message: 'Message', payment: 'Payment', clearing: 'Clearing', onchain: 'On-chain', nodeSize: 'Node size · throughput' },
       inspector: { title: 'US dollar payment paths', route: 'Path', institutions: 'Institutions', statistics: 'Statistics', documents: 'Documents', compare: 'Path comparison', source: 'Open source', actual: 'Public statistic', schematic: 'Schematic', simulation: 'Simulation', updated: 'Last updated', coverage: 'As of', latency: 'Data latency' },
       timeline: { title: 'Market events and money flows', timeline: 'Timeline', comparison: 'Network comparison', institution: 'Institution flows', play: 'Play simulation', pause: 'Pause', restart: 'Restart simulation', speed: 'Playback speed {{speed}}x' },

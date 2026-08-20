@@ -25,7 +25,7 @@ export function NetworkSidebar({ selected, onSelect, locale }: { selected: Netwo
           const color = `rgb(${NETWORK_COLORS[network.id].join(' ')})`
           return (
             <button key={network.id} ref={(element) => { itemRefs.current[index] = element }} className={selected === network.id ? 'selected' : ''} style={{ '--network': color } as React.CSSProperties} onClick={() => onSelect(network.id)} onKeyDown={(event) => moveSelection(event, index)} aria-pressed={selected === network.id}>
-              <Icon size={18} /><span><b>{locale === 'ko' ? network.label : network.labelEn}</b><small>{locale === 'ko' ? network.description : network.descriptionEn}</small></span><i />
+              <Icon size={18} /><span><b>{locale === 'ko' ? network.label : network.labelEn}</b><small>{locale === 'ko' ? '공식 출처 연결' : 'Primary source linked'}</small></span><i />
             </button>
           )
         })}

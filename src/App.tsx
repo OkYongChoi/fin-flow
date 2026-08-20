@@ -8,7 +8,7 @@ import type { Locale } from './types'
 
 const DataPage = lazy(() => import('./components/DataPage'))
 const VALID_PAGES = new Set(['map', 'networks', 'institutions', 'assets', 'learn', 'data'])
-const PAGE_TITLES: Record<string, [string, string]> = { map: ['금융 흐름 지도', 'Financial flow map'], networks: ['네트워크', 'Networks'], institutions: ['기관', 'Institutions'], assets: ['자산', 'Assets'], learn: ['학습', 'Learn'], data: ['데이터', 'Data'] }
+const PAGE_TITLES: Record<string, [string, string]> = { map: ['금융 네트워크 데이터', 'Financial network data'], networks: ['네트워크', 'Networks'], institutions: ['기관', 'Institutions'], assets: ['자산', 'Assets'], learn: ['학습', 'Learn'], data: ['데이터', 'Data'] }
 
 function LocaleRoutes() {
   const { pathname, navigate } = useRouter()
