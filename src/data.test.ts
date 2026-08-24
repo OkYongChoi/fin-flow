@@ -3,6 +3,7 @@ import metrics from '../public/data/metrics.json'
 import sources from '../public/data/sources.json'
 import { EDGES, NETWORKS, NODES } from './data'
 import { getFlowGuide } from './flowGuides'
+import { getProductStructureGuide } from './productStructures'
 
 describe('financial flow contract', () => {
   it('keeps node coordinates unique for unambiguous map markers', () => {
@@ -137,6 +138,22 @@ describe('financial flow contract', () => {
     expect(getFlowGuide('securities-lending').boundary.en).toContain('term return obligation')
     expect(getFlowGuide('syndicated-loans').boundary.en).toContain('secondary loan trading are separate')
   })
+  it('explains leveraged ETF construction without implying a simple doubled basket', () => {
+    const guide = getProductStructureGuide('etf-primary-market')
+    const leveraged = guide?.products.find((product) => product.id === 'leveraged-etf')
+    const inverse = guide?.products.find((product) => product.id === 'inverse-etf')
+
+    expect(guide?.sourceIds).toContain('sec-leveraged-inverse-etfs')
+    expect(leveraged?.portfolio.en).toContain('swaps, futures, other derivatives')
+    expect(leveraged?.portfolio.en).toContain('not limited to holding twice')
+    expect(leveraged?.rebalance.en).toContain('each trading day')
+    expect(inverse?.holdingPeriod.en).toContain('daily compounding')
+  })
+
+  it('only exposes product-construction guidance for supported networks', () => {
+    expect(getProductStructureGuide('swift')).toBeUndefined()
+  })
+
   it('keeps tri-party collateral control separate from generic repo and securities-lending claims', () => {
     const guide = getFlowGuide('triparty-collateral')
     expect(NETWORKS.some((network) => network.id === 'triparty-collateral')).toBe(true)
