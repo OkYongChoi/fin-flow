@@ -231,6 +231,8 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
     concepts: [
       { ko: 'AP는 대규모 설정 단위를 펀드와 직접 교환하지만, 일반 투자자는 통상 거래소에서 ETF 지분을 매매합니다.', en: 'APs exchange large creation units directly with the fund, while other investors ordinarily trade ETF shares on an exchange.' },
       { ko: '바스켓 인도·현금 조정은 설정·환매 구조의 일부이며, 유통시장 체결가나 NAV 자체를 뜻하지 않습니다.', en: 'Basket delivery and cash balancing are parts of creation/redemption mechanics, not a secondary-market execution price or NAV itself.' },
+      { ko: '레버리지·인버스 ETF는 스왑·선물·기타 파생상품과 현금·담보를 조합해 일간 목표 노출을 만들 수 있으며, 지수 구성종목을 단순히 배수만큼 보유하는 구조로 한정되지 않습니다.', en: 'Leveraged and inverse ETFs can combine swaps, futures, other derivatives, and cash or collateral to create daily target exposure; they are not limited to simply multiplying index-constituent holdings.' },
+      { ko: '대부분의 레버리지·인버스 ETF는 매일 목표 노출을 재설정하므로 하루를 넘긴 수익률은 기준지수 기간 수익률의 단순 배수 또는 역수와 크게 달라질 수 있습니다.', en: 'Most leveraged and inverse ETFs reset target exposure daily, so returns beyond one day can differ significantly from a simple multiple or inverse of the benchmark’s period return.' },
     ],
   },
   'securities-lending': {

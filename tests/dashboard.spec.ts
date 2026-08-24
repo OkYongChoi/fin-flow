@@ -67,3 +67,24 @@ test('source history shows the selected network retrieval records', async ({ pag
   await expect(page.getByText(`Snapshot ${manifest.generatedAt.slice(0, 10)}`)).toBeVisible()
   await expect(page.getByRole('link', { name: 'Open Circle primary source' })).toBeVisible()
 })
+
+test('ETF view explains leveraged and inverse product construction with its official source', async ({ page }) => {
+  await page.goto('/ko/map?network=etf-primary-market')
+  const structure = page.getByRole('region', { name: '상품 구성 방식' })
+  await expect(structure).toBeVisible()
+  await expect(structure.getByRole('heading', { name: '레버리지 ETF' })).toBeVisible()
+  await expect(structure).toContainText('스왑·선물·기타 파생상품')
+  await expect(structure).toContainText('매 거래일 목표 노출로 재조정')
+  await expect(structure.getByRole('heading', { name: '인버스 ETF' })).toBeVisible()
+  await expect(page.getByText('1 trading day').first()).toBeVisible()
+  await expect(page.getByText('Updated Investor Bulletin: Leveraged and Inverse ETFs').first()).toBeVisible()
+})
+
+test('leveraged ETF construction remains readable in the mobile source board', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/en/map?network=etf-primary-market')
+  const structure = page.getByRole('region', { name: 'How the products are constructed' })
+  await expect(structure).toBeVisible()
+  await expect(structure.getByRole('heading', { name: 'Leveraged ETF' })).toBeVisible()
+  await expect(structure).toContainText('Reset to target exposure each trading day')
+})
