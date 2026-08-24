@@ -83,7 +83,7 @@ export async function fetchDataBundle(): Promise<DataBundle> {
     throw new Error(`Unable to load source-backed data (${statuses})`)
   }
   const [manifest, sources, metrics] = await Promise.all([
-    manifestResponse.json() as Promise<{ version: string; generatedAt: string; coverageNotice: string }>,
+    manifestResponse.json() as Promise<{ version: string; generatedAt: string; reviewDueAt: string; coverageNotice: string }>,
     sourcesResponse.json() as Promise<SourceRecord[]>,
     metricsResponse.json() as Promise<Metric[]>,
   ])
@@ -91,3 +91,7 @@ export async function fetchDataBundle(): Promise<DataBundle> {
 }
 
 export const getNode = (id: string) => NODES.find((node) => node.id === id)!
+
+export function isSnapshotReviewOverdue(reviewDueAt: string, now = new Date()): boolean {
+  return now > new Date(reviewDueAt + 'T23:59:59.999Z')
+}

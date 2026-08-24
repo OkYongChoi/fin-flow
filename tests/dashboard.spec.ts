@@ -7,9 +7,11 @@ const sourceCount = JSON.parse(readFileSync(new URL('../public/data/sources.json
 
 test('dashboard shows source-backed metrics and changes the selected network', async ({ page }) => {
   await page.goto('/ko/map')
-  await expect(page.getByRole('heading', { name: 'CHIPS · Fedwire', exact: true }).first()).toBeVisible()
   await expect(page.locator('.source-data-heading > div > span')).toHaveText('출처 기반 데이터')
   await expect(page.getByText('2025', { exact: true }).first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'CHIPS · Fedwire', exact: true }).first()).toBeVisible()
+  await expect(page.getByText('다음 검토', { exact: true })).toBeVisible()
+  await expect(page.getByText(new Date(manifest.reviewDueAt + 'T00:00:00Z').toLocaleDateString('ko-KR', { dateStyle: 'medium', timeZone: 'UTC' }))).toBeVisible()
   await page.getByRole('button', { name: /Circle USDC/ }).click()
   await expect(page).toHaveURL(/network=usdc/)
   await expect(page.getByText('USDC 유통량', { exact: true }).first()).toBeVisible()
@@ -40,6 +42,8 @@ test('locale switch preserves the selected source snapshot', async ({ page }) =>
 test('source controls expose dynamically loaded coverage and documents', async ({ page }) => {
   await page.goto('/en/map?network=swift')
   await expect(page.getByText('2025', { exact: true }).first()).toBeVisible()
+  await expect(page.getByText('Next review', { exact: true })).toBeVisible()
+  await expect(page.getByText(new Date(manifest.reviewDueAt + 'T00:00:00Z').toLocaleDateString('en-US', { dateStyle: 'medium', timeZone: 'UTC' }))).toBeVisible()
   await page.getByLabel('Network', { exact: true }).selectOption('usdc')
   await expect(page).toHaveURL(/network=usdc/)
   await expect(page.getByRole('heading', { name: 'Circle USDC source history' })).toBeVisible()

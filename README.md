@@ -68,10 +68,10 @@ npm run preview
 
 1. 공식 제공기관의 원문을 확인하고 `sources.json`에 HTTPS URL과 정확한 메타데이터를 기록합니다.
 2. 새 출처의 `id`를 `metrics.json`의 `sourceId` 또는 `src/data.ts` 경로의 `sourceIds`로 연결합니다.
-3. `manifest.version`을 `YYYY.MM.DD` 형식으로, `generatedAt`을 새 스냅샷 시각으로 갱신합니다.
+3. `manifest.version`을 `YYYY.MM.DD` 형식으로, `generatedAt`을 새 스냅샷 시각으로 갱신하고 `reviewDueAt`에 다음 수동 검토 기한을 기록합니다.
 4. `npm run data:validate`를 실행하고, 사용자에게 보이는 표시값·대상 기간·통화/단위를 다시 확인합니다.
 
-검증기는 빈 배열, 중복 ID/URL, 비 HTTPS URL, 잘못된 날짜, 발행일보다 이른 검색일, 스냅샷 생성일보다 늦은 검색일, 미등록 네트워크, 중복 지표 ID, 빈 표시 레이블, 숫자가 아닌 값, 끊어진 출처 참조를 거부합니다. 출처를 추가하거나 날짜를 바꾸면 반드시 `manifest.generatedAt`과의 시간 관계도 확인해야 합니다.
+검증기는 빈 배열, 중복 ID/URL, 비 HTTPS URL, 잘못된 날짜, 발행일보다 이른 검색일, 스냅샷 생성일보다 늦은 검색일, 기한이 지난 데이터 검토, 미등록 네트워크, 중복 지표 ID, 빈 표시 레이블, 숫자가 아닌 값, 끊어진 출처 참조를 거부합니다. 출처를 추가하거나 날짜를 바꾸면 반드시 `manifest.generatedAt`과의 시간 관계도 확인해야 합니다. GitHub Actions는 이 검증을 매일 실행하므로 기한이 지나면 데이터 담당자가 원문을 다시 확인하고 스냅샷과 다음 검토기한을 함께 갱신해야 합니다.
 
 ## 개발 규칙
 
@@ -105,6 +105,8 @@ Cloudflare Pages 기준 설정은 다음과 같습니다.
 | Node package manager | npm (`package-lock.json` 사용) |
 
 `public/_redirects`는 모든 경로를 `index.html`로 전달하므로 `/en/data`처럼 직접 진입한 SPA 경로도 동작합니다. 배포 후에는 최소한 한국어·영어 지도, 데이터 페이지 직접 URL, 모바일 메뉴, 출처 링크를 확인합니다.
+
+`public/_headers`는 브라우저 보안 헤더를 설정하고 `/data/*` 스냅샷을 5분마다 재검증하도록 합니다. 배포 후에는 CSP 위반 없이 지도와 출처 데이터가 표시되는지도 확인합니다.
 
 ## 프로젝트 구조
 

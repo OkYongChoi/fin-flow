@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import metrics from '../public/data/metrics.json'
 import sources from '../public/data/sources.json'
-import { EDGES, NETWORKS, NODES } from './data'
+import { EDGES, isSnapshotReviewOverdue, NETWORKS, NODES } from './data'
 import { getFlowGuide } from './flowGuides'
 import { getProductStructureGuide } from './productStructures'
 
@@ -152,6 +152,11 @@ describe('financial flow contract', () => {
 
   it('only exposes product-construction guidance for supported networks', () => {
     expect(getProductStructureGuide('swift')).toBeUndefined()
+  })
+
+  it('marks a source snapshot overdue only after the review deadline', () => {
+    expect(isSnapshotReviewOverdue('2026-09-05', new Date('2026-09-05T23:59:59.999Z'))).toBe(false)
+    expect(isSnapshotReviewOverdue('2026-09-05', new Date('2026-09-06T00:00:00.000Z'))).toBe(true)
   })
 
   it('keeps tri-party collateral control separate from generic repo and securities-lending claims', () => {
