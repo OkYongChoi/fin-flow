@@ -50,7 +50,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
         <NetworkSidebar selected={selected} onSelect={selectNetwork} locale={locale} />
         <div className="map-region">
           {error ? <div className="map-error" role="alert"><span>{t('data.loadError')}</span><button type="button" onClick={() => void refetch()}>{t('data.retry')}</button></div> : (
-            <SourceDataBoard selected={selected} metrics={metrics} sources={sources} generatedAt={data?.generatedAt} locale={locale} />
+            <SourceDataBoard selected={selected} metrics={metrics} sources={sources} generatedAt={data?.generatedAt} reviewDueAt={data?.reviewDueAt} locale={locale} />
           )}
           {isLoading ? <div className="loading-line" /> : null}
         </div>

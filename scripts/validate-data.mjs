@@ -10,7 +10,15 @@ const [manifest, sources, metrics] = await Promise.all([
 const fail = (message) => { throw new Error(`Data validation failed: ${message}`) }
 if (!/^\d{4}\.\d{2}\.\d{2}$/.test(manifest.version)) fail('manifest.version must be YYYY.MM.DD')
 if (typeof manifest.generatedAt !== 'string' || Number.isNaN(Date.parse(manifest.generatedAt))) fail('manifest.generatedAt must be a valid timestamp')
+if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(manifest.reviewDueAt ?? '')) fail('manifest.reviewDueAt must be YYYY-MM-DD')
 if (typeof manifest.coverageNotice !== 'string' || !manifest.coverageNotice.trim()) fail('manifest.coverageNotice must be a non-empty string')
+const reviewedAt = new Date(manifest.generatedAt)
+const reviewDueAt = new Date(manifest.reviewDueAt + 'T23:59:59.999Z')
+const validationNow = process.env.DATA_CHECK_NOW ? new Date(process.env.DATA_CHECK_NOW) : new Date()
+if (Number.isNaN(reviewDueAt.getTime()) || reviewDueAt.toISOString().slice(0, 10) !== manifest.reviewDueAt) fail('manifest.reviewDueAt must be a real calendar date')
+if (Number.isNaN(validationNow.getTime())) fail('DATA_CHECK_NOW must be a valid timestamp when provided')
+if (reviewDueAt < reviewedAt) fail('manifest.reviewDueAt must not precede manifest.generatedAt')
+if (validationNow > reviewDueAt) fail('source snapshot review is overdue (due ' + manifest.reviewDueAt + ')')
 if (!Array.isArray(sources) || sources.length === 0) fail('sources must not be empty')
 if (!Array.isArray(metrics) || metrics.length === 0) fail('metrics must not be empty')
 
@@ -41,4 +49,4 @@ for (const metric of metrics) {
   if (!sourceIds.has(metric.sourceId)) fail(`metric ${metric.id} references unknown source ${metric.sourceId}`)
 }
 
-console.log(`Validated ${metrics.length} metrics against ${sources.length} official sources (${manifest.version}).`)
+console.log(`Validated ${metrics.length} metrics against ${sources.length} official sources (${manifest.version}); review due ${manifest.reviewDueAt}.`)
