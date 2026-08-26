@@ -1,10 +1,10 @@
-import { ArrowLeftRight, BookOpenCheck, Boxes, Cable, ChartCandlestick, CircleDollarSign, CreditCard, Gavel, Handshake, Landmark, Layers3, Network, ReceiptText, Repeat2, Scale, ShieldCheck } from 'lucide-react'
+import { ArrowLeftRight, BookOpenCheck, Boxes, Cable, ChartCandlestick, CircleDollarSign, CreditCard, FileStack, Gavel, Handshake, Landmark, Layers3, Network, ReceiptText, Repeat2, Scale, ShieldCheck } from 'lucide-react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NETWORK_COLORS, NETWORKS } from '../data'
 import type { Locale, NetworkId } from '../types'
 
-const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, 'bond-servicing': ReceiptText, 'asset-backed-securitization': Boxes, derivatives: Network, 'credit-derivatives': Gavel, 'listed-derivatives': ChartCandlestick, 'fx-pvp': Repeat2, 'repo-financing': Scale, 'triparty-collateral': ShieldCheck, 'etf-primary-market': Layers3, 'securities-lending': Handshake, 'syndicated-loans': BookOpenCheck, usdc: CircleDollarSign }
+const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, 'securities-issuance': FileStack, 'bond-servicing': ReceiptText, 'asset-backed-securitization': Boxes, derivatives: Network, 'credit-derivatives': Gavel, 'listed-derivatives': ChartCandlestick, 'fx-pvp': Repeat2, 'repo-financing': Scale, 'triparty-collateral': ShieldCheck, 'etf-primary-market': Layers3, 'securities-lending': Handshake, 'syndicated-loans': BookOpenCheck, usdc: CircleDollarSign }
 
 export function NetworkSidebar({ selected, onSelect, locale }: { selected: NetworkId; onSelect: (id: NetworkId) => void; locale: Locale }) {
   const { t } = useTranslation()
