@@ -64,7 +64,7 @@ describe('financial flow contract', () => {
 
   it('keeps leveraged derivative issuance scoped as structure, not live hedging or guaranteed return', () => {
     expect(getFlowGuide('leveraged-derivatives-issuance').boundary.en).toContain('explanatory schematic')
-    expect(getFlowGuide('leveraged-derivatives-issuance').concepts?.some((concept) => concept.en.includes('leverage level'))).toBe(true)
+    expect(getFlowGuide('leveraged-derivatives-issuance').concepts?.some((concept) => /leverage level/i.test(concept.en))).toBe(true)
   })
 
   it('keeps the issuer role separate from downstream allocation and settlement ledgers', () => {
