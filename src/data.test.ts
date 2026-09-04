@@ -49,12 +49,22 @@ describe('financial flow contract', () => {
   })
 
   it('covers the requested network families including primary-market bonds', () => {
-    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'bond-servicing', 'asset-backed-securitization', 'derivatives', 'credit-derivatives', 'listed-derivatives', 'fx-pvp', 'repo-financing', 'triparty-collateral', 'etf-primary-market', 'securities-lending', 'syndicated-loans', 'usdc'])
+    expect(NETWORKS.map((network) => network.id)).toEqual(['swift', 'visa', 'chips-fedwire', 'bond-issuance', 'bond-servicing', 'multi-bond-issuance', 'asset-backed-securitization', 'derivatives', 'leveraged-derivatives-issuance', 'credit-derivatives', 'listed-derivatives', 'fx-pvp', 'repo-financing', 'triparty-collateral', 'etf-primary-market', 'securities-lending', 'syndicated-loans', 'usdc'])
   })
 
   it('keeps bond issuance and OTC derivatives guidance distinct from generic payment stages', () => {
     expect(getFlowGuide('bond-issuance').boundary.en).toContain('Primary issuance')
     expect(getFlowGuide('derivatives').boundary.en).toContain('Bilateral OTC')
+  })
+  it('keeps multi-bond issuance guidance distinct from single-issue and secondary-market execution', () => {
+    expect(getFlowGuide('multi-bond-issuance').boundary.en).toContain('reproduce')
+    expect(getFlowGuide('multi-bond-issuance').roles[0].en).toContain('Issuer')
+    expect(getFlowGuide('multi-bond-issuance').concepts?.some((concept) => concept.en.includes('program'))).toBe(true)
+  })
+
+  it('keeps leveraged derivative issuance scoped as structure, not live hedging or guaranteed return', () => {
+    expect(getFlowGuide('leveraged-derivatives-issuance').boundary.en).toContain('explanatory schematic')
+    expect(getFlowGuide('leveraged-derivatives-issuance').concepts?.some((concept) => concept.en.includes('leverage level'))).toBe(true)
   })
 
   it('keeps the issuer role separate from downstream allocation and settlement ledgers', () => {

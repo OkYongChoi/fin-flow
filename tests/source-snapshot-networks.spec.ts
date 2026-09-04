@@ -4,7 +4,9 @@ test('specialised networks render their cited public metrics instead of simulate
   const cases = [
     ['bond-issuance', 'Bond issuance', 'U.S. securities standard settlement cycle', 'T+1'],
     ['bond-servicing', 'Bond servicing', 'DTC redemption processing', 'DTC'],
+    ['multi-bond-issuance', 'Multi-bond issuance', 'Multi-issue program structure', 'Program-level'],
     ['asset-backed-securitization', 'Asset-backed securitization', 'ABS disclosure framework', 'Reg AB'],
+    ['leveraged-derivatives-issuance', 'Leveraged derivative product issuance', 'Leveraged derivative leverage regime', 'Leverage regime'],
     ['credit-derivatives', 'Credit derivatives credit event', 'ISDA credit-event auction settlement', 'ISDA'],
     ['listed-derivatives', 'Listed derivatives', 'Listed-derivatives daily mark-to-market', 'Daily'],
     ['triparty-collateral', 'Tri-party collateral management', 'FICC ACS Triparty', 'ACS'],

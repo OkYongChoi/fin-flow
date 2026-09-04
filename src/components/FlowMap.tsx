@@ -23,8 +23,10 @@ const SEMANTIC_LABELS: Record<FlowEdge['semantic'], { ko: string; en: string }> 
 const NETWORK_TABLE_SCOPE: Partial<Record<NetworkId, { ko: string; en: string }>> = {
   'bond-issuance': { ko: '채권 발행의 1차 시장 구조도', en: 'Primary-market bond issuance schematic' },
   'bond-servicing': { ko: '채권 사후지급·상환 구조도', en: 'Post-issuance bond servicing and redemption schematic' },
+  'multi-bond-issuance': { ko: '다건 채권 발행 구조도', en: 'Multi-bond issuance schematic' },
   'asset-backed-securitization': { ko: '자산유동화 SPV·트랜치·워터폴 구조도', en: 'Asset-backed securitization SPV, tranche, and waterfall schematic' },
   derivatives: { ko: 'OTC 파생상품 청산 경로 구조도', en: 'OTC derivatives clearing-path schematic' },
+  'leveraged-derivatives-issuance': { ko: '레버리지 파생 상품 발행 경로', en: 'Leveraged derivative issuance path' },
   'credit-derivatives': { ko: '신용사건·경매 정산 구조도', en: 'Credit-event and auction-settlement schematic' },
   'listed-derivatives': { ko: '상장 파생상품 청산·일일 정산 구조도', en: 'Listed-derivatives clearing and daily-settlement schematic' },
   'triparty-collateral': { ko: 'Tri-party 담보관리 구조도', en: 'Tri-party collateral-management schematic' },
