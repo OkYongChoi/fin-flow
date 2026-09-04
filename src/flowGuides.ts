@@ -70,6 +70,25 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '만기·전부 또는 일부 상환·환매는 해당 약관과 DTC 절차에 따르며, 하나의 보편적 이표 계산이나 세금 처리로 일반화하지 않습니다.', en: 'Maturity, full/partial redemption, and calls follow the applicable terms and DTC procedures; they are not generalised into one universal coupon or tax calculation.' },
     ],
   },
+  'multi-bond-issuance': {
+    steps: [
+      { ko: '프로그램 설계', en: 'Program setup', noteKo: '모든 발행이 하나의 계약으로 동일하게 처리되는 것은 아닙니다.', noteEn: 'Not every issue in a program is processed the same way.' },
+      { ko: '트랜치·만기·이자율 조건 확정', en: 'Define tranches, maturities, and coupons', noteKo: '조건은 시장·문서·발행사에 따라 달라집니다.', noteEn: 'Terms vary by market, documentation, and issuer policy.' },
+      { ko: '동시 책정·배정 계획', en: 'Parallel pricing and allocation planning', noteKo: '동시 발행은 배정, 정산, 문서화 경로가 서로 분리될 수 있습니다.', noteEn: 'Parallel issuances can require separate allocation, settlement, and documentation paths.' },
+      { ko: '배정 공시·DvP 운영', en: 'Allocation notice and DvP operations', noteKo: '각 회차의 결과는 유통시장의 거래재개장치와 구분합니다.', noteEn: 'Each wave is distinct from secondary-market execution paths.' },
+    ],
+    roles: [
+      { ko: '발행사: 발행 프로그램과 발행 전 과정을 통합 운영 기준으로 운영합니다.', en: 'Issuer: runs repeat-offer decisions with a program-level policy.' },
+      { ko: 'IB·에이전트: 수요 취합 및 회차별 배정을 조정할 수 있습니다.', en: 'Lead banks and agents: can coordinate demand capture and wave-by-wave allocation.' },
+      { ko: '예탁결제기관·예탁기관: 회차별 적격성·대차·정산 인프라를 지원합니다.', en: 'Depository and custody providers: support eligibility, custody, and per-tranche settlement infrastructure.' },
+    ],
+    boundary: { ko: '다건 발행은 1차 시장 내 반복 실행 절차를 설명한 것입니다. 각 회차의 배정·가격·유통시장 체결·개별 계좌 처리는 개별 거래이며, 이 안내로 재현하지 않습니다.', en: 'Multi-issue issuance is a schematic of repeat-offering operations in the primary market. Wave-level pricing, execution, and investor-level processing are not reproduced.' },
+    concepts: [
+      { ko: '단일 채권 발행과 달리, 다건 발행은 회차·트랜치별 경로가 달라질 수 있습니다.', en: 'Unlike a single issue, a multi-bond program can have different paths by wave and tranche.' },
+      { ko: '회차별 조건은 동일한 발행사라도 회차마다 문서와 배정 논리가 달라질 수 있습니다.', en: 'Conditions may differ by wave for the same issuer depending on the documentation and allocation logic.' },
+      { ko: '본 안내는 프로그램 운영 예시이며, 회수 조건·실제 이자·가격 통화 변환·투자자별 잔액을 재현하지 않습니다.', en: 'This guide is an operating schematic; it does not reproduce redemption terms, currency conversions, prices, or investor-level balances.' },
+    ],
+  },
   'asset-backed-securitization': {
     steps: [
       { ko: '기초자산 풀 정의', en: 'Define the asset pool', noteKo: '기초자산의 범주를 설명하며, 법적 양도 의견이나 개별 계약을 판단하지 않습니다.', noteEn: 'Describes an asset-pool category; it does not determine legal transfer treatment or an individual contract.' },
@@ -117,6 +136,25 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
       { ko: '파생상품의 만기 및 정산은 상품 조건에 따르며, 현금결제와 실물인도는 구분됩니다. 명목금액만으로 결제 방식을 추정하지 않습니다.', en: 'Derivative maturity and settlement follow the product terms: cash settlement and physical delivery are distinct, and the method cannot be inferred from notional alone.' },
       { ko: '명목금액은 계약의 기준 금액일 수 있지만, 시장가치나 신용 노출액과 같지 않습니다. 따라서 명목금액만으로 현금흐름 또는 위험 규모를 판단하지 않습니다.', en: 'Notional is a contractual reference amount, not the same as market value or credit exposure; it alone does not determine cash flow or risk size.' },
       { ko: '담보의 이전과 계약상 정산자산의 인도는 서로 바꿔 쓸 수 없습니다. 담보 적격성·통화·시점은 해당 담보 약정과 상품 조건을 따릅니다.', en: 'Collateral movement is not interchangeable with delivery of a settlement asset; eligibility, currency, and timing follow the collateral and product terms.' },
+    ],
+  },
+  'leveraged-derivatives-issuance': {
+    steps: [
+      { ko: '지표·기초자산·레버리지 레짐 정의', en: 'Define index, underlying, and leverage regime', noteKo: '레버리지 목표는 증빙 문서·공시요건에 따라 달라집니다.', noteEn: 'Leverage intent varies by product documentation and disclosure requirements.' },
+      { ko: '발행 조건서·레버리지 제한 설정', en: 'Issue term sheet and leverage limits', noteKo: '레버리지 한도는 약관과 위험관리 규칙을 따라 결정됩니다.', noteEn: 'Leverage limits are governed by terms and risk-controls.' },
+      { ko: '발행·적격투자자 라우팅', en: 'Issuance and investor routing', noteKo: '투자자 선별과 발행 라우팅은 공개 주문장 또는 기관 약정 방식이 다릅니다.', noteEn: 'Investor qualification and routing differ between retail order flow and institutional placement structures.' },
+      { ko: '초기 담보·리밸런싱·보전정산', en: 'Initial collateral, rebalance, and maintenance settlement', noteKo: '사후 변동성 조정은 일일 리밸런싱 주기·가격 기준을 따릅니다.', noteEn: 'Post-issue rebalancing follows daily reset and valuation conventions.' },
+    ],
+    roles: [
+      { ko: '발행인: 레버리지 산식·초기 담보·손익 전달 방식의 조건을 정합니다.', en: 'Issuer: sets leverage formula, initial collateral, and payout mechanics.' },
+      { ko: '조달·유통 기관: 레버리지 상품의 라우팅, 보고, 유통 채널을 운영합니다.', en: 'Arrangers/distributors: operate routing, disclosure, and distribution channels.' },
+      { ko: '거래 참가자: 담보 요구와 리밸런싱 통지를 이행합니다.', en: 'Participants: satisfy collateral requirements and rebalance notices.' },
+    ],
+    boundary: { ko: '레버리지 파생 상품 발행은 특정 투자 조건의 설명용 구조도입니다. 실시간 헤지비용, 실시간 가치, 보장 수익률 또는 자동 손익 보전은 주장하지 않습니다.', en: 'Leveraged derivative issuance is an explanatory schematic for selected product structures. It does not imply live hedging costs, live valuation, guaranteed returns, or automatic P&L reimbursement.' },
+    concepts: [
+      { ko: '레버리지 레벨은 약정된 노출관리 규칙을 따르며, 단순 배수 노출만으로 설명되지 않습니다.', en: 'Leverage level is constrained by agreed exposure-management rules and is not a simple scalar multiplier alone.' },
+      { ko: '발행 단계는 1차 계약·등록·유통 채널 설정이며, 일일 변동성에 따른 실시간 손익은 별도 시장 가격 경로에서 계산됩니다.', en: 'Issuance is the structuring, registration, and distribution setup phase; daily volatility outcomes are priced in separate market price paths.' },
+      { ko: '담보 요구·초기 정산·재조정 통보는 레버리지 위험 통제의 일부이고, 거래 체결 자체와 동일하지 않습니다.', en: 'Collateral demands, first settlement, and margin adjustment notices are part of leverage risk control and are not identical to execution itself.' },
     ],
   },
   'credit-derivatives': {
