@@ -2,8 +2,12 @@ import { describe, expect, it } from 'vitest'
 import metrics from '../public/data/metrics.json'
 import sources from '../public/data/sources.json'
 import { EDGES, isSnapshotReviewOverdue, NETWORKS, NODES } from './data'
+import type { NetworkId } from './types'
 import { getFlowGuide } from './flowGuides'
 import { getProductStructureGuide } from './productStructures'
+
+const guideHasConcept = (networkId: NetworkId, phrase: string): boolean =>
+  getFlowGuide(networkId).concepts?.some((concept) => concept.en.toLowerCase().includes(phrase.toLowerCase())) === true
 
 describe('financial flow contract', () => {
   it('keeps node coordinates unique for unambiguous map markers', () => {
@@ -59,80 +63,80 @@ describe('financial flow contract', () => {
   it('keeps multi-bond issuance guidance distinct from single-issue and secondary-market execution', () => {
     expect(getFlowGuide('multi-bond-issuance').boundary.en).toContain('reproduce')
     expect(getFlowGuide('multi-bond-issuance').roles[0].en).toContain('Issuer')
-    expect(getFlowGuide('multi-bond-issuance').concepts?.some((concept) => concept.en.includes('program'))).toBe(true)
+    expect(guideHasConcept('multi-bond-issuance', 'program')).toBe(true)
   })
 
   it('keeps leveraged derivative issuance scoped as structure, not live hedging or guaranteed return', () => {
     expect(getFlowGuide('leveraged-derivatives-issuance').boundary.en).toContain('explanatory schematic')
-    expect(getFlowGuide('leveraged-derivatives-issuance').concepts?.some((concept) => /leverage level/i.test(concept.en))).toBe(true)
+    expect(guideHasConcept('leveraged-derivatives-issuance', 'leverage level')).toBe(true)
   })
 
   it('keeps the issuer role separate from downstream allocation and settlement ledgers', () => {
-    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('does not operate every allocation'))).toBe(true)
+    expect(guideHasConcept('bond-issuance', 'does not operate every allocation')).toBe(true)
   })
 
   it('scopes lead-manager guidance to coordination rather than investor-level trades', () => {
-    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('does not display investor-level trades'))).toBe(true)
+    expect(guideHasConcept('bond-issuance', 'does not display investor-level trades')).toBe(true)
   })
 
   it('separates depository infrastructure from the cash settlement leg of DvP', () => {
-    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('cash-settlement leg of DvP'))).toBe(true)
+    expect(guideHasConcept('bond-issuance', 'cash-settlement leg of DvP')).toBe(true)
   })
 
   it('does not treat offering allocation as secondary-market trading', () => {
-    expect(getFlowGuide('bond-issuance').concepts?.some((concept) => concept.en.includes('secondary-market price discovery'))).toBe(true)
+    expect(guideHasConcept('bond-issuance', 'secondary-market price discovery')).toBe(true)
   })
 
   it('keeps OTC counterparties distinct from CCP interposition', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('CCP can interpose'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'CCP can interpose')).toBe(true)
   })
 
   it('does not conflate trade confirmation with valuation, margin, or cash movement', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not itself mean valuation'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'does not itself mean valuation')).toBe(true)
   })
 
   it('does not treat mark-to-market valuation as a cash settlement event', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the same payment event'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not the same payment event')).toBe(true)
   })
 
   it('keeps bilateral collateral management separate from a CCP-cleared path', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not automatically become a CCP-cleared path'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'does not automatically become a CCP-cleared path')).toBe(true)
   })
 
   it('limits CCP interposition to eligible cleared trades', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not every OTC contract is automatically cleared'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not every OTC contract is automatically cleared')).toBe(true)
   })
 
   it('distinguishes initial margin from variation margin', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('potential future exposure'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'potential future exposure')).toBe(true)
   })
 
   it('keeps variation margin distinct from notional and final settlement', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the contract notional'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not the contract notional')).toBe(true)
   })
 
   it('does not collapse margin-call steps into one instant settlement event', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not assumed to be one instant settlement event'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not assumed to be one instant settlement event')).toBe(true)
   })
 
   it('limits novation to the cleared-trade context', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('does not mean every bilateral OTC contract is automatically transferred'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'does not mean every bilateral OTC contract is automatically transferred')).toBe(true)
   })
 
   it('keeps cleared-trade default management separate from ordinary settlement', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not an ordinary maturity settlement step'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not an ordinary maturity settlement step')).toBe(true)
   })
 
   it('does not infer the derivative settlement method from notional', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('cannot be inferred from notional alone'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'cannot be inferred from notional alone')).toBe(true)
   })
 
   it('distinguishes derivative notional from market value and exposure', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not the same as market value or credit exposure'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not the same as market value or credit exposure')).toBe(true)
   })
 
   it('keeps collateral movement separate from settlement-asset delivery', () => {
-    expect(getFlowGuide('derivatives').concepts?.some((concept) => concept.en.includes('not interchangeable with delivery of a settlement asset'))).toBe(true)
+    expect(guideHasConcept('derivatives', 'not interchangeable with delivery of a settlement asset')).toBe(true)
   })
 
   it('keeps the FX PvP route available as a distinct, source-backed guide', () => {
@@ -173,7 +177,7 @@ describe('financial flow contract', () => {
     const guide = getFlowGuide('triparty-collateral')
     expect(NETWORKS.some((network) => network.id === 'triparty-collateral')).toBe(true)
     expect(guide.boundary.en).toContain('does not claim coverage for every tri-party repo market')
-    expect(guide.concepts?.some((concept) => concept.en.includes('not a CCP guarantee'))).toBe(true)
-    expect(guide.concepts?.some((concept) => concept.en.includes('not an automatic right'))).toBe(true)
+    expect(guideHasConcept('triparty-collateral', 'not a CCP guarantee')).toBe(true)
+    expect(guideHasConcept('triparty-collateral', 'not an automatic right')).toBe(true)
   })
 })
