@@ -3,8 +3,10 @@ import { useState } from 'react'
 import { ISSUANCE_FLOWS } from '../issuanceFlows'
 import type { Locale } from '../types'
 
+const DEFAULT_ISSUANCE_FLOW_ID = 'agency-mbs'
+
 export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
-  const [selectedId, setSelectedId] = useState(ISSUANCE_FLOWS[0].id)
+  const [selectedId, setSelectedId] = useState(() => ISSUANCE_FLOWS.find((item) => item.id === DEFAULT_ISSUANCE_FLOW_ID)?.id ?? ISSUANCE_FLOWS[0].id)
   const flow = ISSUANCE_FLOWS.find((item) => item.id === selectedId) ?? ISSUANCE_FLOWS[0]
   return <section className="issuance-library" aria-labelledby="issuance-library-title">
     <header><span><FileStack size={15} aria-hidden="true" />{locale === 'ko' ? '증권 발행 절차' : 'Securities issuance procedures'}</span><h3 id="issuance-library-title">{locale === 'ko' ? '유형을 선택해 발행 경로를 비교하세요' : 'Choose a security type to compare the issuance path'}</h3></header>
