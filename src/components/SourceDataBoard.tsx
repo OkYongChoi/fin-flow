@@ -1,5 +1,6 @@
-import { CalendarClock, ExternalLink, FileCheck2, Layers3 } from 'lucide-react'
+import { ArrowDown, CalendarClock, ExternalLink, FileCheck2, Layers3 } from 'lucide-react'
 import { isSnapshotReviewOverdue, NETWORKS } from '../data'
+import { ISSUANCE_FLOWS } from '../issuanceFlows'
 import { getProductStructureGuide } from '../productStructures'
 import type { Locale, Metric, NetworkId, SourceRecord } from '../types'
 
@@ -10,11 +11,21 @@ export function SourceDataBoard({ selected, metrics, sources, generatedAt, revie
   const sourceById = new Map(sources.map((source) => [source.id, source]))
   const structureGuide = getProductStructureGuide(selected)
   const reviewOverdue = reviewDueAt ? isSnapshotReviewOverdue(reviewDueAt) : false
+  const openIssuanceExplorer = () => {
+    const explorer = document.getElementById('issuance-library')
+    if (!explorer) return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    explorer.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
+    explorer.focus({ preventScroll: true })
+  }
   return (
     <section className="source-data-board" aria-labelledby="source-data-board-title">
       <header className="source-data-heading">
         <div><span>{locale === 'ko' ? '출처 기반 데이터' : 'Source-backed data'}</span><h2 id="source-data-board-title">{locale === 'ko' ? network.label : network.labelEn}</h2></div>
-        <dl><div><dt>{locale === 'ko' ? '지표' : 'Metrics'}</dt><dd>{metrics.length}</dd></div><div><dt>{locale === 'ko' ? '스냅샷 생성' : 'Snapshot generated'}</dt><dd><time dateTime={generatedAt}>{formatDate(generatedAt, locale)}</time></dd></div><div><dt>{reviewOverdue ? (locale === 'ko' ? '검토 기한 경과' : 'Review overdue') : (locale === 'ko' ? '다음 검토' : 'Next review')}</dt><dd><time dateTime={reviewDueAt}>{formatDate(reviewDueAt, locale)}</time></dd></div></dl>
+        <div className="source-data-actions">
+          <dl><div><dt>{locale === 'ko' ? '지표' : 'Metrics'}</dt><dd>{metrics.length}</dd></div><div><dt>{locale === 'ko' ? '스냅샷 생성' : 'Snapshot generated'}</dt><dd><time dateTime={generatedAt}>{formatDate(generatedAt, locale)}</time></dd></div><div><dt>{reviewOverdue ? (locale === 'ko' ? '검토 기한 경과' : 'Review overdue') : (locale === 'ko' ? '다음 검토' : 'Next review')}</dt><dd><time dateTime={reviewDueAt}>{formatDate(reviewDueAt, locale)}</time></dd></div></dl>
+          {selected === 'securities-issuance' ? <button type="button" className="source-explorer-shortcut" onClick={openIssuanceExplorer}><span>{locale === 'ko' ? `${ISSUANCE_FLOWS.length}개 발행 경로 탐색` : `Explore ${ISSUANCE_FLOWS.length} issuance paths`}</span><ArrowDown size={14} aria-hidden="true" /></button> : null}
+        </div>
       </header>
       {structureGuide ? <section className="product-structure" aria-labelledby="product-structure-title">
         <header><span><Layers3 size={15} aria-hidden="true" />{locale === 'ko' ? '상품 이해' : 'Product mechanics'}</span><h3 id="product-structure-title">{locale === 'ko' ? '상품 구성 방식' : 'How the products are constructed'}</h3><p>{structureGuide.introduction[locale]}</p></header>

@@ -24,6 +24,26 @@ test('network selection is exposed as a labelled navigation landmark', async ({ 
   await expect(page.getByRole('navigation', { name: 'Financial networks' }).getByRole('button')).toHaveCount(NETWORKS.length)
 })
 
+test('network search narrows the long navigation and keeps selection shareable', async ({ page }, testInfo) => {
+  await page.goto('/ko/map')
+  if (testInfo.project.name === 'mobile') {
+    await page.getByLabel('네트워크', { exact: true }).selectOption('triparty-collateral')
+    await expect(page).toHaveURL(/network=triparty-collateral/)
+    await expect(page.getByRole('heading', { name: 'Tri-party 담보관리' }).first()).toBeVisible()
+    return
+  }
+  const search = page.getByLabel('금융 네트워크 검색')
+  await expect(search).toBeVisible()
+  await page.keyboard.press('/')
+  await expect(search).toBeFocused()
+  await search.fill('Tri-party')
+  const navigation = page.getByRole('navigation', { name: '금융 네트워크' })
+  await expect(navigation.getByRole('button')).toHaveCount(1)
+  await navigation.getByRole('button', { name: /Tri-party 담보관리/ }).click()
+  await expect(page).toHaveURL(/network=triparty-collateral/)
+  await expect(page.getByRole('heading', { name: 'Tri-party 담보관리' }).first()).toBeVisible()
+})
+
 test('source-data failure has a localized retry action', async ({ page }) => {
   await page.route('**/data/metrics.json', (route) => route.fulfill({ status: 503, body: 'unavailable' }))
   await page.goto('/ko/map')
