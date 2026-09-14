@@ -6,7 +6,7 @@ import type { Locale, Metric, NetworkId, SourceRecord } from '../types'
 export function SourceDetails({ selected, metrics, sources, locale }: { selected: NetworkId; metrics: Metric[]; sources: SourceRecord[]; locale: Locale }) {
   const network = NETWORKS.find((item) => item.id === selected)!
   return (
-    <aside className="detail-inspector source-details" aria-labelledby="detail-inspector-title">
+    <aside className={`detail-inspector source-details ${selected === 'securities-issuance' ? 'issuance-details' : ''}`} aria-labelledby="detail-inspector-title">
       <div className="sheet-handle" />
       <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2 id="detail-inspector-title">{locale === 'ko' ? network.label : network.labelEn}</h2></div><ShieldCheck size={19} /></header>
       <div className="representation-label"><i />{locale === 'ko' ? '공식 출처 스냅샷' : 'Official-source snapshot'}<span>{metrics.length}</span></div>
