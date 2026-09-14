@@ -80,6 +80,14 @@ a { color: inherit; text-decoration: none; }
 .network-list button > i { width: 7px; height: 7px; border: 1px solid #66849b; border-radius: 2px; }
 .network-list button.selected { background: linear-gradient(90deg, color-mix(in srgb, var(--network) 12%, transparent), transparent); }
 .network-list button.selected > i { background: var(--network); border-color: var(--network); box-shadow: 0 0 8px var(--network); }
+.network-search { height: 34px; position: relative; display: flex; align-items: center; margin: 0 0 9px; border: 1px solid var(--line); border-radius: 5px; background: #081d2e; color: #6f8ba1; transition: border-color .16s, box-shadow .16s; }
+.network-search:focus-within { border-color: #4a91c7; box-shadow: 0 0 0 2px rgba(66,165,255,.1); }
+.network-search > svg { position: absolute; left: 9px; pointer-events: none; }
+.network-search input { width: 100%; height: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #dce8f2; padding: 0 32px 0 29px; font-size: 10px; }
+.network-search input::placeholder { color: #617b90; }
+.network-search kbd, .network-search button { position: absolute; right: 5px; min-width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid #36546b; border-radius: 4px; background: #0b263b; color: #7f98ac; font-size: 9px; }
+.network-search button { padding: 0; cursor: pointer; }
+.network-empty { margin: 14px 5px; color: #7891a5; font-size: 10px; line-height: 1.5; }
 .legend-panel { margin-top: 14px; border: 1px solid var(--line-soft); border-radius: 4px; padding: 10px; }
 .legend-panel h3 { margin: 0 0 9px; color: #8ca3b7; font-size: 10px; }
 .legend-panel > div { display: flex; align-items: center; gap: 10px; color: #9badbd; font-size: 10px; margin: 8px 0; }
@@ -145,6 +153,19 @@ a { color: inherit; text-decoration: none; }
 .issuance-selected-card { border: 1px solid rgba(239,111,161,.3); border-radius: 7px; background: linear-gradient(145deg, rgba(38,35,58,.82), rgba(8,29,45,.94) 48%); overflow: hidden; }.issuance-selected-card > header { min-height: 60px; display: flex; justify-content: space-between; align-items: start; gap: 7px; padding: 10px; border-bottom: 1px solid rgba(239,111,161,.2); }.issuance-selected-card > header > div:first-child { display: grid; gap: 4px; min-width: 0; }.issuance-selected-card > header > div:first-child > span { color: #e38aad; font-size: 8px; text-transform: uppercase; letter-spacing: .06em; }.issuance-selected-card h4 { margin: 0; color: #f0f5fa; font-size: 12px; line-height: 1.35; }.issuance-card-actions { display: flex; gap: 4px; flex: 0 0 auto; }.issuance-card-actions button { height: 27px; display: flex; align-items: center; justify-content: center; gap: 4px; border: 1px solid #48657a; border-radius: 4px; background: #0c2639; color: #9db2c2; padding: 0 6px; font-size: 8px; cursor: pointer; }.issuance-card-actions button:last-child { width: 27px; padding: 0; }.issuance-card-actions button[aria-pressed="true"] { border-color: rgba(239,111,161,.62); color: #f19abd; background: rgba(100,31,59,.32); }
 .issuance-flow-detail { display: grid; gap: 10px; padding: 11px; }.issuance-flow-detail > p { margin: 0; color: #9fb2c1; font-size: 10px; line-height: 1.55; }.issuance-flow-detail > ol, .issuance-comparison-grid ol { list-style: none; margin: 0; padding: 0; display: grid; }.issuance-flow-detail li, .issuance-comparison-grid li { position: relative; display: grid; grid-template-columns: 20px 1fr; gap: 7px; min-height: 31px; color: #dcebf4; font-size: 9px; }.issuance-flow-detail li:not(:last-child)::after, .issuance-comparison-grid li:not(:last-child)::after { content: ""; position: absolute; left: 9px; top: 18px; bottom: 0; border-left: 1px dashed #52697c; }.issuance-flow-detail li > i, .issuance-comparison-grid li > i { width: 19px; height: 19px; display: grid; place-items: center; z-index: 1; border: 1px solid #7a5368; border-radius: 50%; background: #162638; color: #efa0bf; font-size: 8px; font-style: normal; }.issuance-flow-detail li b, .issuance-comparison-grid li b { padding-top: 3px; font-size: 9px; font-weight: 560; line-height: 1.35; }.issuance-flow-detail > small, .issuance-comparison-grid section > small { padding: 7px 8px; border-left: 2px solid var(--amber); background: rgba(255,169,36,.06); color: #9eb0bd; font-size: 9px; line-height: 1.5; }.issuance-flow-detail > a, .issuance-comparison-grid section > a { display: flex; justify-content: space-between; align-items: center; gap: 7px; border-top: 1px solid var(--line-soft); padding-top: 8px; color: #e59aba; }.issuance-flow-detail > a span, .issuance-comparison-grid section > a span { display: grid; gap: 2px; min-width: 0; }.issuance-flow-detail > a b, .issuance-comparison-grid section > a b { font-size: 9px; }.issuance-flow-detail > a small, .issuance-comparison-grid section > a small { overflow: hidden; color: #8297a8; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
 .issuance-compare-select { padding: 9px 10px 0; }.issuance-compare-signal { margin: 9px 10px 0; display: flex; align-items: center; gap: 5px; color: #91a7b7; font-size: 8px; line-height: 1.4; }.issuance-compare-signal svg { flex: 0 0 auto; color: #ed8eb3; }.issuance-compare-signal i { width: 3px; height: 3px; border-radius: 50%; background: #627b8e; }.issuance-comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 9px; border-top: 1px solid var(--line-soft); }.issuance-comparison-grid > section { min-width: 0; display: grid; align-content: start; gap: 9px; padding: 10px; }.issuance-comparison-grid > section + section { border-left: 1px solid var(--line-soft); }.issuance-comparison-grid > section > span { color: #d780a3; font-size: 8px; text-transform: uppercase; letter-spacing: .07em; }.issuance-comparison-grid h5 { min-height: 42px; margin: 0; color: #e2ecf4; font-size: 10px; line-height: 1.35; }.issuance-comparison-grid li { grid-template-columns: 17px 1fr; gap: 5px; min-height: 37px; }.issuance-comparison-grid li:not(:last-child)::after { left: 7px; top: 15px; }.issuance-comparison-grid li > i { width: 16px; height: 16px; }.issuance-comparison-grid section > small { min-height: 70px; padding: 6px; font-size: 8px; }.issuance-comparison-grid section > a { margin-top: auto; }.issuance-copy-status { min-height: 12px; color: #76c8ad; font-size: 8px; text-align: right; }.issuance-copy-status.failed { color: #eaa36d; }
+.issuance-library:focus-visible { outline: 2px solid var(--issuance-accent); outline-offset: 5px; border-radius: 4px; }
+.issuance-category-chips { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+.issuance-category-chips button { flex: 0 0 auto; height: 27px; display: flex; align-items: center; gap: 6px; border: 1px solid #34546d; border-radius: 999px; background: #0a2032; color: #88a0b3; padding: 0 8px; font-size: 8px; cursor: pointer; }
+.issuance-category-chips button:hover { border-color: #6d7184; color: #d8e5ef; }
+.issuance-category-chips button[aria-pressed="true"] { border-color: rgba(239,111,161,.7); background: rgba(101,31,60,.3); color: #f0b0c9; }
+.issuance-category-chips button i { min-width: 17px; height: 17px; display: grid; place-items: center; border-radius: 999px; background: rgba(255,255,255,.05); color: #a9bdcc; font-style: normal; }
+.issuance-results-heading > span { display: flex; align-items: center; gap: 6px; }
+.issuance-results-heading > span strong { min-width: 20px; height: 20px; display: grid; place-items: center; border-radius: 999px; background: #102a40; }
+.issuance-results-heading > button { border: 0; background: transparent; color: #df8eae; padding: 2px; font-size: 8px; cursor: pointer; }
+.issuance-card-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--line-soft); background: rgba(6,22,35,.45); }
+.issuance-card-meta span { display: grid; gap: 2px; padding: 7px 10px; color: #6f899d; font-size: 8px; text-transform: uppercase; letter-spacing: .04em; }
+.issuance-card-meta span + span { border-left: 1px solid var(--line-soft); }
+.issuance-card-meta b { color: #dce9f3; font-size: 9px; text-transform: none; letter-spacing: 0; }
 .source-section a span { display: grid; gap: 2px; }.source-section a b { font-size: 9px; }.source-section a small { color: #6c8599; font-size: 8px; }.source-section a svg { color: #608aa9; }
 .inspector-panel { margin-top: 12px; padding: 16px 2px; min-height: 160px; } .inspector-panel h3 { margin: 0 0 10px; font-size: 12px; } .inspector-panel p { margin: 0; color: #8fa5b9; font-size: 11px; line-height: 1.7; }
 .sheet-handle { display: none; }
@@ -172,7 +193,7 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 1150px) {
   .workspace { grid-template-columns: 180px minmax(420px, 1fr) 320px; }
-  .filter-control:nth-of-type(4), .filter-control:nth-of-type(5), .filter-flags { display: none; }
+  .sources-filter, .filter-flags { display: none; }
   .timeline-body { grid-template-columns: 150px 1fr 190px; }
 }
 
@@ -201,7 +222,10 @@ a { color: inherit; text-decoration: none; }
 
 .filter-value { border: 1px solid var(--line); height: 32px; min-width: 100%; display: flex; align-items: center; gap: 7px; border-radius: 4px; background: #0a1d2e; font-size: 11px; padding: 0 9px; color: #afc0cf; overflow: hidden; }.filter-value b { font-weight: 550; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .source-data-board { height: 100%; overflow: auto; padding: 22px; background: radial-gradient(circle at 100% 0, rgba(66,165,255,.12), transparent 35%), #071827; }.source-data-heading { display: flex; justify-content: space-between; gap: 18px; align-items: end; padding-bottom: 18px; border-bottom: 1px solid var(--line); }.source-data-heading > div > span, .source-timeline header > div > span { color: var(--blue); font-size: 9px; letter-spacing: .09em; text-transform: uppercase; }.source-data-heading h2 { margin: 6px 0 0; font-size: 26px; letter-spacing: -.03em; }
+.source-data-actions { display: grid; justify-items: end; gap: 10px; }
 .source-data-heading dl { display: flex; gap: 18px; margin: 0; }.source-data-heading dl div { display: grid; gap: 4px; }.source-data-heading dt { color: #728ca1; font-size: 8px; text-transform: uppercase; }.source-data-heading dd { margin: 0; color: #dce9f4; font-size: 11px; }
+.source-explorer-shortcut { min-height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid rgba(239,111,161,.55); border-radius: 5px; background: linear-gradient(135deg, rgba(105,34,64,.5), rgba(20,48,70,.68)); color: #f1b2ca; padding: 0 10px; font-size: 9px; font-weight: 700; cursor: pointer; }
+.source-explorer-shortcut:hover { border-color: #ef8eb4; color: #fff; }
 .source-metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 18px; }.source-metric-card { min-height: 132px; display: grid; align-content: start; gap: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(145deg, rgba(20,57,87,.72), rgba(8,28,45,.82)); }.source-metric-card > span { color: #9eb1c1; font-size: 10px; line-height: 1.35; }.source-metric-card strong { color: #f0f7fc; font-size: 25px; letter-spacing: -.04em; }.source-metric-card small { color: #6f8da5; font-size: 9px; line-height: 1.4; }.source-metric-card p { display: flex; gap: 5px; align-items: center; margin: auto 0 0; color: #79bce9; font-size: 9px; }
 .product-structure { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }.product-structure > header > span { display: flex; align-items: center; gap: 6px; color: #79bce9; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }.product-structure h3 { margin: 7px 0 5px; font-size: 16px; }.product-structure > header p { max-width: 780px; margin: 0; color: #829caf; font-size: 10px; line-height: 1.6; }.product-structure-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }.product-structure-grid article { padding: 13px; border: 1px solid var(--line); border-radius: 6px; background: rgba(9, 32, 51, .78); }.product-structure-grid h4 { margin: 0 0 10px; color: #e0edf6; font-size: 12px; }.product-structure-grid dl { display: grid; gap: 9px; margin: 0; }.product-structure-grid dl div { display: grid; gap: 3px; }.product-structure-grid dt { color: #6faed8; font-size: 8px; text-transform: uppercase; letter-spacing: .06em; }.product-structure-grid dd { margin: 0; color: #9eb2c2; font-size: 9px; line-height: 1.5; }
 .source-quick-links { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 15px; }.source-quick-links h3 { display: flex; align-items: center; gap: 7px; margin: 0 0 10px; color: #b6c7d5; font-size: 11px; }.source-quick-links > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; }.source-quick-links a { min-height: 70px; display: flex; justify-content: space-between; gap: 8px; padding: 10px; border: 1px solid var(--line-soft); border-radius: 5px; background: rgba(5,21,35,.45); }.source-quick-links a span { display: grid; gap: 3px; min-width: 0; }.source-quick-links a b { font-size: 10px; }.source-quick-links a small { overflow: hidden; color: #7690a5; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }.source-quick-links a svg { flex: 0 0 auto; color: #74b8e8; }
@@ -211,4 +235,24 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 820px) {
   .source-data-board { min-height: 410px; padding: 18px 14px; }.source-data-heading { align-items: start; flex-direction: column; }.source-data-heading h2 { font-size: 24px; }.source-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }.source-metric-card { min-height: 116px; padding: 11px; }.source-metric-card strong { font-size: 21px; }.product-structure-grid { grid-template-columns: 1fr; }.source-timeline { height: auto; min-height: 180px; padding: 14px; }.source-history-list { grid-template-columns: 1fr; }.source-timeline h2 { font-size: 12px; }.source-details { max-height: 62vh; overflow: auto; }.source-details.issuance-details { max-height: none; overflow: visible; }
+  .mode-and-filter { min-height: 72px; padding: 7px 13px; }
+  .filter-bar { align-items: end; gap: 7px; overflow: visible; padding: 0; }
+  .filter-control.metrics-filter, .filter-control.sources-filter, .filter-flags { display: none; }
+  .filter-control.network-filter { order: 0; flex: 1; min-width: 0; }
+  .filter-control.coverage-filter { order: 1; width: 112px; min-width: 112px; }
+  .filter-bar .reset-button { order: 2; width: 34px; min-width: 34px; display: grid; place-items: center; padding: 0; }
+  .filter-bar .reset-button span { display: none; }
+  .network-search { display: none; }
+  .source-data-actions { width: 100%; justify-items: stretch; }
+  .source-data-heading dl { width: 100%; justify-content: space-between; }
+  .source-explorer-shortcut { width: 100%; min-height: 40px; font-size: 10px; }
+  .issuance-library { scroll-margin-top: 16px; gap: 12px; }
+  .issuance-library h3 { font-size: 16px; }
+  .issuance-category-chips { margin-right: -16px; padding-right: 16px; }
+  .issuance-category-chips button { height: 34px; padding: 0 11px; font-size: 9px; }
+  .issuance-results { max-height: 190px; }
+  .issuance-results button { min-height: 49px; padding: 8px 10px; }
+  .issuance-results button b, .issuance-flow-detail > p { font-size: 11px; }
+  .issuance-results button small, .issuance-flow-detail li b, .issuance-flow-detail > small { font-size: 9px; }
+  .issuance-selected-card h4 { font-size: 14px; }
 }

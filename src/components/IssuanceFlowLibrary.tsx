@@ -6,6 +6,7 @@ import type { IssuanceCategory } from '../issuanceFlows'
 import type { Locale } from '../types'
 
 const DEFAULT_ISSUANCE_FLOW_ID = 'agency-mbs'
+const CATEGORY_COUNTS = new Map(ISSUANCE_CATEGORIES.map((category) => [category.id, ISSUANCE_FLOWS.filter((flow) => getIssuanceCategory(flow.id) === category.id).length]))
 
 export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
   const { pathname, search, navigate } = useRouter()
@@ -18,6 +19,7 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<'all' | IssuanceCategory>('all')
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const hasActiveFilters = Boolean(query.trim()) || category !== 'all'
 
   useEffect(() => {
     if ((!requestedId || requestedId === selectedId) && (!requestedComparisonId || comparisonFlow)) return
@@ -63,7 +65,12 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
     }
   }
 
-  return <section className="issuance-library" aria-labelledby="issuance-library-title">
+  const resetFilters = () => {
+    setQuery('')
+    setCategory('all')
+  }
+
+  return <section id="issuance-library" className="issuance-library" aria-labelledby="issuance-library-title" tabIndex={-1}>
     <header className="issuance-library-heading">
       <div><span><FileStack size={15} aria-hidden="true" />{locale === 'ko' ? '증권 발행 절차' : 'Securities issuance procedures'}</span><strong>{ISSUANCE_FLOWS.length}</strong></div>
       <h3 id="issuance-library-title">{locale === 'ko' ? '발행 경로를 찾고 나란히 비교하세요' : 'Find and compare issuance paths side by side'}</h3>
@@ -84,7 +91,12 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
         </label>
       </div>
 
-      <div className="issuance-results-heading"><span>{locale === 'ko' ? '검색 결과' : 'Matching paths'}</span><strong aria-live="polite">{filteredFlows.length}</strong></div>
+      <div className="issuance-category-chips" role="group" aria-label={locale === 'ko' ? '빠른 분류 필터' : 'Quick issuance filters'}>
+        <button type="button" aria-pressed={category === 'all'} onClick={() => setCategory('all')}><span>{locale === 'ko' ? '전체' : 'All'}</span><i>{ISSUANCE_FLOWS.length}</i></button>
+        {ISSUANCE_CATEGORIES.map((item) => <button type="button" key={item.id} aria-pressed={category === item.id} onClick={() => setCategory(item.id)}><span>{item.label[locale]}</span><i>{CATEGORY_COUNTS.get(item.id)}</i></button>)}
+      </div>
+
+      <div className="issuance-results-heading"><span>{locale === 'ko' ? '검색 결과' : 'Matching paths'} <strong aria-live="polite">{filteredFlows.length}</strong></span>{hasActiveFilters ? <button type="button" onClick={resetFilters}>{locale === 'ko' ? '필터 초기화' : 'Reset filters'}</button> : null}</div>
       {filteredFlows.length ? <div className="issuance-results" role="list" aria-label={locale === 'ko' ? '발행 절차 검색 결과' : 'Issuance procedure results'}>
         {filteredFlows.map((item) => <button type="button" key={item.id} className={item.id === selectedId ? 'selected' : ''} aria-pressed={item.id === selectedId} onClick={() => selectFlow(item.id)}>
           <span><b>{item.label[locale]}</b><small>{getIssuanceCategoryLabel(getIssuanceCategory(item.id), locale)} · {item.source.provider}</small></span>
@@ -101,6 +113,7 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
           <button type="button" onClick={() => void copyViewLink()} aria-label={locale === 'ko' ? '현재 보기 링크 복사' : 'Copy current view link'}>{copyStatus === 'copied' ? <Check size={13} /> : <Copy size={13} />}</button>
         </div>
       </header>
+      <div className="issuance-card-meta"><span><b>{flow.steps.length}</b>{locale === 'ko' ? '단계' : 'stages'}</span><span><b>{flow.source.provider}</b>{locale === 'ko' ? '공식 출처' : 'primary source'}</span></div>
 
       {comparisonFlow ? <>
         <label className="issuance-compare-select"><span>{locale === 'ko' ? '비교 절차 선택' : 'Choose comparison path'}</span><select value={comparisonFlow.id} onChange={(event) => updateUrl({ compareIssuance: event.target.value })}>{ISSUANCE_CATEGORIES.map((item) => <optgroup key={item.id} label={item.label[locale]}>{ISSUANCE_FLOWS.filter((candidate) => candidate.id !== selectedId && getIssuanceCategory(candidate.id) === item.id).map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.label[locale]}</option>)}</optgroup>)}</select></label>

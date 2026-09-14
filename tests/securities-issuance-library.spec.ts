@@ -14,6 +14,16 @@ test('securities issuance explorer filters, selects, and restores a shared path'
   await expect(page.getByRole('heading', { name: 'U.S. Treasury bills' })).toBeVisible()
 })
 
+test('securities issuance explorer offers quick category filters and a focused jump target', async ({ page }) => {
+  await page.goto('/ko/map?network=securities-issuance')
+  await page.getByRole('button', { name: '29개 발행 경로 탐색' }).click()
+  await expect(page.locator('#issuance-library')).toBeFocused()
+  await page.getByRole('group', { name: '빠른 분류 필터' }).getByRole('button', { name: /미국 국채/ }).click()
+  await expect(page.getByText('검색 결과').locator('..').getByText('9', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: '필터 초기화' }).click()
+  await expect(page.getByText('검색 결과').locator('..').getByText('29', { exact: true })).toBeVisible()
+})
+
 test('securities issuance explorer compares two source-backed paths', async ({ page }) => {
   await page.goto('/en/map?network=securities-issuance&issuance=us-equity-ipo')
   await page.getByRole('button', { name: 'Compare' }).click()
