@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useTransition } from 'react'
+import { useEffect, useMemo, useState, useTransition } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { AppHeader } from '../App'
@@ -15,6 +15,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const { t } = useTranslation()
   const { pathname, search, navigate } = useRouter()
   const params = useMemo(() => new URLSearchParams(search), [search])
+  const [networkQuery, setNetworkQuery] = useState('')
   const [isPending, startTransition] = useTransition()
   const requested = params.get('network') as NetworkId | null
   const hasValidNetwork = NETWORKS.some((item) => item.id === requested)
@@ -26,10 +27,13 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const updateView = (updates: Record<string, string | null>) => startTransition(() => {
     const next = new URLSearchParams(params)
     Object.entries(updates).forEach(([key, value]) => value === null ? next.delete(key) : next.set(key, value))
-    navigate(`${pathname}?${next.toString()}`, true)
+    navigate(`${pathname}${next.size ? `?${next.toString()}` : ''}`, true)
   })
   const selectNetwork = (network: NetworkId) => updateView({ network })
-  const resetView = () => updateView({ network: 'chips-fedwire', mode: null })
+  const resetView = () => {
+    setNetworkQuery('')
+    updateView({ network: null, mode: null, issuance: null, compareIssuance: null })
+  }
   useEffect(() => {
     if (requested === null || hasValidNetwork) return
     const next = new URLSearchParams(search)
@@ -47,7 +51,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
         </div>
       </section>
       <section className="workspace">
-        <NetworkSidebar selected={selected} onSelect={selectNetwork} locale={locale} />
+        <NetworkSidebar query={networkQuery} onQueryChange={setNetworkQuery} selected={selected} onSelect={selectNetwork} locale={locale} />
         <div className="map-region">
           {error ? <div className="map-error" role="alert"><span>{t('data.loadError')}</span><button type="button" onClick={() => void refetch()}>{t('data.retry')}</button></div> : (
             <SourceDataBoard selected={selected} metrics={metrics} sources={sources} generatedAt={data?.generatedAt} reviewDueAt={data?.reviewDueAt} locale={locale} />

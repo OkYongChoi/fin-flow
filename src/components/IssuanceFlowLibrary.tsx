@@ -1,5 +1,5 @@
 import { Check, Copy, ExternalLink, FileStack, GitCompareArrows, Search, X } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { getIssuanceCategory, getIssuanceCategoryLabel, ISSUANCE_CATEGORIES, ISSUANCE_FLOWS } from '../issuanceFlows'
 import { useRouter } from '../router'
 import type { IssuanceCategory } from '../issuanceFlows'
@@ -16,6 +16,7 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
   const selectedId = ISSUANCE_FLOWS.some((item) => item.id === requestedId) ? requestedId! : DEFAULT_ISSUANCE_FLOW_ID
   const flow = ISSUANCE_FLOWS.find((item) => item.id === selectedId) ?? ISSUANCE_FLOWS[0]
   const comparisonFlow = ISSUANCE_FLOWS.find((item) => item.id === requestedComparisonId && item.id !== selectedId)
+  const searchRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<'all' | IssuanceCategory>('all')
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle')
@@ -68,6 +69,7 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
   const resetFilters = () => {
     setQuery('')
     setCategory('all')
+    searchRef.current?.focus()
   }
 
   return <section id="issuance-library" className="issuance-library" aria-labelledby="issuance-library-title" tabIndex={-1}>
@@ -80,11 +82,11 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
       <div className="issuance-discovery">
         <label className="issuance-search">
           <span>{locale === 'ko' ? '절차 검색' : 'Search procedures'}</span>
-          <span><Search size={13} aria-hidden="true" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={locale === 'ko' ? '예: 국채, IPO, SEC' : 'Try Treasury, IPO, or SEC'} />{query ? <button type="button" onClick={() => setQuery('')} aria-label={locale === 'ko' ? '검색어 지우기' : 'Clear search'}><X size={12} /></button> : null}</span>
+          <span><Search size={13} aria-hidden="true" /><input ref={searchRef} type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={locale === 'ko' ? '예: 국채, IPO, SEC' : 'Try Treasury, IPO, or SEC'} />{query ? <button type="button" onClick={() => { setQuery(''); searchRef.current?.focus() }} aria-label={locale === 'ko' ? '검색어 지우기' : 'Clear search'}><X size={12} /></button> : null}</span>
         </label>
         <label className="issuance-category">
           <span>{locale === 'ko' ? '분류' : 'Category'}</span>
-          <select value={category} onChange={(event) => setCategory(event.target.value as typeof category)}>
+          <select aria-label={locale === 'ko' ? '분류' : 'Category'} value={category} onChange={(event) => setCategory(event.target.value as typeof category)}>
             <option value="all">{locale === 'ko' ? '전체 분류' : 'All categories'}</option>
             {ISSUANCE_CATEGORIES.map((item) => <option key={item.id} value={item.id}>{item.label[locale]}</option>)}
           </select>
@@ -96,15 +98,19 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
         {ISSUANCE_CATEGORIES.map((item) => <button type="button" key={item.id} aria-pressed={category === item.id} onClick={() => setCategory(item.id)}><span>{item.label[locale]}</span><i>{CATEGORY_COUNTS.get(item.id)}</i></button>)}
       </div>
 
-      <div className="issuance-results-heading"><span>{locale === 'ko' ? '검색 결과' : 'Matching paths'} <strong aria-live="polite">{filteredFlows.length}</strong></span>{hasActiveFilters ? <button type="button" onClick={resetFilters}>{locale === 'ko' ? '필터 초기화' : 'Reset filters'}</button> : null}</div>
-      {filteredFlows.length ? <div className="issuance-results" role="list" aria-label={locale === 'ko' ? '발행 절차 검색 결과' : 'Issuance procedure results'}>
-        {filteredFlows.map((item) => <button type="button" key={item.id} className={item.id === selectedId ? 'selected' : ''} aria-pressed={item.id === selectedId} onClick={() => selectFlow(item.id)}>
+      <div className="issuance-results-heading"><span role="status">{locale === 'ko' ? '검색 결과' : 'Matching paths'} <strong>{filteredFlows.length}</strong></span>{hasActiveFilters ? <button type="button" onClick={resetFilters}>{locale === 'ko' ? '필터 초기화' : 'Reset filters'}</button> : null}</div>
+      {filteredFlows.length ? <ul className="issuance-results" aria-label={locale === 'ko' ? '발행 절차 검색 결과' : 'Issuance procedure results'}>
+        {filteredFlows.map((item) => <li key={item.id}><button type="button" className={item.id === selectedId ? 'selected' : ''} aria-pressed={item.id === selectedId} onClick={() => selectFlow(item.id)}>
           <span><b>{item.label[locale]}</b><small>{getIssuanceCategoryLabel(getIssuanceCategory(item.id), locale)} · {item.source.provider}</small></span>
           <i>{item.steps.length}</i>
-        </button>)}
-      </div> : <p className="issuance-empty">{locale === 'ko' ? '일치하는 절차가 없습니다. 검색어나 분류를 바꿔보세요.' : 'No matching paths. Try another search or category.'}</p>}
+        </button></li>)}
+      </ul> : <p className="issuance-empty">{locale === 'ko' ? '일치하는 절차가 없습니다. 검색어나 분류를 바꿔보세요.' : 'No matching paths. Try another search or category.'}</p>}
     </> : null}
 
+    {!comparisonFlow && !filteredFlows.some((item) => item.id === selectedId) ? <div className="selection-filter-notice">
+      <p>{locale === 'ko' ? '현재 선택한 절차는 검색 결과에 없습니다.' : 'The selected procedure is outside the search results.'}</p>
+      <button type="button" onClick={resetFilters}>{locale === 'ko' ? '필터 해제' : 'Clear filters'}</button>
+    </div> : null}
     <article className="issuance-selected-card" aria-live="polite">
       <header>
         <div><span>{getIssuanceCategoryLabel(getIssuanceCategory(flow.id), locale)}</span><h4>{flow.label[locale]}</h4></div>
