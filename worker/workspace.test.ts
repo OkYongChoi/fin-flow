@@ -81,6 +81,22 @@ describe('authenticated workspace with real D1 and signed Clerk-format JWTs', ()
     await request('/api/briefs/versioned', 'DELETE')
     expect((await request('/api/briefs/versioned', 'PUT', tokenA, draft, first.brief.updatedAt)).status).toBe(409)
   })
+  it('requires an exact revision and always advances the stored revision', async () => {
+    await grant()
+    const first = await (await request('/api/briefs/revision', 'PUT', tokenA, draft)).json() as { brief: { updatedAt: number } }
+    expect((await request('/api/briefs/revision', 'PUT', tokenA, { ...draft, notes: 'Missing revision' })).status).toBe(409)
+    expect((await request('/api/briefs/revision', 'PUT', tokenA, { ...draft, notes: 'Malformed revision' }, Number.NaN)).status).toBe(409)
+    const futureRevision = first.brief.updatedAt + 100_000
+    await env.DB.prepare('UPDATE briefs SET updated_at = ? WHERE id = ?').bind(futureRevision, 'revision').run()
+    const next = await (await request('/api/briefs/revision', 'PUT', tokenA, { ...draft, notes: 'Valid update' }, futureRevision)).json() as { brief: { updatedAt: number } }
+    expect(next.brief.updatedAt).toBe(futureRevision + 1)
+  })
+  it('rejects invalid brief IDs and invalid document bodies without writing', async () => {
+    await grant()
+    expect((await request('/api/briefs/contains_underscore', 'PUT', tokenA, draft)).status).toBe(404)
+    expect((await request('/api/briefs/valid-id', 'PUT', tokenA, { ...draft, networks: [] })).status).toBe(400)
+    expect((await env.DB.prepare('SELECT COUNT(*) AS total FROM briefs').first<{ total: number }>())?.total).toBe(0)
+  })
   it('rejects writes when the client account changes during token retrieval', async () => {
     await grant('user_b', 'sub_b')
     const response = await handler.fetch(new Request(origin + '/api/briefs/switched', { method: 'PUT', headers: { Origin: origin, Authorization: `Bearer ${tokenB}`, 'X-Expected-User': 'user_a', 'Content-Type': 'application/json' }, body: JSON.stringify(draft) }), env)

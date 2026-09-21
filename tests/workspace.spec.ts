@@ -111,3 +111,33 @@ test('source failures retry in place without losing work', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Export Markdown', exact: true })).toBeEnabled()
   await expect(page.getByLabel('Brief title')).toHaveValue('Retained on retry')
 })
+
+test('blocked browser storage warns without disabling the editor', async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = Storage.prototype.setItem
+    Storage.prototype.setItem = function (key, value) {
+      if (key.startsWith('fin-flow:')) throw new DOMException('blocked', 'SecurityError')
+      return original.call(this, key, value)
+    }
+  })
+  await page.goto('/en/workspace')
+  await expect(page.getByRole('alert')).toContainText('Browser storage is blocked')
+  await page.getByLabel('Brief title').fill('Editable without storage')
+  await expect(page.getByLabel('Brief title')).toHaveValue('Editable without storage')
+  await expect(page.getByRole('button', { name: 'Export Markdown', exact: true })).toBeEnabled()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('a four-network explorer handoff explains the limit and can be dismissed safely', async ({ page }) => {
+  await page.goto('/en/workspace')
+  await page.getByLabel('Brief title').fill('Full comparison')
+  await page.getByRole('checkbox', { name: 'Visa', exact: true }).check()
+  await page.getByRole('checkbox', { name: 'Bond issuance', exact: true }).check()
+  await page.goto('/en/workspace?network=etf-primary-market')
+  await expect(page.getByText('Remove one selected network to add this one.')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Add to draft', exact: true })).toBeDisabled()
+  await page.getByRole('button', { name: 'Dismiss', exact: true }).click()
+  await expect(page).toHaveURL(/\/en\/workspace$/)
+  await expect(page.getByLabel('Brief title')).toHaveValue('Full comparison')
+  await expect(page.getByRole('checkbox', { name: 'ETF primary market', exact: true })).not.toBeChecked()
+})
