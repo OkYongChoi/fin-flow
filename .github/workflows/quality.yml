@@ -25,6 +25,8 @@ jobs:
       - run: npm ci
       - run: npm run data:validate
       - run: npm test
-      - run: npm run build
+      - run: npm run worker:check
+      - run: npm run worker:build
+      - run: npx wrangler deploy --dry-run
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

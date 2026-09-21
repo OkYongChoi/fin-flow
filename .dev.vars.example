@@ -1,0 +1,12 @@
+# Copy to .dev.vars; never commit values. Reuse the existing Clerk operator account
+# with a fin-flow application. Shared-instance satellites are not configured here.
+APP_ORIGIN=http://localhost:8787
+CLERK_JWT_KEY=
+CLERK_ISSUER=
+CLERK_FRONTEND_ORIGIN=
+CREEM_ENVIRONMENT=test
+CREEM_API_KEY=
+CREEM_WEBHOOK_SECRET=
+# Must be a separate fin-flow USD 49/year product, never MemoStem's product.
+CREEM_PRODUCT_ID=
+BILLING_ACQUISITION_ENABLED=false

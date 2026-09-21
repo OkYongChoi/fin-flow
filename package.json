@@ -9,9 +9,17 @@
     "preview": "vite preview --host 0.0.0.0",
     "data:validate": "node scripts/validate-data.mjs",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "worker:types": "wrangler types --strict-vars=false --include-runtime=false",
+    "worker:check": "tsc -p tsconfig.worker.json",
+    "worker:dev": "wrangler dev",
+    "worker:migrate:local": "wrangler d1 migrations apply DB --local",
+    "worker:deploy": "npm run worker:build && npm run worker:check && wrangler deploy",
+    "worker:build": "npm run build && node scripts/prepare-worker-assets.mjs"
   },
   "dependencies": {
+    "@clerk/backend": "^3.18.1",
+    "@clerk/react": "^6.16.1",
     "@deck.gl/core": "^9.1.14",
     "@deck.gl/layers": "^9.1.14",
     "@deck.gl/mapbox": "^9.1.14",
@@ -27,6 +35,7 @@
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260921.1",
     "@playwright/test": "^1.54.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
@@ -35,9 +44,12 @@
     "@types/react-dom": "^19.1.6",
     "@types/topojson-client": "^3.1.5",
     "@vitejs/plugin-react": "^4.7.0",
+    "jose": "^6.2.12",
     "jsdom": "^26.1.0",
+    "miniflare": "^5.20260921.0-alpha",
     "typescript": "~5.8.3",
     "vite": "^7.0.6",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^4.136.0"
   }
 }
