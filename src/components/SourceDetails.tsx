@@ -1,14 +1,17 @@
 import { ExternalLink, FileCheck2, ShieldCheck } from 'lucide-react'
+import { useRouter } from '../router'
 import { NETWORKS } from '../data'
 import { IssuanceFlowLibrary } from './IssuanceFlowLibrary'
 import type { Locale, Metric, NetworkId, SourceRecord } from '../types'
 
 export function SourceDetails({ selected, metrics, sources, locale }: { selected: NetworkId; metrics: Metric[]; sources: SourceRecord[]; locale: Locale }) {
+  const { navigate } = useRouter()
   const network = NETWORKS.find((item) => item.id === selected)!
   return (
     <aside className={`detail-inspector source-details ${selected === 'securities-issuance' ? 'issuance-details' : ''}`} aria-labelledby="detail-inspector-title">
       <div className="sheet-handle" />
       <header><div><span>{locale === 'ko' ? '선택 네트워크' : 'Selected network'}</span><h2 id="detail-inspector-title">{locale === 'ko' ? network.label : network.labelEn}</h2></div><ShieldCheck size={19} /></header>
+      <button className="brief-button source-brief-cta" onClick={() => navigate(`/${locale}/workspace?network=${selected}`)}>{locale === 'ko' ? '이 네트워크로 브리핑 작성' : 'Create a brief with this network'}</button>
       <div className="representation-label"><i />{locale === 'ko' ? '공식 출처 스냅샷' : 'Official-source snapshot'}<span>{metrics.length}</span></div>
       {selected === 'securities-issuance' ? <IssuanceFlowLibrary locale={locale} /> : null}
       <section className="metric-section"><h3>{locale === 'ko' ? '검증 지표' : 'Verified metrics'}</h3><div className="metric-table">

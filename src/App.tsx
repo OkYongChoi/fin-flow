@@ -6,9 +6,10 @@ import { InfoPage } from './components/InfoPage'
 import { useRouter } from './router'
 import type { Locale } from './types'
 
+const WorkspacePage = lazy(() => import('./components/WorkspacePage'))
 const DataPage = lazy(() => import('./components/DataPage'))
-const VALID_PAGES = new Set(['map', 'networks', 'institutions', 'assets', 'learn', 'data'])
-const PAGE_TITLES: Record<string, [string, string]> = { map: ['금융 네트워크 데이터', 'Financial network data'], networks: ['네트워크', 'Networks'], institutions: ['기관', 'Institutions'], assets: ['자산', 'Assets'], learn: ['학습', 'Learn'], data: ['데이터', 'Data'] }
+const VALID_PAGES = new Set(['map', 'networks', 'institutions', 'assets', 'learn', 'data', 'workspace', 'pricing'])
+const PAGE_TITLES: Record<string, [string, string]> = { workspace: ['브리핑 작업실', 'Briefing workspace'], pricing: ['요금제', 'Plans'], map: ['금융 네트워크 데이터', 'Financial network data'], networks: ['네트워크', 'Networks'], institutions: ['기관', 'Institutions'], assets: ['자산', 'Assets'], learn: ['학습', 'Learn'], data: ['데이터', 'Data'] }
 
 function LocaleRoutes() {
   const { pathname, navigate } = useRouter()
@@ -22,6 +23,7 @@ function LocaleRoutes() {
     document.title = `${PAGE_TITLES[page]?.[locale === 'ko' ? 0 : 1] ?? 'Flow of Money'} · Flow of Money`
   }, [locale, page])
   useEffect(() => { if (!VALID_PAGES.has(page)) navigate(`/${locale}/map`, true) }, [locale, navigate, page])
+  if (page === 'workspace' || page === 'pricing') return <Suspense fallback={<PageLoader />}><WorkspacePage locale={locale} pricing={page === 'pricing'} /></Suspense>
   if (page === 'map') return <Dashboard locale={locale} />
   if (page === 'networks') return <InfoPage type="networks" locale={locale} slug={slug} />
   if (page === 'institutions') return <InfoPage type="institutions" locale={locale} />
@@ -51,7 +53,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
       <button type="button" ref={menuButtonRef} className="mobile-menu icon-button" aria-label={menuOpen ? (locale === 'ko' ? '메뉴 닫기' : 'Close menu') : (locale === 'ko' ? '메뉴 열기' : 'Open menu')} aria-controls="primary-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
       <button type="button" className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
       <nav id="primary-navigation" aria-label={locale === 'ko' ? '주요 탐색' : 'Primary'}>
-        {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')]].map(([path, label]) => (
+        {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')], ['workspace', locale === 'ko' ? '브리핑' : 'Briefings']].map(([path, label]) => (
           <button type="button" key={path} className={activePage === path ? 'active' : ''} aria-current={activePage === path ? 'page' : undefined} onClick={() => go(path)}>{label}</button>
         ))}
       </nav>
