@@ -62,3 +62,7 @@ See [billing operations](billing-operations.md). The code and local validation a
 - production purchases and actual revenue.
 
 Acquisition defaults to false. Do not advertise Pro as purchasable until the complete real provider flow passes. Deployment of the old static Sites artifact alone does not enable cloud storage or authentication.
+
+## UX and SaaS expansion follow-up
+
+The [onboarding and expansion contract](ux-onboarding.md) defines the improved exploration → task template → brief → export → explicit sign-in → private reuse path. Personal collections and team collaboration are staged after real repeated use and launch readiness. Current paid scope and pricing remain unchanged; template/reuse controls do not imply that team permissions or live billing are activated.

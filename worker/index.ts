@@ -12,6 +12,7 @@ async function user(request: Request, env: Env) {
   try {
     const claims = await verifyToken(token, { jwtKey: env.CLERK_JWT_KEY, authorizedParties: [env.APP_ORIGIN] })
     if (claims.iss !== env.CLERK_ISSUER || !claims.sub || claims.sts === 'pending') throw new Error('Invalid session')
+    if (request.headers.has('X-Expected-User') && request.headers.get('X-Expected-User') !== claims.sub) throw new Error('Session changed')
     return claims.sub
   } catch { throw new HttpError(401, 'sign_in_required') }
 }
@@ -45,14 +46,27 @@ export async function api(request: Request, env: Env): Promise<Response> {
     if (!hasAccess(await subscriptions(env, userId))) throw new HttpError(403, 'pro_required')
     const draft = parseBrief(await requestJson(request))
     if (!draft) throw new HttpError(400, 'invalid_brief')
-    const now = Date.now()
+    const existing = await env.DB.prepare('SELECT document, updated_at FROM briefs WHERE id = ? AND user_id = ?').bind(briefId, userId).first<{ document: string; updated_at: number }>()
+    const expected = request.headers.get('If-Match')
+    // Retrying a successful save after a lost response must return that same document.
+    if (existing && JSON.stringify((JSON.parse(existing.document) as SavedBrief).draft) === JSON.stringify(draft)) return json({ brief: JSON.parse(existing.document) })
+    if (existing ? expected !== String(existing.updated_at) : expected !== null) throw new HttpError(409, 'brief_version_conflict')
+    const now = Math.max(Date.now(), (existing?.updated_at ?? 0) + 1)
     const document: SavedBrief = { id: briefId, draft, markdown: briefMarkdown(draft, { ...manifest, sources, metrics: [] }), snapshotVersion: manifest.version, updatedAt: now }
-    // One SQL statement enforces ownership and capacity, including concurrent saves.
-    const result = await env.DB.prepare(`INSERT INTO briefs (id,user_id,document,updated_at)
-      SELECT ?,?,?,? WHERE (SELECT COUNT(*) FROM briefs WHERE user_id = ?) < ? OR EXISTS(SELECT 1 FROM briefs WHERE id = ? AND user_id = ?)
-      ON CONFLICT(id) DO UPDATE SET document = excluded.document, updated_at = excluded.updated_at WHERE briefs.user_id = excluded.user_id`)
-      .bind(briefId, userId, JSON.stringify(document), now, userId, CLOUD_BRIEF_LIMIT, briefId, userId).run()
-    if (!result.meta.changes) throw new HttpError(409, 'brief_limit_or_conflict')
+    if (existing) {
+      const result = await env.DB.prepare('UPDATE briefs SET document = ?, updated_at = ? WHERE id = ? AND user_id = ? AND updated_at = ?')
+        .bind(JSON.stringify(document), now, briefId, userId, existing.updated_at).run()
+      if (!result.meta.changes) throw new HttpError(409, 'brief_version_conflict')
+    } else {
+      const result = await env.DB.prepare(`INSERT INTO briefs (id,user_id,document,updated_at)
+        SELECT ?,?,?,? WHERE (SELECT COUNT(*) FROM briefs WHERE user_id = ?) < ?
+        ON CONFLICT(id) DO NOTHING`).bind(briefId, userId, JSON.stringify(document), now, userId, CLOUD_BRIEF_LIMIT).run()
+      if (!result.meta.changes) {
+        const raced = await env.DB.prepare('SELECT document FROM briefs WHERE id = ? AND user_id = ?').bind(briefId, userId).first<{ document: string }>()
+        if (raced && JSON.stringify((JSON.parse(raced.document) as SavedBrief).draft) === JSON.stringify(draft)) return json({ brief: JSON.parse(raced.document) })
+        throw new HttpError(409, 'brief_limit_or_conflict')
+      }
+    }
     return json({ brief: document })
   }
   throw new HttpError(404, 'not_found')

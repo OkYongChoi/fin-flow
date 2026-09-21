@@ -69,3 +69,9 @@ npx wrangler deploy --dry-run
 Worker integration tests use actual local D1 SQL and RSA-signed Clerk-format JWTs. Creem requests are mocked and events HMAC-signed with a test secret. These verify code boundaries, not real merchant activation. Browser coverage includes desktop and Pixel 7 free workflows; real Clerk/Creem account flows require the evidence above.
 
 Reference contracts checked during implementation: [Clerk token verification](https://clerk.com/docs/reference/backend/verify-token), [Creem webhooks](https://docs.creem.io/skills/creem-api/WEBHOOKS), [Creem API reference](https://docs.creem.io/skills/creem-api/REFERENCE), [Workers best practices](https://developers.cloudflare.com/workers/best-practices/workers-best-practices/).
+
+## Briefing client version and account continuity
+
+Workspace clients send their expected Clerk user ID; the server compares it to the verified subject before any user operation. Brief updates require `If-Match` with the loaded `updatedAt`. A stale version receives `409 brief_version_conflict`; preserve the local edit and offer export or a separate copy. Identical request retries return the stored copy. A deployment of an older client may therefore need a reload before editing existing documents, while public exploration and read/export remain available.
+
+See `docs/ux-onboarding.md` for temporary per-tab drafts and explicit sign-in handoff. These are not cross-device cloud saves. Before opening production sales, define and exercise customer support and account/data-deletion handling, including cancellation of renewal before deleting an identity. This change does not implement automated account deletion.

@@ -8,8 +8,8 @@ import { verifySignature } from './billing'
 let mf: Miniflare, env: Env, tokenA: string, tokenB: string, wrongOriginToken: string, expiredToken: string
 const origin = 'https://flow.example.com'
 const draft = { title: 'Private research', notes: 'Owner only', networks: ['swift'], locale: 'en' }
-async function request(path: string, method = 'GET', token = tokenA, body?: unknown) {
-  return handler.fetch(new Request(origin + path, { method, headers: { Origin: origin, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined }), env)
+async function request(path: string, method = 'GET', token = tokenA, body?: unknown, revision?: number) {
+  return handler.fetch(new Request(origin + path, { method, headers: { Origin: origin, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', ...(revision === undefined ? {} : { 'If-Match': String(revision) }) }, body: body ? JSON.stringify(body) : undefined }), env)
 }
 async function grant(userId = 'user_a', id = 'sub_a', until = Date.now() + 86400000) {
   await env.DB.prepare('INSERT INTO subscriptions (id,user_id,customer_id,environment,product_id,status,paid_until,event_at) VALUES (?,?,?,?,?,?,?,?)').bind(id, userId, 'cust_a', 'test', 'prod_flow', 'active', until, Date.now()).run()
@@ -63,9 +63,29 @@ describe('authenticated workspace with real D1 and signed Clerk-format JWTs', ()
     await grant()
     await env.DB.batch(Array.from({ length: 50 }, (_, i) => env.DB.prepare('INSERT INTO briefs VALUES (?,?,?,?)').bind(`brief-${i}`, 'user_a', '{}', Date.now())))
     expect((await request('/api/briefs/overflow', 'PUT', tokenA, draft)).status).toBe(409)
-    expect((await request('/api/briefs/brief-0', 'PUT', tokenA, draft)).status).toBe(200)
+    const row = await env.DB.prepare('SELECT updated_at FROM briefs WHERE id = ?').bind('brief-0').first<{ updated_at: number }>()
+    expect((await request('/api/briefs/brief-0', 'PUT', tokenA, draft, row!.updated_at)).status).toBe(200)
     const response = await handler.fetch(new Request(origin + '/api/briefs/brief-0', { method: 'DELETE', headers: { Authorization: `Bearer ${tokenA}`, Origin: 'https://evil.example' } }), env)
     expect(response.status).toBe(403)
+  })
+  it('rejects stale edits and deleted-document resurrection while making save retries idempotent', async () => {
+    await grant()
+    const first = await (await request('/api/briefs/versioned', 'PUT', tokenA, draft)).json() as { brief: { updatedAt: number } }
+    const edit = { ...draft, notes: 'Latest edit from another device' }
+    const second = await request('/api/briefs/versioned', 'PUT', tokenA, edit, first.brief.updatedAt)
+    expect(second.status).toBe(200)
+    expect((await request('/api/briefs/versioned', 'PUT', tokenA, { ...draft, notes: 'Stale overwrite' }, first.brief.updatedAt)).status).toBe(409)
+    expect((await request('/api/briefs/versioned', 'PUT', tokenA, edit, first.brief.updatedAt)).status).toBe(200)
+    const stored = await (await request('/api/briefs')).json() as { briefs: { draft: typeof draft }[] }
+    expect(stored.briefs[0].draft.notes).toBe(edit.notes)
+    await request('/api/briefs/versioned', 'DELETE')
+    expect((await request('/api/briefs/versioned', 'PUT', tokenA, draft, first.brief.updatedAt)).status).toBe(409)
+  })
+  it('rejects writes when the client account changes during token retrieval', async () => {
+    await grant('user_b', 'sub_b')
+    const response = await handler.fetch(new Request(origin + '/api/briefs/switched', { method: 'PUT', headers: { Origin: origin, Authorization: `Bearer ${tokenB}`, 'X-Expected-User': 'user_a', 'Content-Type': 'application/json' }, body: JSON.stringify(draft) }), env)
+    expect(response.status).toBe(401)
+    expect(await (await request('/api/briefs', 'GET', tokenB)).json()).toEqual({ briefs: [] })
   })
   it('never upgrades from checkout return parameters and keeps acquisition closed', async () => {
     const result = await (await request('/api/account?checkout=success&pro=true')).json() as { pro: boolean }
