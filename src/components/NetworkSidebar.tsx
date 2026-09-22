@@ -1,12 +1,12 @@
 import { ArrowLeftRight, BookOpenCheck, Boxes, Cable, ChartCandlestick, CircleDollarSign, CreditCard, FileStack, Gavel, Handshake, Landmark, Layers3, Network, ReceiptText, Repeat2, Scale, Search, ShieldCheck, X } from 'lucide-react'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NETWORK_COLORS, NETWORKS } from '../data'
-import type { Locale, NetworkId } from '../types'
+import { NETWORK_COLORS, NETWORKS, networkSources } from '../data'
+import type { DataBundle, Locale, NetworkId } from '../types'
 
 const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, 'securities-issuance': FileStack, 'bond-servicing': ReceiptText, 'multi-bond-issuance': Landmark, 'asset-backed-securitization': Boxes, derivatives: Network, 'leveraged-derivatives-issuance': Network, 'credit-derivatives': Gavel, 'listed-derivatives': ChartCandlestick, 'fx-pvp': Repeat2, 'repo-financing': Scale, 'triparty-collateral': ShieldCheck, 'etf-primary-market': Layers3, 'securities-lending': Handshake, 'syndicated-loans': BookOpenCheck, usdc: CircleDollarSign }
 
-export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChange }: { query: string; onQueryChange: (query: string) => void; selected: NetworkId; onSelect: (id: NetworkId) => void; locale: Locale }) {
+export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChange, data }: { query: string; onQueryChange: (query: string) => void; selected: NetworkId; onSelect: (id: NetworkId) => void; locale: Locale; data?: DataBundle }) {
   const { t } = useTranslation()
   const searchRef = useRef<HTMLInputElement | null>(null)
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
@@ -56,9 +56,10 @@ export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChang
         {filteredNetworks.map((network, index) => {
           const Icon = ICONS[network.id]
           const color = `rgb(${NETWORK_COLORS[network.id].join(' ')})`
+          const sourceCount = data ? networkSources([network.id], data).length : null
           return (
             <button key={network.id} ref={(element) => { itemRefs.current[index] = element }} className={selected === network.id ? 'selected' : ''} style={{ '--network': color } as React.CSSProperties} onClick={() => onSelect(network.id)} onKeyDown={(event) => moveSelection(event, index)} aria-pressed={selected === network.id}>
-              <Icon size={18} /><span><b>{locale === 'ko' ? network.label : network.labelEn}</b><small>{locale === 'ko' ? '공식 출처 연결' : 'Primary source linked'}</small></span><i />
+              <Icon size={18} /><span><b>{locale === 'ko' ? network.label : network.labelEn}</b><small>{sourceCount === null ? (locale === 'ko' ? '출처 확인 대기' : 'Source check pending') : sourceCount === 0 ? (locale === 'ko' ? '출처 미수록' : 'No sources recorded') : (locale === 'ko' ? `공식 출처 ${sourceCount}개` : `${sourceCount} primary sources`)}</small></span><i />
             </button>
           )
         })}

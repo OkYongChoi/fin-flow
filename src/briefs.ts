@@ -1,4 +1,4 @@
-import { EDGES, NETWORKS } from './data'
+import { NETWORKS, networkSources } from './data'
 import { FLOW_GUIDES } from './flowGuides'
 import type { DataBundle, Locale, NetworkId } from './types'
 
@@ -13,8 +13,7 @@ export function parseBrief(value: unknown): BriefDraft | null {
   return { title: v.title.trim(), notes: v.notes, networks: v.networks as NetworkId[], locale: v.locale as Locale }
 }
 export function briefSources(networks: NetworkId[], data: DataBundle) {
-  const ids = new Set(EDGES.filter(edge => networks.includes(edge.networkId)).flatMap(edge => edge.sourceIds))
-  return data.sources.filter(source => ids.has(source.id))
+  return networkSources(networks, data)
 }
 const plain = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/([\\`*_\[\]#])/g, '\\$1')
 export function briefMarkdown(draft: BriefDraft, data: DataBundle) {
@@ -25,6 +24,8 @@ export function briefMarkdown(draft: BriefDraft, data: DataBundle) {
     const guide = FLOW_GUIDES[id]
     lines.push(`## ${plain(ko ? network.label : network.labelEn)}`, '', plain(ko ? network.description : network.descriptionEn), '', ...(guide?.steps ?? []).map((step, i) => `${i + 1}. ${plain(ko ? step.ko : step.en)} — ${plain(ko ? step.noteKo : step.noteEn)}`), '', `> ${plain(guide ? (ko ? guide.boundary.ko : guide.boundary.en) : (ko ? '설명용 구조도이며 개별 거래를 재현하지 않습니다.' : 'An explanatory schematic; it does not reproduce individual transactions.'))}`, '', ...(guide?.roles ?? []).map(role => `- ${plain(ko ? role.ko : role.en)}`), '', ...briefSources([id], data).map(s => `- [${plain(s.provider)}: ${plain(s.title)}](${s.url}) · ${plain(s.coveragePeriod)} · ${ko ? '확인일' : 'retrieved'} ${s.retrievedAt}`), '')
   }
+  const references = [...new Map(draft.networks.flatMap(id => FLOW_GUIDES[id].references ?? []).map(ref => [ref.url, ref])).values()]
+  if (references.length) lines.push(`## ${ko ? '절차 설명의 근거' : 'Process references'}`, '', ...references.map(ref => `- [${plain(ref.title)}](${ref.url})`), '')
   lines.push(`## ${ko ? '작성자 메모' : 'Author notes'}`, '', plain(draft.notes || (ko ? '메모 없음' : 'No notes')), '')
   return lines.join('\n')
 }

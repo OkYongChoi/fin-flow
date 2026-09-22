@@ -26,7 +26,7 @@ function LocaleRoutes() {
   if (page === 'workspace' || page === 'pricing') return <Suspense fallback={<PageLoader />}><WorkspacePage locale={locale} pricing={page === 'pricing'} /></Suspense>
   if (page === 'map') return <Dashboard locale={locale} />
   if (page === 'networks') return <InfoPage type="networks" locale={locale} slug={slug} />
-  if (page === 'institutions') return <InfoPage type="institutions" locale={locale} />
+  if (page === 'institutions') return <InfoPage type="institutions" locale={locale} slug={slug} />
   if (page === 'assets') return <InfoPage type="assets" locale={locale} slug={slug} />
   if (page === 'learn') return <InfoPage type="learn" locale={locale} slug={slug} />
   if (page === 'data') return <Suspense fallback={<PageLoader />}><DataPage locale={locale} /></Suspense>
