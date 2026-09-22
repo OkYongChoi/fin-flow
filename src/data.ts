@@ -84,6 +84,14 @@ export const EDGES: FlowEdge[] = [
 ]
 
 // A missing metric must not hide a source that still documents the network's structure.
+export function networkCoverage(data: Pick<DataBundle, 'sources' | 'metrics'>) {
+  const sourceIds = new Set(data.sources.map(source => source.id))
+  return NETWORKS.map(network => {
+    const metrics = data.metrics.filter(metric => metric.networkId === network.id)
+    return { ...network, metrics: metrics.length, sources: networkSources([network.id], data).length, unlinked: metrics.filter(metric => !sourceIds.has(metric.sourceId)).length }
+  })
+}
+
 export function networkSources(networks: NetworkId[], data: Pick<DataBundle, 'sources' | 'metrics'>): SourceRecord[] {
   const ids = new Set([
     ...EDGES.filter(edge => networks.includes(edge.networkId)).flatMap(edge => edge.sourceIds),

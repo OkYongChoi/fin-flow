@@ -51,7 +51,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
         </div>
       </section>
       <section className={`workspace ${!data || error ? 'is-data-unavailable' : ''}`}>
-        <NetworkSidebar query={networkQuery} onQueryChange={setNetworkQuery} selected={selected} onSelect={selectNetwork} locale={locale} />
+        <NetworkSidebar query={networkQuery} onQueryChange={setNetworkQuery} selected={selected} onSelect={selectNetwork} locale={locale} data={error ? undefined : data} />
         <div className="map-region">
           {isLoading ? <div className="data-state" role="status" aria-live="polite"><h2>{locale === 'ko' ? '출처 데이터 불러오는 중…' : 'Loading source data…'}</h2><p>{locale === 'ko' ? '선택한 네트워크의 지표와 원문을 준비하고 있습니다.' : 'Preparing the metrics and sources for your selected network.'}</p></div> : error ? <div className="map-error data-state" role="alert"><span>{t('data.loadError')}</span><p>{locale === 'ko' ? '네트워크 선택은 유지됩니다. 다시 시도하거나 학습 가이드에서 계속하세요.' : 'Your network selection is kept. Retry or continue with a learning guide.'}</p><button type="button" onClick={() => void refetch()}>{t('data.retry')}</button><button type="button" className="brief-button" onClick={() => navigate(`/${locale}/learn`)}>{locale === 'ko' ? '학습 가이드 열기' : 'Open learning guides'}</button></div> : (
             <SourceDataBoard selected={selected} metrics={metrics} sources={sources} generatedAt={data?.generatedAt} reviewDueAt={data?.reviewDueAt} locale={locale} />

@@ -7,6 +7,7 @@ import type { Locale, Metric, NetworkId, SourceRecord } from '../types'
 export function SourceDetails({ selected, metrics, sources, locale }: { selected: NetworkId; metrics: Metric[]; sources: SourceRecord[]; locale: Locale }) {
   const { navigate } = useRouter()
   const network = NETWORKS.find((item) => item.id === selected)!
+  const unlinked = metrics.some(metric => !sources.some(source => source.id === metric.sourceId))
   return (
     <aside className={`detail-inspector source-details ${selected === 'securities-issuance' ? 'issuance-details' : ''}`} aria-labelledby="detail-inspector-title">
       <div className="sheet-handle" />
@@ -14,7 +15,7 @@ export function SourceDetails({ selected, metrics, sources, locale }: { selected
       <button className="brief-button source-brief-cta" onClick={() => navigate(`/${locale}/workspace?network=${selected}`)}>{locale === 'ko' ? '이 네트워크로 브리핑 작성' : 'Create a brief with this network'}</button>
       <div className="representation-label"><i />{locale === 'ko' ? '공식 출처 스냅샷' : 'Official-source snapshot'}<span>{metrics.length}</span></div>
       {selected === 'securities-issuance' ? <IssuanceFlowLibrary locale={locale} /> : null}
-      <section className="metric-section"><h3>{locale === 'ko' ? '검증 지표' : 'Verified metrics'}</h3><div className="metric-table">
+      <section className="metric-section"><h3>{unlinked ? (locale === 'ko' ? '출처 확인 필요 지표' : 'Metrics requiring source review') : (locale === 'ko' ? '검증 지표' : 'Verified metrics')}</h3><div className="metric-table">
         {metrics.map((metric) => <div key={metric.id}><span>{locale === 'ko' ? metric.labelKo : metric.labelEn}</span><strong>{metric.display}</strong><small>{metric.coveragePeriod}</small></div>)}
         {metrics.length === 0 ? <p className="source-empty">{locale === 'ko' ? '지표 미수록 · 흐름 설명과 원문을 확인하세요.' : 'No metrics in this snapshot. Review the flow and sources.'}</p> : null}
       </div></section>
