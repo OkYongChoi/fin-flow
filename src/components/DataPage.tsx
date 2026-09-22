@@ -3,11 +3,13 @@ import { ExternalLink, FileCheck2, RefreshCw, ShieldCheck } from 'lucide-react'
 import { AppHeader } from '../App'
 import { fetchDataBundle } from '../data'
 import type { Locale } from '../types'
+import { useRouter } from '../router'
 
 export default function DataPage({ locale }: { locale: Locale }) {
+  const { navigate } = useRouter()
   const { data, isLoading, error, refetch } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
   const copy = locale === 'ko'
-  const registryStatus = isLoading ? (copy ? '출처 데이터 불러오는 중…' : 'Loading source data…') : error ? (copy ? '출처 데이터를 불러올 수 없습니다' : 'Source data unavailable') : `${data?.generatedAt.slice(0, 10)} snapshot`
+  const registryStatus = isLoading ? (copy ? '출처 데이터 불러오는 중…' : 'Loading source data…') : error ? (copy ? '출처 데이터를 불러올 수 없습니다' : 'Source data unavailable') : data?.sources.length === 0 ? (copy ? '이 스냅샷에 수록된 출처 없음' : 'No sources in this snapshot') : `${data?.generatedAt.slice(0, 10)} snapshot`
 
   return (
     <main id="main-content" tabIndex={-1} className="data-page">
@@ -22,6 +24,7 @@ export default function DataPage({ locale }: { locale: Locale }) {
           {data?.sources.map((source) => <div className="source-row" role="row" key={source.id}><span role="cell"><b>{source.provider}</b><small>{source.title}</small></span><span role="cell">{source.coveragePeriod}</span><span role="cell">{source.cadence}</span><span role="cell"><a href={source.url} target="_blank" rel="noreferrer" aria-label={copy ? `${source.provider} 원문 새 탭에서 열기` : `Open ${source.provider} source in a new tab`}><ExternalLink size={14} aria-hidden="true" />{copy ? '열기' : 'Open'}</a></span></div>)}
         </div>
         {error ? <div role="alert">{copy ? '출처 레지스트리를 사용할 수 없습니다.' : 'The source registry is unavailable.'}<button type="button" className="retry-button" onClick={() => void refetch()}>{copy ? '데이터 다시 불러오기' : 'Retry data load'}</button></div> : null}
+        {!isLoading && !error && data?.sources.length === 0 && <div className="data-state"><h2>{copy ? '확인할 원문이 아직 없습니다' : 'No sources to review yet'}</h2><p>{copy ? '다시 불러오거나 학습 가이드에서 절차를 먼저 살펴보세요.' : 'Reload the registry or start with the process explanations in the learning guides.'}</p><div className="brief-actions"><button className="brief-button" onClick={() => void refetch()}>{copy ? '데이터 다시 불러오기' : 'Retry data load'}</button><button className="brief-button" onClick={() => navigate(`/${locale}/learn`)}>{copy ? '학습 가이드 열기' : 'Open learning guides'}</button></div></div>}
       </section>
     </main>
   )

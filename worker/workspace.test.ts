@@ -41,6 +41,15 @@ beforeEach(async () => {
 afterAll(async () => { await mf?.dispose() })
 
 describe('authenticated workspace with real D1 and signed Clerk-format JWTs', () => {
+  it('archives both structural and metric sources with the selected process guide', async () => {
+    await grant()
+    const response = await request('/api/briefs/usdc-guide', 'PUT', tokenA, { ...draft, networks: ['usdc'] })
+    expect(response.status).toBe(200)
+    const result = await response.json() as { brief: { markdown: string } }
+    expect(result.brief.markdown).toContain('Identify the chain and token')
+    expect(result.brief.markdown).toContain('https://www.circle.com/transparency')
+    expect(result.brief.markdown).toContain('https://developers.circle.com/stablecoins/usdc-contract-addresses')
+  })
   it('rejects unsigned, expired and wrong-origin tokens', async () => {
     for (const token of ['forged', wrongOriginToken, expiredToken]) expect((await request('/api/account', 'GET', token)).status).toBe(401)
     expect((await request('/api/account')).status).toBe(200)

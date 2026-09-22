@@ -5,20 +5,50 @@ export interface FlowGuide {
   roles: Array<{ ko: string; en: string }>
   boundary: { ko: string; en: string }
   concepts?: Array<{ ko: string; en: string }>
+  references?: Array<{ title: string; url: string }>
 }
 
-const genericGuide: FlowGuide = {
-  steps: [
-    { ko: '지급 지시 생성', en: 'Payment instruction', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-    { ko: '메시지 검증', en: 'Message validation', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-    { ko: '처리 경로 선택', en: 'Processing path selection', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-    { ko: '결과 확인', en: 'Outcome confirmation', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-  ],
-  roles: [{ ko: '참여 기관', en: 'Participating institutions' }],
-  boundary: { ko: '이 화면은 설명용 구조도입니다.', en: 'This view is an explanatory schematic.' },
-}
-
-export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
+export const FLOW_GUIDES: Record<NetworkId, FlowGuide> = {
+  swift: {
+    steps: [
+      { ko: '고객의 지급 요청', en: 'Customer payment request', noteKo: '고객이 거래 은행에 지급을 요청합니다.', noteEn: 'The customer asks their bank to make a payment.' },
+      { ko: '은행 간 메시지 전달', en: 'Interbank message delivery', noteKo: '은행이 SWIFT로 지급 정보를 전달합니다.', noteEn: 'The bank sends payment information through Swift.' },
+      { ko: '별도 장부에서 자금 처리', en: 'Funds handled on separate ledgers', noteKo: '자금의 이전은 관련 은행과 결제 인프라가 처리합니다.', noteEn: 'The banks and settlement infrastructure handle the funds.' },
+    ],
+    roles: [{ ko: '은행: 고객 계좌와 지급을 처리합니다.', en: 'Banks: handle customer accounts and payments.' }, { ko: 'SWIFT: 금융기관 사이의 메시지를 전달합니다.', en: 'Swift: carries messages between financial institutions.' }],
+    boundary: { ko: '메시지 도착과 자금 입금은 같은 사건이 아닙니다. 이 설명은 은행 간 메시징 흐름을 다룹니다.', en: 'Message delivery and credited funds are distinct events. This guide covers interbank messaging.' },
+    references: [{ title: 'Swift · What is Swift?', url: 'https://www.swift.com/about-us/who-we-are/what-swift' }],
+  },
+  visa: {
+    steps: [
+      { ko: '승인 요청과 응답', en: 'Authorization request and response', noteKo: '매입 측의 요청을 발급 측으로 전달해 승인 여부를 확인합니다.', noteEn: 'An acquiring-side request reaches the issuer for an authorization decision.' },
+      { ko: '거래 확정과 청산', en: 'Capture and clearing', noteKo: '승인된 거래 정보를 확정하고 청산을 위해 제출합니다.', noteEn: 'The approved transaction is captured and submitted for clearing.' },
+      { ko: '결제와 결과 보고', en: 'Settlement and reporting', noteKo: '참여 기관이 결제 결과를 확인합니다.', noteEn: 'Participating institutions receive settlement results.' },
+    ],
+    roles: [{ ko: '발급사: 카드 소지자 측 승인 판단을 맡습니다.', en: 'Issuer: makes the cardholder-side authorization decision.' }, { ko: '매입사: 가맹점 측 거래 처리를 지원합니다.', en: 'Acquirer: supports merchant-side transaction processing.' }],
+    boundary: { ko: '승인이 곧 최종결제를 뜻하지 않습니다. 이 설명은 대표적인 승인·청산·결제 흐름입니다.', en: 'Authorization is not final settlement. This is a representative authorization, clearing and settlement flow.' },
+    references: [{ title: 'Visa · VisaNet Connect acceptance', url: 'https://developer.visa.com/capabilities/visanet-connect-acceptance/docs' }],
+  },
+  usdc: {
+    steps: [
+      { ko: '체인과 토큰 식별', en: 'Identify the chain and token', noteKo: 'USDC의 공식 계약 주소는 체인별로 다릅니다.', noteEn: 'Official USDC contract addresses differ by chain.' },
+      { ko: '체인 내 전송', en: 'Transfer on the chain', noteKo: '토큰의 이동은 선택한 체인의 상태에 반영됩니다.', noteEn: 'The token transfer is reflected in the selected chain’s state.' },
+      { ko: '발행·상환과 구분', en: 'Separate issuance and redemption', noteKo: '토큰 전송과 법정화폐 발행·상환 절차는 구분해서 확인합니다.', noteEn: 'A token transfer is distinct from fiat issuance and redemption.' },
+    ],
+    roles: [{ ko: '사용자: 체인과 토큰을 확인합니다.', en: 'User: identifies the chain and token.' }, { ko: 'Circle: 공식 USDC 계약 주소를 공시합니다.', en: 'Circle: publishes official USDC contract addresses.' }],
+    boundary: { ko: '이 페이지는 전송을 실행하거나 주소의 안전성을 보증하지 않습니다. 서로 다른 체인의 주소를 같은 대상으로 취급하지 마세요.', en: 'This page does not execute transfers or certify address safety. Addresses on different chains are not interchangeable.' },
+    references: [{ title: 'Circle · USDC contract addresses', url: 'https://developers.circle.com/stablecoins/usdc-contract-addresses' }],
+  },
+  'securities-issuance': {
+    steps: [
+      { ko: '발행 조건 공고', en: 'Announce the offering', noteKo: '미국 국채 입찰 예: 종류, 규모, 입찰일과 발행일을 공고합니다.', noteEn: 'Treasury auction example: announce the security, size, auction and issue dates.' },
+      { ko: '입찰과 배정', en: 'Receive bids and allocate', noteKo: '입찰을 접수하고 결과에 따라 증권을 배정합니다.', noteEn: 'Receive bids and allocate securities using the auction results.' },
+      { ko: '발행일의 지급·인도', en: 'Payment and delivery on issue date', noteKo: '공고된 발행일에 지급과 증권 인도가 이뤄집니다.', noteEn: 'Payment and delivery occur on the announced issue date.' },
+    ],
+    roles: [{ ko: '발행자: 조건과 일정을 공고합니다.', en: 'Issuer: announces terms and dates.' }, { ko: '입찰자: 입찰을 제출합니다.', en: 'Bidder: submits a bid.' }],
+    boundary: { ko: '미국 국채 입찰을 예로 든 개요입니다. 다른 증권은 발행 라이브러리의 개별 경로를 확인하세요.', en: 'This overview uses a US Treasury auction. Other securities have their own paths in the issuance library.' },
+    references: [{ title: 'TreasuryDirect · How auctions work', url: 'https://www.treasurydirect.gov/auctions/how-auctions-work/' }],
+  },
   'chips-fedwire': {
     steps: [
       { ko: '은행의 지급 지시', en: 'Originating bank', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
@@ -311,5 +341,5 @@ export const FLOW_GUIDES: Partial<Record<NetworkId, FlowGuide>> = {
 }
 
 export function getFlowGuide(networkId: NetworkId): FlowGuide {
-  return FLOW_GUIDES[networkId] ?? genericGuide
+  return FLOW_GUIDES[networkId]
 }

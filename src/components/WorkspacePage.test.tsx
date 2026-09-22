@@ -30,6 +30,25 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.restoreAllMocks() })
 
 describe('account onboarding and repeat-work UX', () => {
+  it('distinguishes loading and failed library requests from an empty account, then recovers', async () => {
+    let finish!: (response: Response) => void
+    let fail = true
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async path => {
+      if (String(path) === '/api/account') return Response.json({ userId: 'user_a', pro: true, hasSubscription: true, checkout: false })
+      if (fail) return new Promise(resolve => { finish = resolve })
+      return Response.json({ briefs: [stored] })
+    })
+    render(<Workspace locale="en" session={session} />)
+    expect(screen.getByText('Loading your saved briefs…')).toBeInTheDocument()
+    expect(screen.queryByText(/You have no saved briefs/)).not.toBeInTheDocument()
+    await waitFor(() => expect(finish).toBeTypeOf('function'))
+    await act(async () => finish(Response.json({ error: 'temporarily_unavailable' }, { status: 503 })))
+    expect(screen.getByText(/This does not mean it is empty/)).toBeInTheDocument()
+    expect(screen.queryByText(/You have no saved briefs/)).not.toBeInTheDocument()
+    fail = false
+    fireEvent.click(screen.getByRole('button', { name: 'Retry account and library' }))
+    expect(await screen.findByRole('button', { name: /^Saved payments/ })).toBeInTheDocument()
+  })
   it('recovers an explicitly transferred guest draft after sign-in', async () => {
     stageHandoff({ ...blankDraft('en'), title: 'Before sign-in', notes: 'Keep my research' })
     mockApi()

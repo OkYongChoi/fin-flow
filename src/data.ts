@@ -83,6 +83,15 @@ export const EDGES: FlowEdge[] = [
   edge('u1', 'usdc', 'new-york', 'singapore', 'asset_transfer', ['circle-contracts']), edge('u2', 'usdc', 'london', 'seoul', 'asset_transfer', ['circle-contracts']), edge('u3', 'usdc', 'singapore', 'tokyo', 'asset_transfer', ['circle-contracts']),
 ]
 
+// A missing metric must not hide a source that still documents the network's structure.
+export function networkSources(networks: NetworkId[], data: Pick<DataBundle, 'sources' | 'metrics'>): SourceRecord[] {
+  const ids = new Set([
+    ...EDGES.filter(edge => networks.includes(edge.networkId)).flatMap(edge => edge.sourceIds),
+    ...data.metrics.filter(metric => networks.includes(metric.networkId)).map(metric => metric.sourceId),
+  ])
+  return data.sources.filter(source => ids.has(source.id))
+}
+
 export async function fetchDataBundle(): Promise<DataBundle> {
   const [manifestResponse, sourcesResponse, metricsResponse] = await Promise.all([
     fetch('/data/manifest.json'), fetch('/data/sources.json'), fetch('/data/metrics.json'),
@@ -96,6 +105,13 @@ export async function fetchDataBundle(): Promise<DataBundle> {
     sourcesResponse.json() as Promise<SourceRecord[]>,
     metricsResponse.json() as Promise<Metric[]>,
   ])
+  const strings = (value: unknown, fields: string[]): boolean => Boolean(value && typeof value === 'object' && fields.every(field => typeof (value as Record<string, unknown>)[field] === 'string'))
+  // An HTTP 200 error payload must reach the retry UI, not crash a rendered list.
+  if (!strings(manifest, ['version', 'generatedAt', 'reviewDueAt', 'coverageNotice']) || !Number.isFinite(Date.parse(manifest.generatedAt)) || !Number.isFinite(Date.parse(manifest.reviewDueAt)) ||
+      !Array.isArray(sources) || !sources.every(source => strings(source, ['id', 'provider', 'title', 'url', 'coveragePeriod', 'cadence', 'publishedAt', 'retrievedAt'])) ||
+      !Array.isArray(metrics) || !metrics.every(metric => strings(metric, ['id', 'networkId', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) && Number.isFinite(metric.value))) {
+    throw new Error('Invalid source-data response')
+  }
   return { ...manifest, sources, metrics }
 }
 

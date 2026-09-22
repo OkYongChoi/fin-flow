@@ -2,6 +2,8 @@ import { verifyToken } from '@clerk/backend'
 import { briefMarkdown, CLOUD_BRIEF_LIMIT, parseBrief, type SavedBrief } from '../src/briefs'
 import manifest from '../public/data/manifest.json'
 import sources from '../public/data/sources.json'
+import metrics from '../public/data/metrics.json'
+import type { Metric } from '../src/types'
 import { acquisitionEnabled, checkout, hasAccess, portal, subscriptions, webhook } from './billing'
 import { HttpError, json, object, requestJson } from './http'
 
@@ -52,7 +54,7 @@ export async function api(request: Request, env: Env): Promise<Response> {
     if (existing && JSON.stringify((JSON.parse(existing.document) as SavedBrief).draft) === JSON.stringify(draft)) return json({ brief: JSON.parse(existing.document) })
     if (existing ? expected !== String(existing.updated_at) : expected !== null) throw new HttpError(409, 'brief_version_conflict')
     const now = Math.max(Date.now(), (existing?.updated_at ?? 0) + 1)
-    const document: SavedBrief = { id: briefId, draft, markdown: briefMarkdown(draft, { ...manifest, sources, metrics: [] }), snapshotVersion: manifest.version, updatedAt: now }
+    const document: SavedBrief = { id: briefId, draft, markdown: briefMarkdown(draft, { ...manifest, sources, metrics: metrics as Metric[] }), snapshotVersion: manifest.version, updatedAt: now }
     if (existing) {
       const result = await env.DB.prepare('UPDATE briefs SET document = ?, updated_at = ? WHERE id = ? AND user_id = ? AND updated_at = ?')
         .bind(JSON.stringify(document), now, briefId, userId, existing.updated_at).run()

@@ -2,11 +2,14 @@ import { ArrowDown, CalendarClock, ExternalLink, FileCheck2, Layers3 } from 'luc
 import { isSnapshotReviewOverdue, NETWORKS } from '../data'
 import { ISSUANCE_FLOWS } from '../issuanceFlows'
 import { getProductStructureGuide } from '../productStructures'
+import { useRouter } from '../router'
+import { NetworkGuide } from './NetworkGuide'
 import type { Locale, Metric, NetworkId, SourceRecord } from '../types'
 
 const formatDate = (value: string | undefined, locale: Locale) => value ? new Intl.DateTimeFormat(locale === 'ko' ? 'ko-KR' : 'en-US', { dateStyle: 'medium' }).format(new Date(value)) : '—'
 
 export function SourceDataBoard({ selected, metrics, sources, generatedAt, reviewDueAt, locale }: { selected: NetworkId; metrics: Metric[]; sources: SourceRecord[]; generatedAt?: string; reviewDueAt?: string; locale: Locale }) {
+  const { navigate } = useRouter()
   const network = NETWORKS.find((item) => item.id === selected)!
   const sourceById = new Map(sources.map((source) => [source.id, source]))
   const structureGuide = getProductStructureGuide(selected)
@@ -43,13 +46,14 @@ export function SourceDataBoard({ selected, metrics, sources, generatedAt, revie
       </section> : null}
       <div className="source-metric-grid" aria-label={locale === 'ko' ? '검증 지표' : 'Verified metrics'}>
         {metrics.map((metric) => <article key={metric.id} className="source-metric-card"><span>{locale === 'ko' ? metric.labelKo : metric.labelEn}</span><strong>{metric.display}</strong><small>{metric.unit} · {metric.coveragePeriod}</small><p><FileCheck2 size={13} aria-hidden="true" />{sourceById.get(metric.sourceId)?.provider ?? metric.sourceId}</p></article>)}
-        {metrics.length === 0 ? <p className="source-empty">{locale === 'ko' ? '표시할 검증 지표가 없습니다.' : 'No verified metrics are available.'}</p> : null}
+        {metrics.length === 0 ? <div className="source-empty" role="status"><p>{locale === 'ko' ? '이 스냅샷에는 표시할 검증 지표가 없습니다. 수치 0을 뜻하지 않습니다.' : 'No verified metrics are available in this snapshot. This does not mean a value of zero.'}</p><p>{locale === 'ko' ? '아래 절차 설명과 연결된 원문으로 계속 확인할 수 있습니다.' : 'Continue with the process guide and any linked primary sources below.'}</p></div> : null}
       </div>
+      <NetworkGuide network={selected} locale={locale} />
       <section className="source-quick-links" aria-labelledby="source-quick-links-title">
         <h3 id="source-quick-links-title"><CalendarClock size={15} aria-hidden="true" />{locale === 'ko' ? '원문 발행·조회 정보' : 'Publication and retrieval records'}</h3>
         <div>
           {sources.map((source) => <a key={source.id} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.provider}</b><small>{source.title}</small><small>{locale === 'ko' ? `발행 ${source.publishedAt} · 조회 ${source.retrievedAt}` : `Published ${source.publishedAt} · retrieved ${source.retrievedAt}`}</small></span><ExternalLink size={14} aria-hidden="true" /></a>)}
-          {sources.length === 0 ? <p className="source-empty">{locale === 'ko' ? '연결된 원문이 없습니다.' : 'No linked primary sources.'}</p> : null}
+          {sources.length === 0 ? <div className="source-empty"><p>{locale === 'ko' ? '이 스냅샷에서 연결된 원문을 찾지 못했습니다.' : 'No linked primary sources were found in this snapshot.'}</p><button className="brief-button" onClick={() => navigate(`/${locale}/data`)}>{locale === 'ko' ? '출처 레지스트리 확인' : 'Review source registry'}</button></div> : null}
         </div>
       </section>
     </section>

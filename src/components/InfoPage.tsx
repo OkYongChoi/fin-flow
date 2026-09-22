@@ -1,9 +1,10 @@
 import { ArrowLeft, ArrowRight, BookOpen, Cable, CircleDollarSign, Landmark, Network } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { AppHeader } from '../App'
 import { NETWORKS } from '../data'
-import type { Locale } from '../types'
+import type { Locale, NetworkId } from '../types'
 import { useRouter } from '../router'
+import { NetworkGuide } from './NetworkGuide'
 
 const COPY = {
   ko: {
@@ -41,11 +42,18 @@ const GUIDES = {
   ],
 } as const
 
+const GUIDE_NETWORKS: Record<'institutions' | 'assets' | 'learn', readonly NetworkId[]> = {
+  institutions: ['chips-fedwire', 'swift', 'visa', 'usdc'],
+  assets: ['swift', 'chips-fedwire', 'derivatives', 'usdc'],
+  learn: ['swift', 'visa', 'chips-fedwire', 'derivatives'],
+}
 
 export function InfoPage({ type, locale, slug }: { type: 'networks' | 'institutions' | 'assets' | 'learn'; locale: Locale; slug?: string }) {
   const { navigate } = useRouter()
+  const detailRef = useRef<HTMLDivElement>(null)
   const validSlugs = type === 'networks' ? NETWORKS.map((network) => network.id) : GUIDES[type].map((_, index) => String(index + 1))
   useEffect(() => { if (slug && !validSlugs.includes(slug)) navigate(`/${locale}/${type}`, true) }, [locale, navigate, slug, type, validSlugs])
+  useEffect(() => { if (slug) { detailRef.current?.focus({ preventScroll: true }); detailRef.current?.scrollIntoView({ block: 'nearest' }) } }, [slug, type])
   const openItem = (target: string) => navigate(target)
   const copy = COPY[locale][type]
   return (
@@ -60,10 +68,18 @@ export function InfoPage({ type, locale, slug }: { type: 'networks' | 'instituti
           const title = network ? (locale === 'ko' ? network.label : network.labelEn) : guide[locale === 'ko' ? 0 : 1]
           const description = network ? (locale === 'ko' ? network.description : network.descriptionEn) : guide[locale === 'ko' ? 2 : 3]
           const target = network ? `/${locale}/map?network=${network.id}` : `/${locale}/${type}/${itemSlug}`
-          return <article key={itemSlug} className={slug === itemSlug ? 'active' : ''}><button type="button" aria-current={slug === itemSlug ? 'page' : undefined} onClick={() => openItem(target)}><span>0{index + 1}</span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight aria-hidden="true" /></button></article>
+          const related = !network && type !== 'networks' ? GUIDE_NETWORKS[type][index] : null
+          const relatedNetwork = NETWORKS.find(item => item.id === related)
+          return <article key={itemSlug} className={slug === itemSlug ? 'active' : ''}><button type="button" aria-current={slug === itemSlug ? 'page' : undefined} aria-expanded={!network ? slug === itemSlug : undefined} aria-controls={!network ? `guide-${itemSlug}` : undefined} onClick={() => openItem(target)}><span>{String(index + 1).padStart(2, '0')}</span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight aria-hidden="true" /></button>
+            {related && relatedNetwork && <div id={`guide-${itemSlug}`} className="guide-detail" hidden={slug !== itemSlug} ref={slug === itemSlug ? detailRef : undefined} tabIndex={-1} role="region" aria-label={`${title} · ${locale === 'ko' ? '상세 가이드' : 'Detailed guide'}`}>
+              <p>{locale === 'ko' ? '관련 흐름' : 'Related flow'}: <strong>{locale === 'ko' ? relatedNetwork.label : relatedNetwork.labelEn}</strong></p>
+              <NetworkGuide network={related} locale={locale} id={`guide-flow-${itemSlug}`} />
+              <div className="brief-actions"><button className="brief-button" onClick={() => navigate(`/${locale}/map?network=${related}`)}>{locale === 'ko' ? '원문과 지표 보기' : 'View sources and metrics'}<ArrowRight size={16} /></button><button className="brief-button primary" onClick={() => navigate(`/${locale}/workspace?network=${related}`)}>{locale === 'ko' ? '이 흐름으로 브리핑 작성' : 'Create a brief from this flow'}</button></div>
+            </div>}
+          </article>
         })}
       </section>
-      <section className="flow-principles"><div><Network /><h2>{locale === 'ko' ? '하나의 선, 하나의 의미' : 'One line, one meaning'}</h2><p>{locale === 'ko' ? '메시지·청산·결제·자산 이전을 서로 다른 선으로 구분합니다.' : 'Messaging, clearing, settlement and asset transfer use distinct visual encodings.'}</p></div><div><Landmark /><h2>{locale === 'ko' ? '출처가 있는 숫자' : 'Source-backed figures'}</h2><p>{locale === 'ko' ? '모든 수치에 기관, 기준 기간과 갱신 주기를 연결합니다.' : 'Every figure links to its provider, coverage period and release cadence.'}</p></div><div><BookOpen /><h2>{locale === 'ko' ? '두 단계의 깊이' : 'Two levels of depth'}</h2><p>{locale === 'ko' ? '기본 보기는 개념을, 전문 보기는 비교와 방법론을 강조합니다.' : 'Basic mode teaches concepts; Pro mode emphasizes comparison and methodology.'}</p></div></section>
+      <section className="flow-principles"><div><Network /><h2>{locale === 'ko' ? '역할부터 이해하기' : 'Start with the roles'}</h2><p>{locale === 'ko' ? '메시지·청산·결제·자산 이전의 역할과 경계를 단계별로 확인합니다.' : 'Follow the roles and boundaries of messaging, clearing, settlement and asset transfer.'}</p></div><div><Landmark /><h2>{locale === 'ko' ? '출처가 있는 숫자' : 'Source-backed figures'}</h2><p>{locale === 'ko' ? '모든 수치에 기관, 기준 기간과 갱신 주기를 연결합니다.' : 'Every figure links to its provider, coverage period and release cadence.'}</p></div><div><BookOpen /><h2>{locale === 'ko' ? '이해에서 내 문서로' : 'From understanding to your own brief'}</h2><p>{locale === 'ko' ? '원문을 확인하고 내 질문을 더해 무료로 브리핑을 내보내세요.' : 'Check the sources, add your questions and export a brief for free.'}</p></div></section>
     </main>
   )
 }
