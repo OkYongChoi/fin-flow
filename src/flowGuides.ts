@@ -51,13 +51,23 @@ export const FLOW_GUIDES: Record<NetworkId, FlowGuide> = {
   },
   'chips-fedwire': {
     steps: [
-      { ko: '은행의 지급 지시', en: 'Originating bank', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-      { ko: '지급 메시지', en: 'Payment message', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
-      { ko: 'CHIPS 또는 Fedwire', en: 'CHIPS or Fedwire', noteKo: '별도 결제 경로 · 직렬 아님', noteEn: 'Alternative rails · not sequential' },
-      { ko: '수취은행 반영', en: 'Beneficiary bank', noteKo: '설명용 단계', noteEn: 'Explanatory stage' },
+      { ko: '은행의 지급 지시', en: 'Originating bank', noteKo: '송금은행이 자기 자금 또는 고객을 위한 달러 지급 지시를 준비합니다.', noteEn: 'The sending bank prepares a dollar payment instruction for itself or a customer.' },
+      { ko: '지급 메시지', en: 'Payment message', noteKo: '참여은행이 지급 정보를 담은 지시를 이용할 결제 시스템에 제출합니다.', noteEn: 'A participating bank submits an instruction containing payment details to the settlement system it uses.' },
+      { ko: 'CHIPS 또는 Fedwire', en: 'CHIPS or Fedwire', noteKo: '서로 다른 결제 경로입니다. CHIPS는 지급 의무를 상계하고, Fedwire는 연방준비은행 계좌에서 건별 자금 이전을 처리합니다.', noteEn: 'Alternative rails: CHIPS offsets payment obligations; Fedwire processes individual transfers through Federal Reserve Bank accounts.' },
+      { ko: '수취은행 반영', en: 'Beneficiary bank', noteKo: '수취은행의 지급 수신과 고객 계좌 입금은 구분해서 확인해야 합니다.', noteEn: 'Confirm the receiving bank’s receipt separately from the credit to its customer’s account.' },
     ],
-    roles: [{ ko: '참여 기관', en: 'Participating institutions' }],
-    boundary: { ko: '이 화면은 설명용 구조도입니다.', en: 'This view is an explanatory schematic.' },
+    roles: [
+      { ko: '송금은행: 자기 자금 또는 고객을 위한 지급 지시를 제출합니다.', en: 'Sending bank: submits payment instructions for itself or a customer.' },
+      { ko: 'The Clearing House: CHIPS를 운영하며 지급 의무의 상계를 통해 달러 청산·결제를 지원합니다.', en: 'The Clearing House: operates CHIPS, using offsetting payment obligations to support dollar clearing and settlement.' },
+      { ko: '연방준비은행: Fedwire를 운영하며 송금·수취 참여은행 계좌의 차감과 입금을 처리합니다.', en: 'Federal Reserve Banks: operate Fedwire and process debits and credits to sending and receiving participants’ accounts.' },
+      { ko: '수취은행: 지급 정보를 받아 고객 계좌의 입금 처리를 담당합니다.', en: 'Receiving bank: receives payment details and handles the credit to its customer’s account.' },
+    ],
+    boundary: { ko: 'CHIPS와 Fedwire는 서로 다른 달러 결제 시스템이며, 여기서는 대안적 경로로 비교합니다. CHIPS 다음에 Fedwire를 반드시 거친다는 뜻이 아닙니다. 은행 간 결제 완료만으로 수취인 계좌의 입금 시각을 보장하지 않습니다.', en: 'CHIPS and Fedwire are distinct dollar settlement systems, shown here as alternative paths rather than required sequential stages. Interbank settlement alone does not guarantee when the recipient’s account is credited.' },
+    references: [
+      { title: 'The Clearing House · CHIPS', url: 'https://www.theclearinghouse.org/payment-systems/chips' },
+      { title: 'Federal Reserve Financial Services · Fedwire Funds Service', url: 'https://www.frbservices.org/financial-services/wires' },
+      { title: 'Federal Reserve Financial Services · Fedwire Funds Service disclosure', url: 'https://www.frbservices.org/binaries/content/assets/crsocms/financial-services/wires/funds-service-disclosure.pdf' },
+    ],
   },
   'bond-issuance': {
     steps: [

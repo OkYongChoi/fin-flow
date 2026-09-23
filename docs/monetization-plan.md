@@ -4,7 +4,7 @@ Decision date: 2026-09-22. Implementation issue: [#199](https://github.com/OkYon
 
 ## Product and initial customer
 
-The first paid job is preparing a source-backed financial-infrastructure briefing for product onboarding, internal explanation or a lesson. The initial audience is Korean/English fintech product managers, operations practitioners and educators who repeatedly explain messaging, clearing, settlement and issuance. Public sources and the existing explorer stay free. The paid value is a reusable, private body of work across devices, not exclusive access to public facts.
+The first paid job is preparing a source-backed financial-infrastructure briefing for product onboarding, internal explanation or a lesson. The initial audience is Korean/English fintech product managers, operations practitioners and educators who repeatedly explain messaging, clearing, settlement and issuance. The public audience also includes anyone curious about finance: everyday-question starters and plain-language reading guidance support independent learning alongside practitioner tasks. Public sources and the existing explorer stay free. The paid value is a reusable, private body of work across devices, not exclusive access to public facts.
 
 This is a product hypothesis, not a validated market or revenue forecast. We have not interviewed buyers, collected payment or verified willingness to pay. Start narrow rather than build trading signals, live market data, automated investment advice, enterprise procurement or an AI subscription without customer evidence.
 
@@ -12,7 +12,7 @@ This is a product hypothesis, not a validated market or revenue forecast. We hav
 
 | Plan | Offer | Price hypothesis |
 | --- | --- | --- |
-| Explore | Existing explorer, one browser-local draft, up to four-network comparison, annotations and source-linked Markdown export | Free |
+| Explore | Existing explorer with everyday-language search, searchable financial glossary, one autosaved browser-local draft plus explicit browser notebook copies (20-slot save limit), up to four-network comparison, annotations, source-linked comparison/metrics, Markdown and print/PDF output, and editable file backup/restore | Free |
 | Pro | Explore plus 50 private cloud briefs, reopen/edit across devices, document and source snapshot at each save | USD 49/year, recurring, tax-inclusive; no trial |
 | Team (discovery only) | Shared training collections, reviewer workflow and team administration | No advertised price or checkout; validate demand first |
 

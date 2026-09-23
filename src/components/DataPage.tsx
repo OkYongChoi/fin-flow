@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
+import { sourceDataQueryOptions } from '../sourceDataQuery'
 import { ExternalLink, FileCheck2, RefreshCw, ShieldCheck } from 'lucide-react'
 import { AppHeader } from '../App'
-import { fetchDataBundle, networkCoverage } from '../data'
+import { networkCoverage } from '../data'
 import type { Locale } from '../types'
 import { useRouter } from '../router'
 
 export default function DataPage({ locale }: { locale: Locale }) {
   const { navigate } = useRouter()
-  const { data, isLoading, error, refetch } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
+  const { data, isLoading, error, refetch } = useQuery(sourceDataQueryOptions)
   const copy = locale === 'ko'
   const coverage = data ? networkCoverage(data) : []
   const registryStatus = isLoading ? (copy ? '출처 데이터 불러오는 중…' : 'Loading source data…') : error ? (copy ? '출처 데이터를 불러올 수 없습니다' : 'Source data unavailable') : data?.sources.length === 0 ? (copy ? '이 스냅샷에 수록된 출처 없음' : 'No sources in this snapshot') : `${data?.generatedAt.slice(0, 10)} snapshot`

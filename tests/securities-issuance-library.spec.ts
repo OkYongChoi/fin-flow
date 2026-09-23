@@ -44,3 +44,40 @@ test('securities issuance explorer copies its shareable URL state', async ({ pag
   expect(copiedUrl).toContain('issuance=us-equity-ipo')
   expect(copiedUrl).toContain('compareIssuance=adr-depository-issuance')
 })
+
+test('loads issuance details only when selected and preserves the jump target while loading', async ({ page }) => {
+  let requests = 0
+  let release = () => {}
+  const ready = new Promise<void>(resolve => { release = resolve })
+  await page.route(/\/(?:src\/components\/IssuanceFlowLibrary\.tsx|assets\/IssuanceFlowLibrary-[^/?]+\.js)(?:\?|$)/, async route => {
+    requests += 1
+    await ready
+    await route.continue()
+  })
+  try {
+    await page.goto('/ko/map', { waitUntil: 'domcontentloaded' })
+    await expect(page.locator('#source-data-board-title')).toHaveText('CHIPS · Fedwire')
+    expect(requests).toBe(0)
+    await page.getByLabel('네트워크', { exact: true }).selectOption('securities-issuance')
+    await expect(page.getByRole('status').filter({ hasText: '발행 경로를 불러오는 중…' })).toBeVisible()
+    expect(requests).toBe(1)
+    await page.getByRole('button', { name: '29개 발행 경로 탐색' }).click()
+    await expect(page.locator('#issuance-library')).toBeFocused()
+    release()
+    await expect(page.getByRole('heading', { name: '발행 경로를 찾고 나란히 비교하세요' })).toBeVisible()
+    await expect(page.locator('#issuance-library')).toBeFocused()
+  } finally {
+    release()
+  }
+})
+
+test('recovers from a failed issuance download without losing the shared selection', async ({ page }) => {
+  await page.route(/\/(?:src\/components\/IssuanceFlowLibrary\.tsx|assets\/IssuanceFlowLibrary-[^/?]+\.js)(?:\?|$)/, route => route.abort('failed'), { times: 1 })
+  const path = '/en/map?network=securities-issuance&issuance=us-equity-ipo'
+  await page.goto(path)
+  await expect(page.getByRole('alert')).toContainText('This view could not be loaded')
+  await expect(page.locator('#source-data-board-title')).toHaveText('Securities issuance library')
+  await page.getByRole('button', { name: 'Reload view' }).click()
+  await expect(page).toHaveURL(path)
+  await expect(page.getByRole('heading', { name: 'U.S. common-stock IPO' })).toBeVisible()
+})

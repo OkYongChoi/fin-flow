@@ -1,15 +1,25 @@
 // @vitest-environment jsdom
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render as testingRender, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { ReactElement } from 'react'
+import { fetchDataBundle } from '../data'
+import { sourceDataQueryOptions } from '../sourceDataQuery'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Workspace, type Session } from './WorkspacePage'
 import { blankDraft, freshWorking, loadWorking, persistWorking, stageHandoff } from '../workspaceDrafts'
 import type { SavedBrief } from '../briefs'
+import { readLocalBriefs, saveLocalBrief } from '../localBriefs'
 import manifest from '../../public/data/manifest.json'
 import sources from '../../public/data/sources.json'
 
 vi.mock('../App', () => ({ AppHeader: () => null }))
-vi.mock('../data', async original => ({ ...await original<typeof import('../data')>(), fetchDataBundle: async () => ({ ...manifest, sources, metrics: [] }) }))
+vi.mock('../data', async original => ({ ...await original<typeof import('../data')>(), fetchDataBundle: vi.fn(async () => ({ ...manifest, sources, metrics: [] })) }))
+const clients: QueryClient[] = []
+function render(ui: ReactElement, client = new QueryClient({ defaultOptions: { queries: { retryDelay: 0 } } })) {
+  clients.push(client)
+  return testingRender(<QueryClientProvider client={client}>{ui}</QueryClientProvider>)
+}
 const session: Session = { userId: 'user_a', ready: true, getToken: async () => 'signed-test-token' }
 const stored: SavedBrief = { id: 'brief-a', draft: { ...blankDraft('en'), title: 'Saved payments', notes: 'Original note' }, updatedAt: 100, markdown: '# Original snapshot', snapshotVersion: '2026.09.05' }
 function mockApi(write?: (body: RequestInit, path: string) => Promise<Response>) {
@@ -21,13 +31,14 @@ function mockApi(write?: (body: RequestInit, path: string) => Promise<Response>)
   })
 }
 beforeEach(() => {
+  vi.mocked(fetchDataBundle).mockResolvedValue({ ...manifest, sources, metrics: [] })
   localStorage.clear(); sessionStorage.clear(); window.history.replaceState({}, '', '/en/workspace')
   vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined)
   HTMLElement.prototype.scrollIntoView = vi.fn()
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', '') }
   HTMLDialogElement.prototype.close = function () { this.removeAttribute('open') }
 })
-afterEach(() => { cleanup(); vi.restoreAllMocks() })
+afterEach(() => { cleanup(); clients.splice(0).forEach(client => client.clear()); vi.restoreAllMocks() })
 
 describe('account onboarding and repeat-work UX', () => {
   it('distinguishes loading and failed library requests from an empty account, then recovers', async () => {
@@ -143,5 +154,44 @@ describe('account onboarding and repeat-work UX', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Browser storage is blocked')
     fireEvent.change(screen.getByLabelText('Brief title'), { target: { value: 'Still editable' } })
     expect(screen.getByLabelText('Brief title')).toHaveValue('Still editable')
+  })
+})
+
+
+describe('source snapshot recovery', () => {
+  it('blocks export after a failed cached refresh, preserves the draft, and recovers on retry', async () => {
+    const client = new QueryClient({ defaultOptions: { queries: { retryDelay: 0 } } })
+    client.setQueryData(sourceDataQueryOptions.queryKey, { ...manifest, sources, metrics: [] })
+    render(<Workspace locale="en" session={{ userId: null, ready: true, getToken: async () => null }} />, client)
+    const exportButton = screen.getByRole('button', { name: 'Export Markdown' })
+    expect(exportButton).toBeEnabled()
+    fireEvent.change(screen.getByLabelText('Your perspective and questions'), { target: { value: 'Retain this research during a refresh' } })
+    vi.mocked(fetchDataBundle).mockRejectedValue(new Error('unavailable'))
+    await act(async () => { await client.invalidateQueries({ queryKey: sourceDataQueryOptions.queryKey }) })
+    expect(await screen.findByRole('button', { name: 'Retry sources' })).toBeInTheDocument()
+    expect(exportButton).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Print / PDF' })).toBeDisabled()
+    expect(screen.getByLabelText('Your perspective and questions')).toHaveValue('Retain this research during a refresh')
+    vi.mocked(fetchDataBundle).mockResolvedValue({ ...manifest, sources, metrics: [] })
+    fireEvent.click(screen.getByRole('button', { name: 'Retry sources' }))
+    await waitFor(() => expect(exportButton).toBeEnabled())
+    expect(screen.queryByRole('button', { name: 'Retry sources' })).not.toBeInTheDocument()
+  })
+})
+
+
+describe('guest notebook isolation', () => {
+  it('never exposes or adds account work to browser-wide guest copies', async () => {
+    const guest = saveLocalBrief({ ...blankDraft('en'), title: 'Guest copy', notes: 'Public learning note' }).brief
+    persistWorking('user_a', freshWorking({ ...blankDraft('en'), title: 'Private account work', notes: 'Private notes' }))
+    mockApi()
+    render(<Workspace locale="en" session={session} />)
+    await screen.findByRole('button', { name: 'Save to account' })
+    expect(screen.queryByRole('region', { name: /^Browser notebook/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Keep a copy of this draft' })).not.toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText('Your perspective and questions'), { target: { value: 'An updated private note' } })
+    expect(readLocalBriefs().briefs).toEqual([guest])
+    expect(localStorage.getItem('fin-flow:brief-draft:v1')).toBeNull()
+    expect(loadWorking('user_a', 'en').draft.notes).toBe('An updated private note')
   })
 })

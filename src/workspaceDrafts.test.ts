@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { blankDraft, clearHandoff, freshWorking, loadWorking, parseEditableDraft, pendingHandoff, persistWorking, stageHandoff, templateDraft } from './workspaceDrafts'
+import { BRIEF_TEMPLATES, blankDraft, clearHandoff, freshWorking, loadWorking, parseEditableDraft, pendingHandoff, persistWorking, stageHandoff, templateDraft } from './workspaceDrafts'
 import { parseBrief } from './briefs'
 beforeEach(() => { localStorage.clear(); sessionStorage.clear() })
 afterEach(() => { vi.useRealTimers() })
@@ -53,7 +53,7 @@ describe('draft continuity and task starters', () => {
     expect(loadWorking('user_b', 'en')).toEqual(freshWorking(blankDraft('en')))
   })
   it('builds localized valid templates using catalog network IDs', () => {
-    for (const locale of ['ko', 'en'] as const) for (const id of ['payments', 'issuance', 'lesson']) expect(parseBrief(templateDraft(id, locale))).not.toBeNull()
+    for (const locale of ['ko', 'en'] as const) for (const { id } of BRIEF_TEMPLATES) expect(parseBrief(templateDraft(id, locale))).not.toBeNull()
     expect(templateDraft('unknown', 'en')).toBeNull()
   })
 })

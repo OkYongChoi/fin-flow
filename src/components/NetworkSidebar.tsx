@@ -2,6 +2,7 @@ import { ArrowLeftRight, BookOpenCheck, Boxes, Cable, ChartCandlestick, CircleDo
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NETWORK_COLORS, NETWORKS, networkSources } from '../data'
+import { searchNetworks } from '../networkSearch'
 import type { DataBundle, Locale, NetworkId } from '../types'
 
 const ICONS = { swift: Cable, visa: CreditCard, 'chips-fedwire': ArrowLeftRight, 'bond-issuance': Landmark, 'securities-issuance': FileStack, 'bond-servicing': ReceiptText, 'multi-bond-issuance': Landmark, 'asset-backed-securitization': Boxes, derivatives: Network, 'leveraged-derivatives-issuance': Network, 'credit-derivatives': Gavel, 'listed-derivatives': ChartCandlestick, 'fx-pvp': Repeat2, 'repo-financing': Scale, 'triparty-collateral': ShieldCheck, 'etf-primary-market': Layers3, 'securities-lending': Handshake, 'syndicated-loans': BookOpenCheck, usdc: CircleDollarSign }
@@ -10,12 +11,7 @@ export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChang
   const { t } = useTranslation()
   const searchRef = useRef<HTMLInputElement | null>(null)
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
-  const filteredNetworks = useMemo(() => {
-    const needle = query.trim().toLocaleLowerCase(locale)
-    if (!needle) return NETWORKS
-    return NETWORKS.filter((network) => [network.label, network.labelEn, network.description, network.descriptionEn]
-      .some((value) => value.toLocaleLowerCase(locale).includes(needle)))
-  }, [locale, query])
+  const filteredNetworks = useMemo(() => searchNetworks(query), [query])
 
   useEffect(() => {
     const focusSearch = (event: KeyboardEvent) => {
@@ -44,7 +40,7 @@ export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChang
       <h2 id="network-sidebar-title">{t('sidebar.title')}<span>{query ? `${filteredNetworks.length}/${NETWORKS.length}` : NETWORKS.length}</span></h2>
       <div className="network-search">
         <Search size={13} aria-hidden="true" />
-        <input ref={searchRef} type="search" value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={(event) => { if (event.key === 'Escape') onQueryChange('') }} aria-label={locale === 'ko' ? '금융 네트워크 검색' : 'Search financial networks'} placeholder={locale === 'ko' ? '네트워크·기능 검색' : 'Search network or function'} />
+        <input ref={searchRef} type="search" value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={(event) => { if (event.key === 'Escape') onQueryChange('') }} aria-label={locale === 'ko' ? '금융 네트워크 검색' : 'Search financial networks'} placeholder={locale === 'ko' ? '송금·카드 결제·ETF 검색' : 'Search transfers, cards, ETFs'} />
         {query ? <button type="button" onClick={() => { onQueryChange(''); searchRef.current?.focus() }} aria-label={locale === 'ko' ? '네트워크 검색어 지우기' : 'Clear network search'}><X size={12} /></button> : <kbd aria-hidden="true">/</kbd>}
       </div>
       <p className="network-result-status" role="status">{query.trim() ? (locale === 'ko' ? `검색 결과 ${filteredNetworks.length}개` : `${filteredNetworks.length} matching networks`) : ''}</p>

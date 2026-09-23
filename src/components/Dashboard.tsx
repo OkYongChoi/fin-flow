@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState, useTransition } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { sourceDataQueryOptions } from '../sourceDataQuery'
 import { useTranslation } from 'react-i18next'
 import { AppHeader } from '../App'
-import { fetchDataBundle, NETWORKS, networkSources } from '../data'
+import { NETWORKS, networkSources } from '../data'
 import type { Locale, NetworkId } from '../types'
 import { FilterBar } from './FilterBar'
 import { NetworkSidebar } from './NetworkSidebar'
@@ -20,7 +21,7 @@ export function Dashboard({ locale }: { locale: Locale }) {
   const requested = params.get('network') as NetworkId | null
   const hasValidNetwork = NETWORKS.some((item) => item.id === requested)
   const selected = hasValidNetwork ? requested! : 'chips-fedwire'
-  const { data, isLoading, error, refetch } = useQuery({ queryKey: ['source-data'], queryFn: fetchDataBundle })
+  const { data, isLoading, error, refetch } = useQuery(sourceDataQueryOptions)
   const metrics = useMemo(() => data?.metrics.filter((metric) => metric.networkId === selected) ?? [], [data, selected])
   const sources = useMemo(() => data ? networkSources([selected], data) : [], [data, selected])
 

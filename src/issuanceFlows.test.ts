@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
+import { ISSUANCE_FLOW_COUNT } from './issuanceCatalog'
 import { getIssuanceCategory, ISSUANCE_CATEGORIES, ISSUANCE_FLOWS } from './issuanceFlows'
 
 describe('issuance flow taxonomy', () => {
   it('classifies every discoverable flow into a visible category', () => {
     const classified = ISSUANCE_FLOWS.map((flow) => [flow.id, getIssuanceCategory(flow.id)] as const)
     expect(new Set(classified.map(([id]) => id)).size).toBe(classified.length)
+    expect(ISSUANCE_FLOW_COUNT).toBe(classified.length)
     expect(new Set(classified.map(([, category]) => category))).toEqual(new Set(ISSUANCE_CATEGORIES.map((item) => item.id)))
   })
 
