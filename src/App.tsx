@@ -1,11 +1,12 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Landmark, Menu, Orbit } from 'lucide-react'
-import { Dashboard } from './components/Dashboard'
-import { InfoPage } from './components/InfoPage'
 import { useRouter } from './router'
+import { LoadBoundary } from './components/LoadBoundary'
 import type { Locale } from './types'
 
+const Dashboard = lazy(() => import('./components/Dashboard').then(module => ({ default: module.Dashboard })))
+const InfoPage = lazy(() => import('./components/InfoPage').then(module => ({ default: module.InfoPage })))
 const WorkspacePage = lazy(() => import('./components/WorkspacePage'))
 const DataPage = lazy(() => import('./components/DataPage'))
 const VALID_PAGES = new Set(['map', 'networks', 'institutions', 'assets', 'learn', 'data', 'workspace', 'pricing'])
@@ -23,14 +24,13 @@ function LocaleRoutes() {
     document.title = `${PAGE_TITLES[page]?.[locale === 'ko' ? 0 : 1] ?? 'Flow of Money'} · Flow of Money`
   }, [locale, page])
   useEffect(() => { if (!VALID_PAGES.has(page)) navigate(`/${locale}/map`, true) }, [locale, navigate, page])
-  if (page === 'workspace' || page === 'pricing') return <Suspense fallback={<PageLoader />}><WorkspacePage locale={locale} pricing={page === 'pricing'} /></Suspense>
-  if (page === 'map') return <Dashboard locale={locale} />
-  if (page === 'networks') return <InfoPage type="networks" locale={locale} slug={slug} />
-  if (page === 'institutions') return <InfoPage type="institutions" locale={locale} slug={slug} />
-  if (page === 'assets') return <InfoPage type="assets" locale={locale} slug={slug} />
-  if (page === 'learn') return <InfoPage type="learn" locale={locale} slug={slug} />
-  if (page === 'data') return <Suspense fallback={<PageLoader />}><DataPage locale={locale} /></Suspense>
-  return <PageLoader />
+  return <LoadBoundary resetKey={`${locale}/${page}`} locale={locale}><Suspense fallback={<PageLoader locale={locale} />}>
+    {page === 'workspace' || page === 'pricing' ? <WorkspacePage locale={locale} pricing={page === 'pricing'} />
+      : page === 'map' ? <Dashboard locale={locale} />
+      : page === 'networks' || page === 'institutions' || page === 'assets' || page === 'learn' ? <InfoPage type={page} locale={locale} slug={slug} />
+      : page === 'data' ? <DataPage locale={locale} />
+      : <PageLoader locale={locale} />}
+  </Suspense></LoadBoundary>
 }
 
 export function AppHeader({ locale, compact = false }: { locale: Locale; compact?: boolean }) {
@@ -66,7 +66,7 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
   )
 }
 
-function PageLoader() { return <div className="page-loader"><Orbit /><span>Loading source-backed data…</span></div> }
+function PageLoader({ locale = 'ko' }: { locale?: Locale }) { return <div className="page-loader" role="status"><Orbit aria-hidden="true" /><span>{locale === 'ko' ? '출처 데이터를 불러오는 중…' : 'Loading source-backed data…'}</span></div> }
 
 export default function App() {
   const { pathname, navigate } = useRouter()

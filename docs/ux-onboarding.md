@@ -28,7 +28,7 @@ Captured screenshots are held outside the repository in `/tmp/fin-flow-ux-audit/
 
 ## Draft and concurrency contract
 
-- Guest: one browser-local draft under the existing v1 key; recovery now accepts incomplete edits as well as valid finished briefs.
+- Guest: one automatically saved browser-local draft under the existing v1 key, plus explicit browser notebook copies under separate v1 keys. Incomplete drafts are supported. The notebook is guest-only, visible to anyone using the browser, and does not sync across devices; see `docs/learning-and-local-notebook.md`.
 - Signed-in: per-user v2 working envelope in sessionStorage (this tab only), including document ID, loaded version and saved fingerprint. Closing the tab can remove this temporary copy; only successful cloud save persists across devices.
 - Explicit sign-in handoff: staged in the same tab, expires after one hour and is claimed by the first signed-in user. An existing account draft wins; the staged draft is offered with replacement confirmation. Account switching does not import another user's temporary draft.
 - Storage failures are visible and trigger a leave-page warning. Guest's original browser copy is retained through handoff. No local token or paid entitlement is stored in the draft.

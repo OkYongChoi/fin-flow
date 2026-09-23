@@ -1,10 +1,12 @@
 import { ArrowLeft, ArrowRight, BookOpen, Cable, CircleDollarSign, Landmark, Network } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
 import { AppHeader } from '../App'
 import { NETWORKS } from '../data'
 import type { Locale, NetworkId } from '../types'
 import { useRouter } from '../router'
 import { NetworkGuide } from './NetworkGuide'
+
+const FinanceGlossary = lazy(() => import('./FinanceGlossary'))
 
 const COPY = {
   ko: {
@@ -60,6 +62,7 @@ export function InfoPage({ type, locale, slug }: { type: 'networks' | 'instituti
     <main id="main-content" tabIndex={-1} className="info-page">
       <AppHeader locale={locale} />
       <section className="info-hero"><button className="back-link" onClick={() => navigate(`/${locale}/map`)}><ArrowLeft size={15} />{locale === 'ko' ? '지도로 돌아가기' : 'Back to map'}</button><h1>{copy[0]}</h1><p>{copy[1]}</p><small>{copy[2]}</small></section>
+      {type === 'learn' && <Suspense fallback={<p role="status">{locale === 'ko' ? '금융 용어집을 불러오는 중…' : 'Loading the finance glossary…'}</p>}><FinanceGlossary locale={locale} /></Suspense>}
       <section className="editorial-grid">
         {(type === 'networks' ? NETWORKS : GUIDES[type]).map((item, index) => {
           const network = 'id' in item ? item : null

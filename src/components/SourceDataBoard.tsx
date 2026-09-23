@@ -1,6 +1,6 @@
 import { ArrowDown, CalendarClock, ExternalLink, FileCheck2, Layers3 } from 'lucide-react'
 import { isSnapshotReviewOverdue, NETWORKS } from '../data'
-import { ISSUANCE_FLOWS } from '../issuanceFlows'
+import { ISSUANCE_FLOW_COUNT } from '../issuanceCatalog'
 import { getProductStructureGuide } from '../productStructures'
 import { useRouter } from '../router'
 import { NetworkGuide } from './NetworkGuide'
@@ -28,9 +28,10 @@ export function SourceDataBoard({ selected, metrics, sources, generatedAt, revie
         <div><span>{locale === 'ko' ? '출처 기반 데이터' : 'Source-backed data'}</span><h2 id="source-data-board-title">{locale === 'ko' ? network.label : network.labelEn}</h2></div>
         <div className="source-data-actions">
           <dl><div><dt>{locale === 'ko' ? '지표' : 'Metrics'}</dt><dd>{metrics.length}</dd></div><div><dt>{locale === 'ko' ? '스냅샷 생성' : 'Snapshot generated'}</dt><dd><time dateTime={generatedAt}>{formatDate(generatedAt, locale)}</time></dd></div><div><dt>{reviewOverdue ? (locale === 'ko' ? '검토 기한 경과' : 'Review overdue') : (locale === 'ko' ? '다음 검토' : 'Next review')}</dt><dd><time dateTime={reviewDueAt}>{formatDate(reviewDueAt, locale)}</time></dd></div></dl>
-          {selected === 'securities-issuance' ? <button type="button" className="source-explorer-shortcut" onClick={openIssuanceExplorer}><span>{locale === 'ko' ? `${ISSUANCE_FLOWS.length}개 발행 경로 탐색` : `Explore ${ISSUANCE_FLOWS.length} issuance paths`}</span><ArrowDown size={14} aria-hidden="true" /></button> : null}
+          {selected === 'securities-issuance' ? <button type="button" className="source-explorer-shortcut" onClick={openIssuanceExplorer}><span>{locale === 'ko' ? `${ISSUANCE_FLOW_COUNT}개 발행 경로 탐색` : `Explore ${ISSUANCE_FLOW_COUNT} issuance paths`}</span><ArrowDown size={14} aria-hidden="true" /></button> : null}
         </div>
       </header>
+      <aside className="learning-entry"><div><strong>{locale === 'ko' ? '금융, 익숙한 질문에서 시작해 보세요' : 'Start with a question you already have'}</strong><p>{locale === 'ko' ? '해외 송금부터 카드 결제까지, 흐름을 비교하고 내 말로 정리해 보세요.' : 'From sending money abroad to paying by card, compare the flows and make sense of them.'}</p></div><div className="brief-actions"><button type="button" className="brief-button" onClick={() => navigate(`/${locale}/workspace`)}>{locale === 'ko' ? '궁금한 질문으로 시작' : 'Start with a question'}</button><button type="button" className="brief-button" onClick={() => navigate(`/${locale}/learn`)}>{locale === 'ko' ? '금융 용어 찾아보기' : 'Look up financial terms'}</button></div></aside>
       {structureGuide ? <section className="product-structure" aria-labelledby="product-structure-title">
         <header><span><Layers3 size={15} aria-hidden="true" />{locale === 'ko' ? '상품 이해' : 'Product mechanics'}</span><h3 id="product-structure-title">{locale === 'ko' ? '상품 구성 방식' : 'How the products are constructed'}</h3><p>{structureGuide.introduction[locale]}</p></header>
         <div className="product-structure-grid">

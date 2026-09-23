@@ -72,7 +72,7 @@ export function IssuanceFlowLibrary({ locale }: { locale: Locale }) {
     searchRef.current?.focus()
   }
 
-  return <section id="issuance-library" className="issuance-library" aria-labelledby="issuance-library-title" tabIndex={-1}>
+  return <section className="issuance-library" aria-labelledby="issuance-library-title">
     <header className="issuance-library-heading">
       <div><span><FileStack size={15} aria-hidden="true" />{locale === 'ko' ? '증권 발행 절차' : 'Securities issuance procedures'}</span><strong>{ISSUANCE_FLOWS.length}</strong></div>
       <h3 id="issuance-library-title">{locale === 'ko' ? '발행 경로를 찾고 나란히 비교하세요' : 'Find and compare issuance paths side by side'}</h3>

@@ -18,8 +18,10 @@ for (const locale of ['ko', 'en'] as const) {
     await expect(page).toHaveURL(/workspace\?network=usdc$/)
     await page.getByRole('button', { name: ko ? '초안에 추가' : 'Add to draft', exact: true }).click()
     const preview = page.getByRole('region', { name: ko ? '브리핑 미리보기' : 'Brief preview', exact: true })
-    await expect(preview).toContainText(ko ? '체인과 토큰 식별' : 'Identify the chain and token')
-    await expect(preview.getByRole('link', { name: /Circle · USDC contract addresses/ })).toHaveAttribute('href', 'https://developers.circle.com/stablecoins/usdc-contract-addresses')
+    const process = preview.locator('.brief-flow-detail').filter({ has: page.getByRole('heading', { name: 'Circle USDC', exact: true }) })
+    await process.locator('summary').click()
+    await expect(process.getByText(ko ? '체인과 토큰 식별' : 'Identify the chain and token', { exact: false })).toBeVisible()
+    await expect(process.getByRole('link', { name: /Circle · USDC contract addresses/ })).toHaveAttribute('href', 'https://developers.circle.com/stablecoins/usdc-contract-addresses')
   })
 
   test(`${locale}: empty metrics keep their source and a useful process explanation`, async ({ page }) => {

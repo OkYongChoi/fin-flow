@@ -1,0 +1,35 @@
+.finance-glossary { max-width: 1180px; margin: 0 auto; padding: 36px 30px 48px; }
+.finance-glossary-heading h2 { font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -.035em; line-height: 1.35; margin: 12px 0; }
+.finance-glossary-heading p, .finance-glossary-method { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.finance-glossary-kicker { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 750; letter-spacing: .09em; color: var(--blue); }
+.finance-glossary-search { margin-top: 24px; }
+.finance-glossary-search > label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+.finance-glossary-search > div { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 8px 12px; max-width: 680px; }
+.finance-glossary-search > div > svg { color: var(--muted); flex: 0 0 auto; }
+.finance-glossary-search input { width: 100%; min-width: 0; background: transparent; color: var(--text); border: 0; font: inherit; font-size: 14px; min-height: 34px; }
+.finance-glossary-search input:focus { outline: none; }
+.finance-glossary-search > div:focus-within { outline: 2px solid var(--blue); outline-offset: 2px; }
+.finance-glossary-search button { flex: 0 0 auto; border: 0; border-radius: 5px; background: var(--primary-soft); color: var(--blue); font: inherit; font-size: 12px; font-weight: 650; padding: 10px; cursor: pointer; }
+.finance-glossary-search small { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.finance-glossary-results { color: var(--muted); font-size: 12px; line-height: 1.7; margin: 18px 0 12px; }
+.finance-glossary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.finance-glossary-card { min-width: 0; border: 1px solid var(--line); border-radius: 10px; padding: 22px; background: var(--panel); display: flex; flex-direction: column; scroll-margin-top: 25px; }
+.finance-glossary-card.selected { border-color: var(--blue); background: #fcfcff; }
+.finance-glossary-card:focus { outline: 2px solid var(--blue); outline-offset: 3px; }
+.finance-glossary-card-heading h3 { font-size: 18px; line-height: 1.4; margin: 0 0 5px; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.finance-glossary-card-heading > span { font-size: 11px; line-height: 1.7; color: var(--muted); }
+.finance-glossary-card > p { color: var(--text); font-size: 13px; line-height: 1.85; margin: 16px 0; }
+.finance-glossary-distinction { background: var(--secondary-soft); border-radius: 6px; padding: 12px; font-size: 12px; line-height: 1.8; }
+.finance-glossary-distinction strong { color: var(--mint); font-size: 11px; }.finance-glossary-distinction p { margin: 5px 0 0; }
+.finance-glossary-flows { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0; }
+.finance-glossary-flows button { display: inline-flex; align-items: center; justify-content: space-between; gap: 7px; max-width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 9px 10px; text-align: left; font: inherit; font-size: 11px; line-height: 1.6; background: var(--panel); color: var(--blue); cursor: pointer; }
+.finance-glossary-flows button svg { flex-shrink: 0; }
+.finance-glossary-card footer { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 14px; display: grid; gap: 7px; }
+.finance-glossary-card footer a { color: var(--blue); font-size: 11px; line-height: 1.7; overflow-wrap: anywhere; text-underline-offset: 3px; }
+.finance-glossary-card footer small { font-size: 10px; line-height: 1.7; color: var(--muted); }
+.finance-glossary-card footer .finance-glossary-permalink { display: inline-flex; align-items: center; gap: 5px; justify-self: start; margin-top: 3px; color: var(--muted); }
+.finance-glossary-empty { padding: 24px; border: 1px dashed var(--line); border-radius: 8px; background: var(--panel); font-size: 13px; line-height: 1.8; }
+.finance-glossary-method { margin: 20px 0 0; font-size: 11px; }
+.finance-glossary button:focus-visible, .finance-glossary a:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+@media (max-width: 1000px) { .finance-glossary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .finance-glossary { padding: 30px 20px 40px; }.finance-glossary-grid { grid-template-columns: 1fr; }.finance-glossary-card { padding: 20px; }.finance-glossary-search > div { flex-wrap: wrap; }.finance-glossary-search input { flex: 1 1 150px; width: auto; }.finance-glossary-search button { margin-left: auto; } }
