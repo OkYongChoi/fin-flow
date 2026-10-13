@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { buildBriefEvidence } from '../../briefEvidence'
+import { metricDisplay, metricKindLabel } from '../../data'
 import type { DataBundle, Locale, NetworkId } from '../../types'
 
 export function BriefComparison({ networks, data, locale }: { networks: NetworkId[]; data: DataBundle; locale: Locale }) {
@@ -26,7 +27,11 @@ export function BriefComparison({ networks, data, locale }: { networks: NetworkI
     <div className="brief-evidence-cards">{evidence.networks.map(network => <section key={network.id} className="brief-evidence-card" aria-label={`${network.label[locale]} ${ko ? '근거' : 'evidence'}`}>
       <h4>{network.label[locale]}</h4>
       {network.metrics.length ? <ul>{network.metrics.map(metric => <li key={metric.id}>
-        <span>{ko ? metric.labelKo : metric.labelEn}</span><strong>{metric.display}</strong>
+        <div className="brief-metric-header">
+          <span>{ko ? metric.labelKo : metric.labelEn}</span>
+          <span className={`metric-kind-badge kind-${metric.kind}`}>{metricKindLabel(metric.kind, locale)}</span>
+        </div>
+        <strong>{metricDisplay(metric, locale)}</strong>
         <small>{ko ? '단위' : 'Unit'}: {metric.unit} · {ko ? '대상 기간' : 'Period'}: {metric.coveragePeriod}</small>
         {metric.source ? <a href={metric.source.url} target="_blank" rel="noreferrer">{metric.source.provider} · {ko ? '확인일' : 'Retrieved'} {metric.source.retrievedAt.slice(0, 10)} ↗</a> : <small className="evidence-warning">{ko ? '연결된 출처를 찾을 수 없습니다.' : 'The linked source is unavailable.'}</small>}
       </li>)}</ul> : <p className="workspace-hint">{ko ? '이 스냅샷에 수록된 지표가 없습니다. 값이 0이라는 뜻은 아닙니다.' : 'No metrics in this snapshot. This does not mean a value of zero.'}</p>}

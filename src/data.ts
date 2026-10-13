@@ -1,4 +1,4 @@
-import type { DataBundle, FlowEdge, FlowNode, Metric, NetworkId, SourceRecord } from './types'
+import type { DataBundle, FlowEdge, FlowNode, Locale, Metric, NetworkId, SourceRecord } from './types'
 
 export const NETWORKS: Array<{ id: NetworkId; label: string; labelEn: string; description: string; descriptionEn: string }> = [
   { id: 'swift', label: 'SWIFT', labelEn: 'SWIFT', description: '은행 간 메시지 네트워크', descriptionEn: 'Interbank messaging network' },
@@ -117,7 +117,7 @@ export async function fetchDataBundle(): Promise<DataBundle> {
   // An HTTP 200 error payload must reach the retry UI, not crash a rendered list.
   if (!strings(manifest, ['version', 'generatedAt', 'reviewDueAt', 'coverageNotice']) || !Number.isFinite(Date.parse(manifest.generatedAt)) || !Number.isFinite(Date.parse(manifest.reviewDueAt)) ||
       !Array.isArray(sources) || !sources.every(source => strings(source, ['id', 'provider', 'title', 'url', 'coveragePeriod', 'cadence', 'publishedAt', 'retrievedAt'])) ||
-      !Array.isArray(metrics) || !metrics.every(metric => strings(metric, ['id', 'networkId', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) && Number.isFinite(metric.value))) {
+      !Array.isArray(metrics) || !metrics.every(metric => strings(metric, ['id', 'networkId', 'kind', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) && Number.isFinite(metric.value) && ['statistic', 'rule', 'service', 'process'].includes(metric.kind))) {
     throw new Error('Invalid source-data response')
   }
   return { ...manifest, sources, metrics }
@@ -128,3 +128,19 @@ export const getNode = (id: string) => NODES.find((node) => node.id === id)!
 export function isSnapshotReviewOverdue(reviewDueAt: string, now = new Date()): boolean {
   return now > new Date(reviewDueAt + 'T23:59:59.999Z')
 }
+
+export function metricDisplay(metric: Metric, locale: Locale): string {
+  if (locale === 'en' && metric.displayEn) return metric.displayEn
+  if (locale === 'ko' && metric.displayKo) return metric.displayKo
+  return metric.display
+}
+
+export function metricKindLabel(kind: Metric['kind'], locale: Locale): string {
+  switch (kind) {
+    case 'statistic': return locale === 'ko' ? '통계' : 'Statistic'
+    case 'rule': return locale === 'ko' ? '규칙' : 'Rule'
+    case 'service': return locale === 'ko' ? '서비스' : 'Service'
+    case 'process': return locale === 'ko' ? '절차' : 'Process'
+  }
+}
+

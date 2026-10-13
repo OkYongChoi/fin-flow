@@ -71,9 +71,9 @@ export function InfoPage({ type, locale, slug }: { type: 'networks' | 'instituti
           const title = network ? (locale === 'ko' ? network.label : network.labelEn) : guide[locale === 'ko' ? 0 : 1]
           const description = network ? (locale === 'ko' ? network.description : network.descriptionEn) : guide[locale === 'ko' ? 2 : 3]
           const target = network ? `/${locale}/map?network=${network.id}` : `/${locale}/${type}/${itemSlug}`
-          const related = !network && type !== 'networks' ? GUIDE_NETWORKS[type][index] : null
+          const related = type === 'networks' ? (network?.id ?? null) : (!network ? GUIDE_NETWORKS[type][index] : null)
           const relatedNetwork = NETWORKS.find(item => item.id === related)
-          return <article key={itemSlug} className={slug === itemSlug ? 'active' : ''}><button type="button" aria-current={slug === itemSlug ? 'page' : undefined} aria-expanded={!network ? slug === itemSlug : undefined} aria-controls={!network ? `guide-${itemSlug}` : undefined} onClick={() => openItem(target)}><span>{String(index + 1).padStart(2, '0')}</span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight aria-hidden="true" /></button>
+          return <article key={itemSlug} className={slug === itemSlug ? 'active' : ''}><button type="button" aria-current={slug === itemSlug ? 'page' : undefined} aria-expanded={slug === itemSlug} aria-controls={`guide-${itemSlug}`} onClick={() => openItem(target)}><span>{String(index + 1).padStart(2, '0')}</span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight aria-hidden="true" /></button>
             {related && relatedNetwork && <div id={`guide-${itemSlug}`} className="guide-detail" hidden={slug !== itemSlug} ref={slug === itemSlug ? detailRef : undefined} tabIndex={-1} role="region" aria-label={`${title} · ${locale === 'ko' ? '상세 가이드' : 'Detailed guide'}`}>
               <p>{locale === 'ko' ? '관련 흐름' : 'Related flow'}: <strong>{locale === 'ko' ? relatedNetwork.label : relatedNetwork.labelEn}</strong></p>
               <NetworkGuide network={related} locale={locale} id={`guide-flow-${itemSlug}`} />

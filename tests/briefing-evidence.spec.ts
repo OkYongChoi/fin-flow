@@ -50,7 +50,7 @@ for (const locale of ['en', 'ko'] as const) {
     await page.getByRole('button', { name: ko ? 'Markdown 내보내기' : 'Export Markdown', exact: true }).click()
     const markdown = await downloadedText(await downloading)
     expect(markdown).toContain(ko ? '| 비교 항목 | Visa | CHIPS · Fedwire |' : '| Compare | Visa | CHIPS · Fedwire |')
-    expect(markdown).toContain(ko ? '| 결제 규모 | $14.2T | USD | FY2025 |' : '| Payments volume | $14.2T | USD | FY2025 |')
+    expect(markdown).toContain(ko ? '| 결제 규모 | 통계 | $14.2T | USD | FY2025 |' : '| Payments volume | Statistic | $14.2T | USD | FY2025 |')
     expect(markdown).toContain('https://annualreport.visa.com/financials/default.aspx')
     expect(markdown).toContain('2026-08-02')
     expect(markdown).not.toContain('13.24M')

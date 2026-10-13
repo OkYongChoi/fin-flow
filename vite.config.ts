@@ -3,7 +3,12 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  server: { port: 4173 },
+  server: {
+    port: 4173,
+    watch: {
+      ignored: ['**/node_modules/**', '**/.git/**', '**/dist/**'],
+    },
+  },
   preview: { port: 4173 },
   build: {
     rollupOptions: {
