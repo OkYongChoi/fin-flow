@@ -9,7 +9,7 @@ import { EDGES, getNode, NETWORK_COLORS, NODES } from '../data'
 import type { FlowEdge, Locale, NetworkId } from '../types'
 
 const WORLD = feature(countries as never, (countries as { objects: { countries: never } }).objects.countries) as unknown as GeoJSON.FeatureCollection
-const BASE_STYLE = { version: 8 as const, sources: {}, layers: [{ id: 'background', type: 'background' as const, paint: { 'background-color': '#061728' } }] }
+const BASE_STYLE = { version: 8 as const, sources: {}, layers: [{ id: 'background', type: 'background' as const, paint: { 'background-color': '#060a12' } }] }
 
 const SEMANTIC_LABELS: Record<FlowEdge['semantic'], { ko: string; en: string }> = {
   message: { ko: '메시지 전달', en: 'Message transfer' },
@@ -69,8 +69,8 @@ export default function FlowMap({ selected, proMode, locale }: { selected: Netwo
     <section className="flow-map" role="region" aria-labelledby="map-title" aria-describedby="map-disclaimer">
       <Map initialViewState={{ longitude: mobile ? 15 : 22, latitude: mobile ? 20 : 25, zoom: mobile ? -0.1 : 1.25 }} minZoom={mobile ? -0.5 : 0.85} maxZoom={6} mapStyle={BASE_STYLE} attributionControl={false}>
         <Source id="countries" type="geojson" data={WORLD}>
-          <Layer id="countries-fill" type="fill" paint={{ 'fill-color': '#173653', 'fill-opacity': 0.9 }} />
-          <Layer id="countries-outline" type="line" paint={{ 'line-color': '#315474', 'line-width': 0.55, 'line-opacity': 0.75 }} />
+          <Layer id="countries-fill" type="fill" paint={{ 'fill-color': '#0f1726', 'fill-opacity': 0.95 }} />
+          <Layer id="countries-outline" type="line" paint={{ 'line-color': '#1e2e46', 'line-width': 0.65, 'line-opacity': 0.8 }} />
         </Source>
         <DeckOverlay layers={layers} />
         {NODES.map((node) => <Marker key={node.id} longitude={node.coordinates[0]} latitude={node.coordinates[1]} anchor="center"><button type="button" className={`map-node ${node.id === activeNode ? 'active' : ''}`} onClick={() => setActiveNode(node.id)} aria-pressed={node.id === activeNode} aria-label={locale === 'ko' ? `${node.label} 노드 선택` : `Select ${node.label} node`}><i /><span>{node.label}</span></button></Marker>)}
