@@ -53,13 +53,13 @@ export function AppHeader({ locale, compact = false }: { locale: Locale; compact
       <button type="button" ref={menuButtonRef} className="mobile-menu icon-button" aria-label={menuOpen ? (locale === 'ko' ? '메뉴 닫기' : 'Close menu') : (locale === 'ko' ? '메뉴 열기' : 'Open menu')} aria-controls="primary-navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><Menu size={21} /></button>
       <button type="button" className="brand" onClick={() => go('map')}><Orbit aria-hidden="true" /><span>Flow of Money</span></button>
       <nav id="primary-navigation" aria-label={locale === 'ko' ? '주요 탐색' : 'Primary'}>
-        {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')], ['workspace', locale === 'ko' ? '브리핑' : 'Briefings']].map(([path, label]) => (
+        {[['map', t('nav.map')], ['networks', t('nav.networks')], ['institutions', t('nav.institutions')], ['assets', t('nav.assets')], ['data', t('nav.data')], ['workspace', locale === 'ko' ? '브리핑' : 'Briefings'], ['learn', locale === 'ko' ? '학습' : 'Learn']].map(([path, label]) => (
           <button type="button" key={path} className={activePage === path ? 'active' : ''} aria-current={activePage === path ? 'page' : undefined} onClick={() => go(path)}>{label}</button>
         ))}
       </nav>
       <div className="header-actions">
         <button type="button" className="locale-button" aria-label={locale === 'ko' ? 'Switch to English' : '한국어로 전환'} onClick={switchLocale}>{locale === 'ko' ? 'EN' : 'KO'}</button>
-        <button type="button" className="icon-button" aria-label={locale === 'ko' ? '프로젝트 소개' : 'About the project'} onClick={() => go('learn')}><Landmark size={18} /></button>
+        <button type="button" className="icon-button" title={locale === 'ko' ? '금융 용어 사전 및 학습 가이드' : 'Finance glossary & learning guides'} aria-label={locale === 'ko' ? '금융 용어 사전 및 학습 가이드' : 'Finance glossary & learning guides'} onClick={() => go('learn')}><Landmark size={18} /></button>
       </div>
     </header>
     </>

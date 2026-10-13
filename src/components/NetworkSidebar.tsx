@@ -29,6 +29,11 @@ export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChang
   const selectionOutsideResults = !filteredNetworks.some((network) => network.id === selected)
 
   const moveSelection = (event: React.KeyboardEvent<HTMLButtonElement>, current: number) => {
+    if (event.key === 'ArrowUp' && current === 0) {
+      event.preventDefault()
+      searchRef.current?.focus()
+      return
+    }
     const target = event.key === 'Home' ? 0 : event.key === 'End' ? filteredNetworks.length - 1 : event.key === 'ArrowRight' || event.key === 'ArrowDown' ? (current + 1) % filteredNetworks.length : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? (current - 1 + filteredNetworks.length) % filteredNetworks.length : -1
     if (target < 0) return
     event.preventDefault()
@@ -40,7 +45,14 @@ export function NetworkSidebar({ selected, onSelect, locale, query, onQueryChang
       <h2 id="network-sidebar-title">{t('sidebar.title')}<span>{query ? `${filteredNetworks.length}/${NETWORKS.length}` : NETWORKS.length}</span></h2>
       <div className="network-search">
         <Search size={13} aria-hidden="true" />
-        <input ref={searchRef} type="search" value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={(event) => { if (event.key === 'Escape') onQueryChange('') }} aria-label={locale === 'ko' ? '금융 네트워크 검색' : 'Search financial networks'} placeholder={locale === 'ko' ? '송금·카드 결제·ETF 검색' : 'Search transfers, cards, ETFs'} />
+        <input ref={searchRef} type="search" value={query} onChange={(event) => onQueryChange(event.target.value)} onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            onQueryChange('')
+          } else if ((event.key === 'ArrowDown' || event.key === 'Enter') && filteredNetworks.length > 0) {
+            event.preventDefault()
+            itemRefs.current[0]?.focus()
+          }
+        }} aria-label={locale === 'ko' ? '금융 네트워크 검색' : 'Search financial networks'} placeholder={locale === 'ko' ? '송금·카드 결제·ETF 검색' : 'Search transfers, cards, ETFs'} />
         {query ? <button type="button" onClick={() => { onQueryChange(''); searchRef.current?.focus() }} aria-label={locale === 'ko' ? '네트워크 검색어 지우기' : 'Clear network search'}><X size={12} /></button> : <kbd aria-hidden="true">/</kbd>}
       </div>
       <p className="network-result-status" role="status">{query.trim() ? (locale === 'ko' ? `검색 결과 ${filteredNetworks.length}개` : `${filteredNetworks.length} matching networks`) : ''}</p>

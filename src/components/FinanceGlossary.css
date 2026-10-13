@@ -30,7 +30,14 @@
 .finance-glossary-card footer { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 14px; display: grid; gap: 7px; }
 .finance-glossary-card footer a { color: var(--blue); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; text-underline-offset: 3px; }
 .finance-glossary-card footer small { font-size: 11px; line-height: 1.7; color: var(--muted); }
-.finance-glossary-card footer .finance-glossary-permalink { display: inline-flex; align-items: center; gap: 5px; justify-self: start; margin-top: 3px; color: var(--muted); }
+.finance-glossary-card footer .finance-glossary-permalink { display: inline-flex; align-items: center; gap: 5px; justify-self: start; margin-top: 3px; color: var(--muted); cursor: pointer; transition: color .15s ease; border-radius: 4px; padding: 2px 4px; }
+.finance-glossary-card footer .finance-glossary-permalink:hover { color: var(--blue); background: rgba(56, 189, 248, .08); }
+.glossary-quick-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 10px; }
+.glossary-quick-tags > span { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.quick-tag-chip { border: 1px solid var(--line); border-radius: 999px; background: var(--panel-2); color: var(--text-dim); font-size: 11px; font-weight: 600; padding: 4px 10px; cursor: pointer; transition: all .15s ease; }
+.quick-tag-chip:hover { border-color: var(--blue); color: var(--blue); background: var(--primary-soft); }
+.finance-glossary-card.selected { border-color: var(--blue); background: var(--panel-2); box-shadow: 0 0 24px rgba(56, 189, 248, .22), inset 0 0 0 1px rgba(56, 189, 248, .3); animation: cardGlow 2s ease-in-out infinite alternate; }
+@keyframes cardGlow { from { box-shadow: 0 0 16px rgba(56, 189, 248, .15); } to { box-shadow: 0 0 28px rgba(56, 189, 248, .3); } }
 .finance-glossary-empty { padding: 24px; border: 1px dashed var(--line); border-radius: 12px; background: var(--panel); font-size: 13px; line-height: 1.8; color: var(--muted); }
 .finance-glossary-method { margin: 20px 0 0; font-size: 12px; }
 .finance-glossary button:focus-visible, .finance-glossary a:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
