@@ -58,9 +58,11 @@ const networkIds = new Set([
   'syndicated-loans',
   'usdc',
 ])
+const validKinds = new Set(['statistic', 'rule', 'service', 'process'])
 const metricIds = new Set()
 for (const metric of metrics) {
-  for (const key of ['id', 'networkId', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) if (!metric[key]) fail(`metric ${metric.id ?? '?'} missing ${key}`)
+  for (const key of ['id', 'networkId', 'kind', 'labelKo', 'labelEn', 'display', 'unit', 'coveragePeriod', 'sourceId']) if (!metric[key]) fail(`metric ${metric.id ?? '?'} missing ${key}`)
+  if (!validKinds.has(metric.kind)) fail(`metric ${metric.id} has invalid kind ${metric.kind}`)
   if (metricIds.has(metric.id)) fail(`duplicate metric ${metric.id}`)
   metricIds.add(metric.id)
   if (!networkIds.has(metric.networkId)) fail(`metric ${metric.id} references unknown network ${metric.networkId}`)

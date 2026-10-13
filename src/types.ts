@@ -14,13 +14,18 @@ export interface SourceRecord {
   cadence: string
 }
 
+export type MetricKind = 'statistic' | 'rule' | 'service' | 'process'
+
 export interface Metric {
   id: string
   networkId: NetworkId
+  kind: MetricKind
   labelKo: string
   labelEn: string
   value: number
   display: string
+  displayKo?: string
+  displayEn?: string
   unit: string
   coveragePeriod: string
   sourceId: string

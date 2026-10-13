@@ -1,4 +1,4 @@
-import { NETWORKS, networkSources } from './data'
+import { metricDisplay, metricKindLabel, NETWORKS, networkSources } from './data'
 import { buildBriefEvidence } from './briefEvidence'
 import type { DataBundle, Locale, NetworkId } from './types'
 
@@ -52,9 +52,9 @@ export function briefMarkdown(draft: BriefDraft, data: DataBundle) {
     lines.push(`## ${plain(network.label[draft.locale])}`, '', plain(network.scope[draft.locale]), '', `### ${text('출처가 연결된 스냅샷 지표', 'Source-linked snapshot metrics')}`, '')
     if (network.metrics.length) {
       lines.push(
-        `| ${text('지표', 'Metric')} | ${text('기록된 값', 'Recorded value')} | ${text('단위', 'Unit')} | ${text('대상 기간', 'Coverage period')} | ${text('출처', 'Source')} | ${text('확인일', 'Retrieved')} |`,
-        '| --- | --- | --- | --- | --- | --- |',
-        ...network.metrics.map(metric => `| ${cell(ko ? metric.labelKo : metric.labelEn)} | ${cell(metric.display)} | ${cell(metric.unit)} | ${cell(metric.coveragePeriod)} | ${metric.source ? link(`${metric.source.provider}: ${metric.source.title}`, metric.source.url) : text('출처 정보 없음', 'Source record unavailable')} | ${metric.source ? cell(metric.source.retrievedAt) : text('확인일 없음', 'Unavailable')} |`), '',
+        `| ${text('지표', 'Metric')} | ${text('구분', 'Kind')} | ${text('기록된 값', 'Recorded value')} | ${text('단위', 'Unit')} | ${text('대상 기간', 'Coverage period')} | ${text('출처', 'Source')} | ${text('확인일', 'Retrieved')} |`,
+        '| --- | --- | --- | --- | --- | --- | --- |',
+        ...network.metrics.map(metric => `| ${cell(ko ? metric.labelKo : metric.labelEn)} | ${cell(metricKindLabel(metric.kind, draft.locale))} | ${cell(metricDisplay(metric, draft.locale))} | ${cell(metric.unit)} | ${cell(metric.coveragePeriod)} | ${metric.source ? link(`${metric.source.provider}: ${metric.source.title}`, metric.source.url) : text('출처 정보 없음', 'Source record unavailable')} | ${metric.source ? cell(metric.source.retrievedAt) : text('확인일 없음', 'Unavailable')} |`), '',
       )
     } else lines.push(text('이 스냅샷에 연결된 지표가 없습니다. 지표 미제공은 값이 0임을 뜻하지 않습니다.', 'No linked metrics in this snapshot. Unavailable metrics do not imply a zero value.'), '')
     lines.push(

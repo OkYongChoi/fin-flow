@@ -1,5 +1,5 @@
 import { ArrowDown, CalendarClock, ExternalLink, FileCheck2, Layers3 } from 'lucide-react'
-import { isSnapshotReviewOverdue, NETWORKS } from '../data'
+import { isSnapshotReviewOverdue, metricDisplay, metricKindLabel, NETWORKS } from '../data'
 import { ISSUANCE_FLOW_COUNT } from '../issuanceCatalog'
 import { getProductStructureGuide } from '../productStructures'
 import { useRouter } from '../router'
@@ -48,7 +48,17 @@ export function SourceDataBoard({ selected, metrics, sources, generatedAt, revie
       </section> : null}
       {unlinked > 0 && <div className="source-empty" role="status"><p>{locale === 'ko' ? `${unlinked}개 지표의 출처 레코드를 불러오지 못했습니다. 표시된 값을 원문에서 재확인할 수 없는 상태입니다.` : `${unlinked} metrics have missing source records. Their displayed values cannot currently be checked against the registry.`}</p><button className="brief-button" onClick={() => navigate(`/${locale}/data`)}>{locale === 'ko' ? '데이터 수록 현황 확인' : 'Check data coverage'}</button></div>}
       <div className="source-metric-grid" aria-label={unlinked ? (locale === 'ko' ? '출처 확인 필요 지표' : 'Metrics requiring source review') : (locale === 'ko' ? '검증 지표' : 'Verified metrics')}>
-        {metrics.map((metric) => <article key={metric.id} className="source-metric-card"><span>{locale === 'ko' ? metric.labelKo : metric.labelEn}</span><strong>{metric.display}</strong><small>{metric.unit} · {metric.coveragePeriod}</small><p><FileCheck2 size={13} aria-hidden="true" />{sourceById.get(metric.sourceId)?.provider ?? metric.sourceId}</p></article>)}
+        {metrics.map((metric) => (
+          <article key={metric.id} className="source-metric-card">
+            <div className="source-metric-top">
+              <span>{locale === 'ko' ? metric.labelKo : metric.labelEn}</span>
+              <span className={`metric-kind-badge kind-${metric.kind}`}>{metricKindLabel(metric.kind, locale)}</span>
+            </div>
+            <strong>{metricDisplay(metric, locale)}</strong>
+            <small>{metric.unit} · {metric.coveragePeriod}</small>
+            <p><FileCheck2 size={13} aria-hidden="true" />{sourceById.get(metric.sourceId)?.provider ?? metric.sourceId}</p>
+          </article>
+        ))}
         {metrics.length === 0 ? <div className="source-empty" role="status"><p>{locale === 'ko' ? '이 스냅샷에는 표시할 검증 지표가 없습니다. 수치 0을 뜻하지 않습니다.' : 'No verified metrics are available in this snapshot. This does not mean a value of zero.'}</p><p>{locale === 'ko' ? '아래 절차 설명과 연결된 원문으로 계속 확인할 수 있습니다.' : 'Continue with the process guide and any linked primary sources below.'}</p></div> : null}
       </div>
       <NetworkGuide network={selected} locale={locale} />
